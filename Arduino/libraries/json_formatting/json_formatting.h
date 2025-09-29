@@ -1,5 +1,5 @@
-#ifndef SIMPLE_MQTT_PROTOCOL_H
-#define SIMPLE_MQTT_PROTOCOL_H
+#ifndef JSON_FORMATTING_H
+#define JSON_FORMATTING_H
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
@@ -84,4 +84,4 @@ String topicRoomConnection(int floorId, int roomId);
 String topicUltrasonic(int floorId, int roomId, int uId);
 String topicHall(int floorId, int roomId, int hsId);
 
-#endif // SIMPLE_MQTT_PROTOCOL_H
+#endif 
