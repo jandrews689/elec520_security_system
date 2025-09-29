@@ -1,35 +1,29 @@
-#ifndef Json_formatting.h
-#define Json_formatting.h
+#ifndef SIMPLE_MQTT_PROTOCOL_H
+#define SIMPLE_MQTT_PROTOCOL_H
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
-// -------- Limits (override before including if you want) --------
-#ifndef SMP_MAX_FLOORS
+// -------- Limits --------
 #define SMP_MAX_FLOORS   8
-#endif
-#ifndef SMP_MAX_ROOMS
 #define SMP_MAX_ROOMS    8
-#endif
-#ifndef SMP_MAX_SENSORS
 #define SMP_MAX_SENSORS  8
-#endif
 
-// -------- Enums aligned with your data dictionary --------
+// -------- Enums --------
 enum SystemState { DISARMED=0, ARMED=1, ALARM=2, OTHER=3 };
 enum KeypadState { NO_INPUT=0, PASS_ACCEPTED=1, PASS_DECLINED=2 };
 
-// -------- Data model (fixed-size, simple C structs) --------
+// -------- Data Structures --------
 struct UltraSensor {
   bool used = false;
-  int  id   = -1;     // U_ID
-  bool state= false;  // U_STATE
+  int  id   = -1;
+  bool state= false;
 };
 
 struct HallSensor {
   bool used = false;
-  int  id   = -1;     // HS_ID
-  bool state= false;  // HS_STATE
+  int  id   = -1;
+  bool state= false;
 };
 
 struct RoomNode {
@@ -48,39 +42,46 @@ struct FloorNode {
 };
 
 struct ProtocolModel {
-  // System / BaseStation
   SystemState systemState = DISARMED;
   bool        baseConnected = false;
   KeypadState keypad = NO_INPUT;
-
-  // Floors
-  FloorNode floors[SMP_MAX_FLOORS];
+  FloorNode   floors[SMP_MAX_FLOORS];
 };
 
-// -------- Global model store (defined in .cpp) --------
+// -------- Global Model --------
 extern ProtocolModel MODEL;
 
-// -------- API you asked for --------
-
-// 1) add floors
+// -------- Add functions --------
 bool addFloor(int floorId);
-
-// 2) add rooms (nested under a floor)
 bool addRoom(int floorId, int roomId);
-
-// 3) add ultrasonic sensors (nested under room)
 bool addUltrasonic(int floorId, int roomId, int uId);
-
-// 4) add hall sensors (nested under room)
 bool addHall(int floorId, int roomId, int hsId);
 
-// 5) parse all data (pass PubSubClient topic/payload here)
+// -------- Setters (direct update from GPIO or logic) --------
+bool setSystemState(SystemState state);
+bool setBaseConnection(bool connected);
+bool setBaseKeypad(KeypadState key);
+bool setFloorConnection(int floorId, bool connected);
+bool setRoomConnection(int floorId, int roomId, bool connected);
+bool setUltrasonicState(int floorId, int roomId, int uId, bool state);
+bool setHallState(int floorId, int roomId, int hsId, bool state);
+
+// -------- Parse incoming messages --------
 bool parseMqtt(const char* topicC, const char* payloadC);
 
-// 6) concatenate all data (snapshot JSON)
+// -------- Build JSON snapshot --------
 String buildSnapshot();
 
-// Optional: reset everything to defaults
+// -------- Reset model --------
 void resetModel();
 
-#endif
+// -------- Topic Builders --------
+String topicSystemState();
+String topicBaseConnection();
+String topicBaseKeypad();
+String topicFloorConnection(int floorId);
+String topicRoomConnection(int floorId, int roomId);
+String topicUltrasonic(int floorId, int roomId, int uId);
+String topicHall(int floorId, int roomId, int hsId);
+
+#endif // SIMPLE_MQTT_PROTOCOL_H
