@@ -269,6 +269,7 @@ String buildSnapshot() {
 }
 
 // -------- Topic Builders --------
+String topicEverything(){return "home/security";}
 String topicSystemState(){return "home/security/system/state";}
 String topicBaseConnection(){return "home/security/basestation/connection";}
 String topicBaseKeypad(){return "home/security/basestation/keypad";}

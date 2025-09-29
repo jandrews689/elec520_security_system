@@ -76,6 +76,7 @@ String buildSnapshot();
 void resetModel();
 
 // -------- Topic Builders --------
+String topicEverything();
 String topicSystemState();
 String topicBaseConnection();
 String topicBaseKeypad();
