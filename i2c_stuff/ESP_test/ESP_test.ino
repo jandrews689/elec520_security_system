@@ -10,7 +10,7 @@ void setup() {
 }
 
 void loop() {
-  // Poll the slave: ask for up to 16 bytes
+  // Poll the slave: ask for up to 16 bytes (can change that atm this is fine)
   Wire.requestFrom(SLAVE_ADDR, 16);
   if (Wire.available()) {
     uint8_t len = Wire.read();
@@ -21,17 +21,17 @@ void loop() {
       }
       Serial.print("Got: ");
       Serial.println(buf);
-      // Act on TEST
-      if (len == 4 && strncmp(buf, "ALERT", 5) == 0) {
+      // Act on ALERT
+      if (len == 5 && strncmp(buf, "ALERT", 5) == 0) {
         Serial.println("Button press received over I2C.");
       }
       // Drain any leftover bytes (if master asked for 16 but slave sent fewer)
       while (Wire.available()) (void)Wire.read();
     } else {
-      // no message (len==0), or invalid length; drain
+      // no message (len==0), or invalid length so drain
       while (Wire.available()) (void)Wire.read();
     }
   }
 
-  delay(20); // poll every 20 ms (adjust as desired)
+  delay(20); // poll every 20 ms
 }
