@@ -55,7 +55,8 @@ extern ProtocolModel MODEL;
 bool addFloor(int floorId);
 bool addRoom(int floorId, int roomId);
 bool addUltrasonic(int floorId, int roomId, int uId);
-bool addHall(int floorId, int roomId, int hsId);
+bool addHall(int floorId, int roomId, int hsId)
+;
 
 // -------- Setters (direct update from GPIO or logic) --------
 bool setSystemState(SystemState state);

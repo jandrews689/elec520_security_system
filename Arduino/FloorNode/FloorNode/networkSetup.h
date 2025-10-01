@@ -10,6 +10,8 @@ const char* mqtt_server = "broker.hivemq.com";
 const int mqtt_port = 1883; 
 const char* mqtt_client_id = "ESP32_BaseStation"; 
 
+uint64_t macAddress;
+
 int message_ID = 0;
 
 WiFiClient espClient;
@@ -30,6 +32,11 @@ void setup_wifi() {
   Serial.println("\nWiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
+
+  // gives the base MAC as uint64_t
+  macAddress = ESP.getEfuseMac(); 
+  Serial.print("ESP32 MAC Address");
+  Serial.println(macAddress);
 }
 
 // Example of Callback when receiving subscribed messages
@@ -77,4 +84,11 @@ void brokerReconnect() {
     }
   }
 }
+
+// //Returns the numerical value of the mac address. 
+// uint64_t getNumericMAC() {
+//   uint64_t mac = ESP.getEfuseMac(); // gives the base MAC as uint64_t
+//   return mac;
+// }
+
 

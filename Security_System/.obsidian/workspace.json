@@ -15,9 +15,9 @@
               "state": {
                 "file": "FloorNode System.canvas",
                 "viewState": {
-                  "x": 379.2678106457241,
-                  "y": -46.668527579691045,
-                  "zoom": -0.6666666666666666
+                  "x": -75.74659633676822,
+                  "y": 415.10495024937177,
+                  "zoom": -0.3333333333333333
                 }
               },
               "icon": "lucide-layout-dashboard",
@@ -81,7 +81,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "179f8cd8c0e57bd2",
