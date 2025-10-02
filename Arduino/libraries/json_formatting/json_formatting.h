@@ -11,7 +11,7 @@
 
 // -------- Enums --------
 enum SystemState { DISARMED=0, ARMED=1, ALARM=2, OTHER=3 };
-enum KeypadState { NO_INPUT=0, PASS_ACCEPTED=1, PASS_DECLINED=2 };
+enum KeypadState { NO_INPUT=0, ACCEPTED=1, DECLINED=2 };
 
 // -------- Data Structures --------
 struct UltraSensor {
@@ -43,8 +43,9 @@ struct FloorNode {
 
 struct ProtocolModel {
   SystemState systemState = DISARMED;
-  bool        baseConnected = false;
   KeypadState keypad = NO_INPUT;
+  bool        networkStatus = false;   // STATUS field
+  String      macAddress = "";         // ADRRESS field
   FloorNode   floors[SMP_MAX_FLOORS];
 };
 
@@ -55,13 +56,13 @@ extern ProtocolModel MODEL;
 bool addFloor(int floorId);
 bool addRoom(int floorId, int roomId);
 bool addUltrasonic(int floorId, int roomId, int uId);
-bool addHall(int floorId, int roomId, int hsId)
-;
+bool addHall(int floorId, int roomId, int hsId);
 
-// -------- Setters (direct update from GPIO or logic) --------
+// -------- Setters --------
 bool setSystemState(SystemState state);
-bool setBaseConnection(bool connected);
-bool setBaseKeypad(KeypadState key);
+bool setSystemKeypad(KeypadState key);
+bool setNetworkStatus(bool connected);
+bool setNetworkMac(const String& mac);
 bool setFloorConnection(int floorId, bool connected);
 bool setRoomConnection(int floorId, int roomId, bool connected);
 bool setUltrasonicState(int floorId, int roomId, int uId, bool state);
@@ -77,13 +78,15 @@ String buildSnapshot();
 void resetModel();
 
 // -------- Topic Builders --------
-String topicEverything();
 String topicSystemState();
-String topicBaseConnection();
-String topicBaseKeypad();
-String topicFloorConnection(int floorId);
-String topicRoomConnection(int floorId, int roomId);
-String topicUltrasonic(int floorId, int roomId, int uId);
-String topicHall(int floorId, int roomId, int hsId);
+String topicSystemKeypad();
+String topicNetworkStatus();
+String topicNetworkMac();
+String topicFloorId(int flr_id);
+String topicFloorConnection(int flr_id);
+String topicRoomId(int flr_id,int rm_id);
+String topicRoomConnection(int flr_id,int rm_id);
+String topicUltrasonic(int flr_id,int rm_id,int u_id);
+String topicHall(int flr_id,int rm_id,int hs_id);
 
-#endif 
+#endif
