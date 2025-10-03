@@ -3,6 +3,11 @@
 // -------- Global --------
 ProtocolModel MODEL;
 
+//Used to store MODEL externally.
+ProtocolModel StoreMODEL(){
+  return MODEL;
+}
+
 // -------- Helpers --------
 static const char* toString(SystemState s) {
   switch (s) {
@@ -170,7 +175,6 @@ bool parseMqtt(const char* topicC,const char* payloadC) {
   }
   if (n<10 && start<(int)topic.length()) parts[n++]=topic.substring(start);
 
-  // ✅ Correct version — no stray slashes, no escaped quotes
   if (n < 2 || parts[0] != "ELEC520" || parts[1] != "security") return false;
 
   // system state
@@ -281,6 +285,8 @@ String buildSnapshot() {
   serializeJson(doc,out);
   return out;
 }
+
+
 
 // -------- Topic Builders --------
 String topicSystemState(){return "ELEC520/security/system/state";}

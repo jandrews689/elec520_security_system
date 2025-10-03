@@ -1,11 +1,12 @@
-// #include <ArduinoJson.h>
-// #include <ArduinoJson.hpp>
-// #include <json_formatting.h>
-// #include <WiFi.h>
-// #include <esp_now.h>
-// #include <esp_wifi.h>
-#include <networkSetup.h>
+#include "classFloorNode.h"
 
+const char* ssid = "Joe's S23 Ultra"; 
+const char* password = "joea12345"; 
+const char* mqtt_server = "broker.hivemq.com"; 
+int mqtt_port = 1883; 
+const char* mqtt_client_id = "ESP32_BaseStation";
+
+classFloorNode objFloor(ssid, password, mqtt_server, mqtt_port, mqtt_client_id);
 
 
 
@@ -13,19 +14,11 @@
 void setup() {
   Serial.begin(115200);
 
-  // //Setups ESP NOW
-  // while (!setup_espnow()) {
-  //   delay(500);
-  //   Serial.print("Waiting for setup of ESP device:");
-  //   Serial.println(WiFi.macAddress());
-  // }
+  objFloor.setNodeID(1);
+  objFloor.setupNetwork();
 
   
-  setup_wifi();
-  setup_espnow();
 
-  //Sends a ESP NOW message
-  esp_startup_ping();
 }
 
 

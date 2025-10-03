@@ -77,6 +77,9 @@ String buildSnapshot();
 // -------- Reset model --------
 void resetModel();
 
+//Used to store MODEL externally.
+ProtocolModel StoreMODEL();
+
 // -------- Topic Builders --------
 String topicSystemState();
 String topicSystemKeypad();
