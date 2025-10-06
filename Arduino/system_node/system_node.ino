@@ -8,13 +8,12 @@ const char* mqtt_client_id = "ESP32_BaseStation";
 
 classFloorNode objFloor(ssid, password, mqtt_server, mqtt_port, mqtt_client_id);
 
-
+bool xCloudConnectionNode = false;
 
 //SETUP////////////////////////////////////////////////////////////////////////////////
 void setup() {
   Serial.begin(115200);
 
-  objFloor.setNodeID(1);
   objFloor.setupNetwork();
 
   
@@ -24,6 +23,9 @@ void setup() {
 
 //LOOP/////////////////////////////////////////////////////////////////////////////////////////
 void loop() {
+
+
+
   // //ESP NOW /////////////////////////////////////////////////////////////////////////////////
   //   // Prepare message
   // myData.id = myData.id+1;

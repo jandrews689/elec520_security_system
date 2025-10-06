@@ -80,6 +80,12 @@ void resetModel();
 //Used to store MODEL externally.
 ProtocolModel StoreMODEL();
 
+//Update the local MODEL with the Global model. 
+bool updateModelFromSnapshot(const char* payloadC);
+
+//Build a single floor into JSON
+String buildFloorSnapshot(int floorId);
+
 // -------- Topic Builders --------
 String topicSystemState();
 String topicSystemKeypad();

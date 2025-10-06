@@ -287,6 +287,85 @@ String buildSnapshot() {
 }
 
 
+//Used to update the local MODEL from the global MODEL
+bool updateModelFromSnapshot(const char* payloadC) {
+  DynamicJsonDocument doc(16384);
+  if (deserializeJson(doc, payloadC)) return false;
+  JsonObjectConst root = doc.as<JsonObjectConst>();
+
+  // -------- System --------
+  if (root.containsKey("System")) {
+    JsonObjectConst sys = root["System"];
+    if (sys.containsKey("STATE"))
+      MODEL.systemState = parseSystemState(sys["STATE"]);
+    if (sys.containsKey("KEYPAD"))
+      MODEL.keypad = parseKeypad(sys["KEYPAD"]);
+  }
+
+  // -------- Network --------
+  if (root.containsKey("Network")) {
+    JsonObjectConst net = root["Network"];
+    if (net.containsKey("STATUS"))
+      MODEL.networkStatus = parseBoolLoose(net["STATUS"]);
+    if (net.containsKey("ADRRESS"))
+      MODEL.macAddress = net["ADRRESS"].as<const char*>();
+  }
+
+  // -------- Floors --------
+  if (root.containsKey("Floors")) {
+    JsonArrayConst flrs = root["Floors"].as<JsonArrayConst>();
+    for (JsonObjectConst jf : flrs) {
+      int flr_id = jf["FLR_ID"] | -1;
+      if (flr_id < 0) continue;
+      addFloor(flr_id);
+      FloorNode* f = findFloor(flr_id);
+      if (jf.containsKey("CON_STATE"))
+        f->connection = parseBoolLoose(jf["CON_STATE"]);
+
+      if (jf.containsKey("Rooms")) {
+        JsonArrayConst rms = jf["Rooms"].as<JsonArrayConst>();
+        for (JsonObjectConst jr : rms) {
+          int rm_id = jr["RM_ID"] | -1;
+          if (rm_id < 0) continue;
+          addRoom(flr_id, rm_id);
+          RoomNode* r = findRoom(f, rm_id);
+          if (jr.containsKey("CON_STATE"))
+            r->connection = parseBoolLoose(jr["CON_STATE"]);
+
+          // Ultrasonic
+          if (jr.containsKey("Ultra")) {
+            JsonArrayConst ultras = jr["Ultra"].as<JsonArrayConst>();
+            int uIndex = 0;
+            for (JsonObjectConst ju : ultras) {
+              addUltrasonic(flr_id, rm_id, uIndex);
+              UltraSensor* u = findUltra(r, uIndex);
+              if (u && ju.containsKey("U_STATE"))
+                u->state = parseBoolLoose(ju["U_STATE"]);
+              uIndex++;
+            }
+          }
+
+          // Hall
+          if (jr.containsKey("Hall")) {
+            JsonArrayConst halls = jr["Hall"].as<JsonArrayConst>();
+            int hIndex = 0;
+            for (JsonObjectConst jh : halls) {
+              addHall(flr_id, rm_id, hIndex);
+              HallSensor* h = findHall(r, hIndex);
+              if (h && jh.containsKey("HS_STATE"))
+                h->state = parseBoolLoose(jh["HS_STATE"]);
+              hIndex++;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return true;
+}
+
+
 
 // -------- Topic Builders --------
 String topicSystemState(){return "ELEC520/security/system/state";}

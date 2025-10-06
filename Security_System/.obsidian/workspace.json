@@ -15,13 +15,25 @@
               "state": {
                 "file": "FloorNode System.canvas",
                 "viewState": {
-                  "x": -75.74659633676822,
-                  "y": -170.75833795174418,
+                  "x": -560.8162005462943,
+                  "y": 556.2161078375979,
                   "zoom": -0.3333333333333333
                 }
               },
               "icon": "lucide-layout-dashboard",
               "title": "FloorNode System"
+            }
+          },
+          {
+            "id": "7d5c5fea9a11b90d",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.9.14"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.9.14"
             }
           }
         ]
