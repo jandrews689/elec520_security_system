@@ -1,5 +1,7 @@
+#include <elec520_protocol.h>
+
 #include <Arduino.h>
-//add lib here
+
 // ---------- Tiny assert helpers ----------
 static int __tests = 0, __fails = 0;
 #define ASSERT_TRUE(expr)  do{__tests++; if(!(expr)){__fails++; Serial.printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #expr);} }while(0)
