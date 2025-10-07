@@ -229,12 +229,11 @@ public:
     void setThisNodeMac() {
         esp_err_t result = esp_wifi_get_mac(WIFI_IF_STA, strucTXMessage.src_addr);
         if (result == ESP_OK) {
-            Serial.print("Node Mac Addree Stored: ");
+            Serial.print("Node Mac Address Stored: ");
             for (int i = 0; i < 6; i++) {
                 Serial.printf("%02X", strucTXMessage.src_addr[i]);
                 if (i < 5) Serial.print(":");
             }
-            Serial.println();
         }
     }
 
@@ -414,3 +413,5 @@ public:
 inline classFloorNode* classFloorNode::instance = nullptr;
 
 #endif
+
+
