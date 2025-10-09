@@ -63,6 +63,8 @@ private:
 
     unsigned long _lastFloorSentMsg; //
 
+    uint8_t _uiNumRoom;
+
 
     // --- Static callbacks that forward into the instance ---
     static void mqttCallbackStatic(char* topic, byte* payload, unsigned int length) {
@@ -130,6 +132,7 @@ public:
         instance = this;  // set singleton pointer
         for (int i = 0; i < 6; i++) _auiMacAddress[i] = 0;
         _lastFloorSentMsg = 0;
+        _uiNumRoom = 0;
     }
 
     //Set/Get NodeID
@@ -278,32 +281,35 @@ public:
     }
 
 
-    //ESP recieve callback.
-    void onReceive(const esp_now_recv_info_t* info, const uint8_t* incomingDataBytes, int len) {
-        //Stores the data into RXMessage
-        memcpy(&strucRXMessage, incomingDataBytes, sizeof(strucRXMessage));
-        memcpy(strucRXMessage.src_addr, info->src_addr, 6);
-        
-        Serial.print("RX: ");
-        for (int i = 0; i < 6; i++) {
-            Serial.printf("%02X", strucRXMessage.src_addr[i]);
-            if (i < 5) Serial.print(":");
-        }
-        Serial.printf(" | Value: %s\n", strucRXMessage.payload);
+void onReceive(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
+    // Create a null-terminated buffer
+    static char buf[251];
+    int n = (len < 250) ? len : 250;
+    memcpy(buf, data, n);
+    buf[n] = '\0';  // make it a valid string
 
-        //Converts the mac address and stores.
-        storePeerAddress(macToShortInt(info->src_addr));
-
-        //Store the received data into model. 
-        // updateModelFromSnapshot(incomingDataBytes);
+    Serial.print("RX: ");
+    for (int i = 0; i < 6; i++) {
+        Serial.printf("%02X", info->src_addr[i]);
+        if (i < 5) Serial.print(":");
     }
+    Serial.printf(" | Value: %s\n", buf);
+
+    // Optional: store MAC and parse message
+    storePeerAddress(macToShortInt(info->src_addr));
+    parseRoomEspString(String(buf));
+}
 
 
-    //send ESP NOW message
-    void sendEspNowMsg(struct_message message){
-        esp_err_t result = esp_now_send(peerInfo.peer_addr, (uint8_t*)&message.payload, sizeof(message.payload));
-        if (result != ESP_OK) Serial.printf("esp_now_send failed with error: %d\n", result);
-    }
+
+void sendEspNowMsg(const struct_message &message) {
+    size_t len = strlen(message.payload);
+    esp_err_t result = esp_now_send(peerInfo.peer_addr, (uint8_t*)message.payload, len);
+    if (result != ESP_OK)
+        Serial.printf("esp_now_send failed with error: %d\n", result);
+}
+
+
 
 
     //ESP Startup ping - Used for estabishing contact with other nodes.
@@ -325,15 +331,30 @@ public:
 
     // }
 
+    void setNumberOfRooms(int number){
+        _uiNumRoom = number;
+    }
+
 
     void sendFloorData(){
         if (millis() - _lastFloorSentMsg > 1000){
             //Compile the floor data into string. 
-            String data = buildFloorDataString(0b0000'0001);
-            //convert string to char[250];
-            data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
-            //Send the data over esp now. 
-            sendEspNowMsg(strucTXMessage);
+
+            // for (uint8_t i=0; i<_uiNumRoom; i++){
+                // Serial.printf("Room ID is %d\n", i);
+                String data = buildRoomEspString(0b0000'0001, 0b0000'0001);
+                //convert string to char[250];
+                data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
+                //Send the data over esp now. 
+                sendEspNowMsg(strucTXMessage);
+                delay(20);
+                data = buildRoomEspString(0b0000'0001, 0b0000'0010);
+                //convert string to char[250];
+                data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
+                //Send the data over esp now. 
+                sendEspNowMsg(strucTXMessage);
+            // }
+
             _lastFloorSentMsg = millis();
         }
     }

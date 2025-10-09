@@ -17,6 +17,8 @@ void setup() {
   objFloor.setupNetwork();
 
   //Setup the floor
+  objFloor.setNumberOfRooms(2);
+
   addFloor  (0b0000'0001);
 
   addRoom   (0b0000'0001, 0b0000'0001);
@@ -33,13 +35,7 @@ void setup() {
   addHall   (0b0000'0001, 0b0000'0010, 0b0000'0001);
   addHall   (0b0000'0001, 0b0000'0010, 0b0000'0010);
 
-  addRoom   (0b0000'0001, 0b0000'0100);
-
-  addUltra  (0b0000'0001, 0b0000'0100, 0b0000'0001);
-
-  addHall   (0b0000'0001, 0b0000'0100, 0b0000'0001);
-  addHall   (0b0000'0001, 0b0000'0100, 0b0000'0010);
-
+  for (int i = 0; i<3; i++) objFloor.sendFloorData();
 
 }
 
@@ -49,7 +45,8 @@ void setup() {
 //LOOP/////////////////////////////////////////////////////////////////////////////////////////
 void loop() {
 
-  objFloor.sendFloorData();
+  
+  
 
   // //ESP NOW /////////////////////////////////////////////////////////////////////////////////
   //   // Prepare message
