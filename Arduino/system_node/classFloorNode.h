@@ -39,8 +39,8 @@ private:
 
     // Message structure
     typedef struct struct_message {
-        // int id = 1;             //id of the message
-        char value[250];        //value contained in message
+        char topic[64];
+        char payload[250];        //value contained in message
         uint8_t src_addr[6];    //source address (used for RX messages not TX messages)
     } struct_message;
 
@@ -61,7 +61,7 @@ private:
     unsigned long startTime;
     uint8_t uiTransmitPosition = 0;
 
-
+    unsigned long _lastFloorSentMsg; //
 
 
     // --- Static callbacks that forward into the instance ---
@@ -129,6 +129,7 @@ public:
           _mqtt_client_id(mqtt_client_id), client(espClient) {
         instance = this;  // set singleton pointer
         for (int i = 0; i < 6; i++) _auiMacAddress[i] = 0;
+        _lastFloorSentMsg = 0;
     }
 
     //Set/Get NodeID
@@ -243,7 +244,7 @@ public:
             Serial.printf("%02X", strucTXMessage.src_addr[i]);
             if (i < 5) Serial.print(":");
         }
-        Serial.printf(" | Value: %s\n", strucTXMessage.value);
+        Serial.printf(" | Value: %s\n", strucTXMessage.payload);
     }
 
 
@@ -288,7 +289,7 @@ public:
             Serial.printf("%02X", strucRXMessage.src_addr[i]);
             if (i < 5) Serial.print(":");
         }
-        Serial.printf(" | Value: %s\n", strucRXMessage.value);
+        Serial.printf(" | Value: %s\n", strucRXMessage.payload);
 
         //Converts the mac address and stores.
         storePeerAddress(macToShortInt(info->src_addr));
@@ -298,9 +299,9 @@ public:
     }
 
 
-    //send ESP now message
+    //send ESP NOW message
     void sendEspNowMsg(struct_message message){
-        esp_err_t result = esp_now_send(peerInfo.peer_addr, (uint8_t*)&message.value, sizeof(message.value));
+        esp_err_t result = esp_now_send(peerInfo.peer_addr, (uint8_t*)&message.payload, sizeof(message.payload));
         if (result != ESP_OK) Serial.printf("esp_now_send failed with error: %d\n", result);
     }
 
@@ -312,9 +313,7 @@ public:
             //Calculate the average RSSI value.
             initialRSSI();
             //Get the current RSSI for the node. Save the data in the value entry of TX packet. 
-            snprintf(strucTXMessage.value, sizeof(strucTXMessage.value), "Node RSSI: %.2f", getRSSI());
-            // esp_err_t result = esp_now_send(peerInfo.peer_addr, (uint8_t*)&strucTXMessage.value, sizeof(strucTXMessage.value));
-            // if (result != ESP_OK) Serial.printf("esp_now_send failed with error: %d\n", result);
+            snprintf(strucTXMessage.payload, sizeof(strucTXMessage.payload), "Node RSSI: %.2f", getRSSI());
             sendEspNowMsg(strucTXMessage);
             delay(1000);
         }
@@ -327,43 +326,17 @@ public:
     // }
 
 
-    // //Update floor sensor data. 
-    // String updateSENSORS(){
-    //     //get data from the sensors
-
-    //     // return data from the sensors. 
-    //     Serial.printf("Updating Sensor stored data\n");
-    //     return ("TESTING");
-    // }
-
-
-    // //Send ESP NOW packet. 
-    // void compileFloorData(){
-    //     updateSENSORS();
-    //     String strFloor = buildFloorSnapshot(getNodeID());
-    //     Serial.printf("Building floor snapshot\n");
-    // }
-
-
-
-
-
-    // //Break down the packet into ESP NOW size messages. 
-    // void sendFloorDataOverEspNow(){
-    //     compileFloorData();
-
-    //     //code to breakdown the string size into <250 chars
-    //     //while message > 250 chars, 
-    //     //store first 249 chars onto string,
-    //     //add null terminator.
-    //     //send over esp now.
-    //     char *message = "HELLO";
-    //     sendSingleEspNowMsg(message);
-    // }
-
-
-
-
+    void sendFloorData(){
+        if (millis() - _lastFloorSentMsg > 1000){
+            //Compile the floor data into string. 
+            String data = buildFloorDataString(0b0000'0001);
+            //convert string to char[250];
+            data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
+            //Send the data over esp now. 
+            sendEspNowMsg(strucTXMessage);
+            _lastFloorSentMsg = millis();
+        }
+    }
 
 };
 

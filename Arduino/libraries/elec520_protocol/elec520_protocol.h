@@ -1,5 +1,5 @@
-#ifndef ELEC520_PROTOCOL
-#define ELEC520_PROTOCOL
+#ifndef ELEC520_PROTOCOL_H
+#define ELEC520_PROTOCOL_H
 
 #include <Arduino.h>
 
@@ -8,57 +8,58 @@
 #define SMP_MAX_ROOMS    8
 #define SMP_MAX_SENSORS  8
 
-// ---------- Enums (BYTEENUM over the wire) ----------
+// ---------- Enums (BYTEENUM on wire) ----------
 enum SystemState : uint8_t { DISARMED=0, ARMED=1, ALARM=2, OTHER=3 };
 enum KeypadState : uint8_t { NO_INPUT=0, ACCEPTED=1, DECLINED=2 };
 
 // ---------- Data Structures ----------
 struct UltraSensor {
   bool     used  = false;
-  uint8_t  id    = 0;      // topic path {u_id}
-  uint8_t  value = 0;      // BYTE (bitfield)
+  uint8_t  id    = 0;      // {u_id}
+  uint8_t  value = 0;      // BYTE (bitfield 0..255)
 };
 
 struct HallSensor {
-  bool used  = false;
-  uint8_t id = 0;          // topic path {hs_id}
-  bool  open = false;      // BOOL (true=open, false=closed)
+  bool     used  = false;
+  uint8_t  id    = 0;      // {hs_id}
+  bool     open  = false;  // true=open, false=closed
 };
 
 struct RoomNode {
   bool     used        = false;
-  uint8_t  roomId      = 0;     // topic path {r_id}
-  bool     connected   = false; // f/{f_id}/r/{r_id}/cs
-  uint8_t  idByte      = 0;     // f/{f_id}/r/{r_id}/id  (bitfield)
+  uint8_t  roomId      = 0;     // {r_id}
+  bool     connected   = false; // r/{r_id}/cs
+  uint8_t  idByte      = 0;     // r/{r_id}/id  (bitfield, optional)
   UltraSensor ultra[SMP_MAX_SENSORS];
   HallSensor  hall [SMP_MAX_SENSORS];
 };
 
 struct FloorNode {
   bool     used        = false;
-  uint8_t  floorId     = 0;     // topic path {f_id}
+  uint8_t  floorId     = 0;     // {f_id}
   bool     connected   = false; // f/{f_id}/cs
-  uint8_t  idByte      = 0;     // f/{f_id}/id (bitfield)
+  uint8_t  idByte      = 0;     // f/{f_id}/id  (bitfield, optional)
   RoomNode rooms[SMP_MAX_ROOMS];
 };
 
 struct ProtocolModel {
-  uint8_t     systemState = DISARMED; // BYTEENUM
-  uint8_t     keypad      = NO_INPUT; // BYTEENUM
-  uint8_t     network     = 0;        // BYTEENUM (CONNECTED/DISCONNECT as 0/1 or defined mapping)
-  String      mac         = "";       // STRING (e.g., "00:00:00:00:00:00")
-  FloorNode   floors[SMP_MAX_FLOORS];
+  uint8_t   systemState = DISARMED; // s/st
+  uint8_t   keypad      = NO_INPUT; // s/ke
+  uint8_t   network     = 0;        // n/st (0=disc,1=conn or your mapping)
+  String    mac         = "";       // n/mc ("AA:BB:CC:DD:EE:FF")
+  FloorNode floors[SMP_MAX_FLOORS];
 };
 
-// ---------- Global ----------
+// ---------- Global MODEL ----------
 extern ProtocolModel MODEL;
 
-// ---------- Add / Set (minimal) ----------
+// ---------- Adders ----------
 bool addFloor(uint8_t f_id);
 bool addRoom(uint8_t f_id, uint8_t r_id);
 bool addUltra(uint8_t f_id, uint8_t r_id, uint8_t u_id);
 bool addHall(uint8_t f_id, uint8_t r_id, uint8_t hs_id);
 
+// ---------- Setters ----------
 bool setSystemState(uint8_t s);
 bool setKeypad(uint8_t k);
 bool setNetwork(uint8_t n);
@@ -73,34 +74,40 @@ bool setHallOpen(uint8_t f_id, uint8_t r_id, uint8_t hs_id, bool open);
 
 void resetModel();
 
-// ---------- Parsers (RAW payloads, no JSON) ----------
-// Cloud topics MUST start with "ELEC520/security/..."
-// Node topics are headerless ("s/st", "f/1/r/2/u/0", etc.)
-bool parseCloud(const char* topic, const char* rawPayload);
-bool parseNode (const char* topic, const char* rawPayload);
-
-// ---------- Topic builders (Cloud, with header) ----------
-String topicSystemState();                          // ELEC520/security/s/st
-String topicKeypad();                               // ELEC520/security/s/ke
-String topicNetwork();                              // ELEC520/security/n/st
-String topicMac();                                  // ELEC520/security/n/mc
-String topicFloorIdByte(uint8_t f_id);              // ELEC520/security/f/{f_id}/id
-String topicFloorConnection(uint8_t f_id);          // ELEC520/security/f/{f_id}/cs
-String topicRoomIdByte(uint8_t f_id,uint8_t r_id);  // ELEC520/security/f/{f_id}/r/{r_id}/id
-String topicRoomConnection(uint8_t f_id,uint8_t r_id);// ELEC520/security/f/{f_id}/r/{r_id}/cs
-String topicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id);// ELEC520/security/f/{f_id}/r/{r_id}/u/{u_id}
-String topicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id); // ELEC520/security/f/{f_id}/r/{r_id}/h/{hs_id}
-
-// ---------- Topic builders (Node, NO header) ----------
-String nodeTopicSystemState();                          // s/st
-String nodeTopicKeypad();                               // s/ke
-String nodeTopicNetwork();                              // n/st
-String nodeTopicMac();                                  // n/mc
-String nodeTopicFloorIdByte(uint8_t f_id);              // f/{f_id}/id
-String nodeTopicFloorConnection(uint8_t f_id);          // f/{f_id}/cs
-String nodeTopicRoomIdByte(uint8_t f_id,uint8_t r_id);  // f/{f_id}/r/{r_id}/id
+// ---------- Topic builders (Node: NO header) ----------
+String nodeTopicSystemState();                           // s/st
+String nodeTopicKeypad();                                // s/ke
+String nodeTopicNetwork();                               // n/st
+String nodeTopicMac();                                   // n/mc
+String nodeTopicFloorIdByte(uint8_t f_id);               // f/{f_id}/id
+String nodeTopicFloorConnection(uint8_t f_id);           // f/{f_id}/cs
+String nodeTopicRoomIdByte(uint8_t f_id,uint8_t r_id);   // f/{f_id}/r/{r_id}/id
 String nodeTopicRoomConnection(uint8_t f_id,uint8_t r_id);// f/{f_id}/r/{r_id}/cs
 String nodeTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id);// f/{f_id}/r/{r_id}/u/{u_id}
 String nodeTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id); // f/{f_id}/r/{r_id}/h/{hs_id}
 
-#endif
+// ---------- Topic builders (Cloud: WITH header once each topic) ----------
+String cloudTopicSystemState();                           // ELEC520/security/s/st
+String cloudTopicKeypad();                                // ELEC520/security/s/ke
+String cloudTopicNetwork();                               // ELEC520/security/n/st
+String cloudTopicMac();                                   // ELEC520/security/n/mc
+String cloudTopicFloorIdByte(uint8_t f_id);               // ELEC520/security/f/{f_id}/id
+String cloudTopicFloorConnection(uint8_t f_id);           // ELEC520/security/f/{f_id}/cs
+String cloudTopicRoomIdByte(uint8_t f_id,uint8_t r_id);   // ELEC520/security/f/{f_id}/r/{r_id}/id
+String cloudTopicRoomConnection(uint8_t f_id,uint8_t r_id);// ELEC520/security/f/{f_id}/r/{r_id}/cs
+String cloudTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id);// ELEC520/security/f/{f_id}/r/{r_id}/u/{u_id}
+String cloudTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id); // ELEC520/security/f/{f_id}/r/{r_id}/h/{hs_id}
+
+// ---------- Parsers for single topic/value ----------
+bool parseNode(const char* topic, const char* rawPayload);    // expects NO header
+bool parseCloud(const char* topic, const char* rawPayload);   // expects ELEC520/security/ header
+
+// ---------- Floor (ESP-NOW) compact strings ----------
+String buildFloorEspString(uint8_t floorId);                 // f/1/r/1/h/1:true;/r/2/u/0:128;...
+bool   parseFloorEspString(const String& floorData);         // updates MODEL
+
+// ---------- System (MQTT) compact string (single message) ----------
+String buildSystemMqttString();                              // ELEC520/security/f/1/...; /f/2/...;
+bool   parseSystemMqttString(const String& systemData);      // updates MODEL
+
+#endif // ELEC520_PROTOCOL_H
