@@ -2,6 +2,8 @@
     "files.associations": {
         "ostream": "cpp",
         "chrono": "cpp",
-        "xlocale": "cpp"
+        "xlocale": "cpp",
+        "future": "cpp",
+        "system_error": "cpp"
     }
 }
