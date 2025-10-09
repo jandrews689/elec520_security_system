@@ -179,6 +179,7 @@ String buildRoomEspString(uint8_t f_id, uint8_t r_id){
   }
 
   if (out.endsWith(";")) out.remove(out.length()-1);
+  // out += '\0';
   return out;
 }
 

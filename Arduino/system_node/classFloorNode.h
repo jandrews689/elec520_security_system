@@ -300,16 +300,26 @@ void onReceive(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
     parseRoomEspString(String(buf));
 }
 
+// void sendEspNowMsg(struct_message &message) { 
+//     size_t len = strlen(message.payload); // actual length of the string 
+//     esp_err_t result = esp_now_send(peerInfo.peer_addr, (uint8_t*)message.payload, len); 
+//     if (result != ESP_OK) Serial.printf("esp_now_send failed with error: %d\n", result); 
+// }
 
+    void sendEspNowMsg(struct_message &message) {
+        // Ensure null-termination
+        message.payload[sizeof(message.payload) - 1] = '\0';
+        size_t len = strnlen(message.payload, sizeof(message.payload));
+        
+        if (len == 0 || len > 250) {
+            Serial.printf("Invalid ESP-NOW payload length: %u\n", (unsigned)len);
+            return;
+        }
 
-void sendEspNowMsg(const struct_message &message) {
-    size_t len = strlen(message.payload);
-    esp_err_t result = esp_now_send(peerInfo.peer_addr, (uint8_t*)message.payload, len);
-    if (result != ESP_OK)
-        Serial.printf("esp_now_send failed with error: %d\n", result);
-}
-
-
+        esp_err_t result = esp_now_send(peerInfo.peer_addr, (uint8_t*)message.payload, len);
+        if (result != ESP_OK)
+            Serial.printf("esp_now_send failed with error: %d\n", result);
+    }
 
 
     //ESP Startup ping - Used for estabishing contact with other nodes.
@@ -326,10 +336,6 @@ void sendEspNowMsg(const struct_message &message) {
     }
     
 
-    // //Compares the RSSI of all the node and selects the lowest rssi for connection with the cloud. 
-    // void setCloudConnectionNode(){
-
-    // }
 
     void setNumberOfRooms(int number){
         _uiNumRoom = number;
@@ -340,20 +346,16 @@ void sendEspNowMsg(const struct_message &message) {
         if (millis() - _lastFloorSentMsg > 1000){
             //Compile the floor data into string. 
 
-            // for (uint8_t i=0; i<_uiNumRoom; i++){
+            for (uint8_t i=1; i<_uiNumRoom+1; i++){
                 // Serial.printf("Room ID is %d\n", i);
-                String data = buildRoomEspString(0b0000'0001, 0b0000'0001);
+                String data = buildRoomEspString(0b0000'0001, i);
                 //convert string to char[250];
                 data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
+                strucTXMessage.payload[sizeof(strucTXMessage.payload) - 1] = '\0';
                 //Send the data over esp now. 
                 sendEspNowMsg(strucTXMessage);
                 delay(20);
-                data = buildRoomEspString(0b0000'0001, 0b0000'0010);
-                //convert string to char[250];
-                data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
-                //Send the data over esp now. 
-                sendEspNowMsg(strucTXMessage);
-            // }
+            }
 
             _lastFloorSentMsg = millis();
         }
