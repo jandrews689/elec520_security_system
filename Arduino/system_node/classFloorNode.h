@@ -55,7 +55,7 @@ private:
 
     // Peer Node structure
     typedef struct peer_node_data {
-        int id = -1;
+        float fRSSI;
         uint32_t uiMacAddress;
     } peer_node_data;
 
@@ -115,7 +115,9 @@ private:
 
 
     void setBaseStation(){
+        for (int i=0; i<8;i++){
 
+        }
     }
 
 
@@ -306,10 +308,10 @@ private:
 
     //ESP Startup ping - Used for estabishing contact with other nodes.
     void esp_startup_ping() {
+        //Calculate the average RSSI value.
+        initialRSSI();
         //Try establish connection for 5 seconds. 
         while (millis() - startTime < 5000) {
-            //Calculate the average RSSI value.
-            initialRSSI();
             //Get the current RSSI for the node. Save the data in the value entry of TX packet. 
             snprintf(strucTXMessage.payload, sizeof(strucTXMessage.payload), "Node RSSI: %.2f", getRSSI());
             sendEspNowMsg(strucTXMessage);
