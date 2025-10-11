@@ -62,7 +62,10 @@ private:
     peer_node_data uiPeerMacAddressStorage[8] = {};   //Peer address storage.
     int iPA = 0;                                //Peer address storage element.
 
+    uint32_t uiThisFloorNodeMacID;
+
     unsigned long startTime;
+    unsigned long baseStationConnectionTime;
     byte bTransmitPosition = 0b0000'0001;
 
     unsigned long _lastFloorSentMsg; //
@@ -94,8 +97,8 @@ private:
     }
 
 
-    //Stores the Peers mac address
-    void storePeerAddress(uint32_t macID){
+    //Stores the Peers mac address and rssi
+    void storePeerDetails(uint32_t macID, uint8_t rssiValue){
         //check if address already exists. 
         // Serial.printf("Checking Peer address......");
         for (int i = 0; i<8; i++){
@@ -104,9 +107,9 @@ private:
                 return;
             } else { //store the address into the storage
                 uiPeerMacAddressStorage[iPA].uiMacAddress = macID;
-                uiPeerMacAddressStorage[iPA].id = iPA;
+                uiPeerMacAddressStorage[iPA].fRSSI = rssiValue;
                 iPA++;
-                Serial.printf("Peer address: %d SAVED!\n", macID);
+                Serial.printf("Peer address: %d SAVED! RSSI Value: %d\n", macID, rssiValue);
                 return;
             }
         }
@@ -115,9 +118,33 @@ private:
 
 
     void setBaseStation(){
-        for (int i=0; i<8;i++){
+        if (millis() - baseStationConnectionTime > 10000){
+            Serial.printf("Checking RSSI Values.....\n");
 
+            //sort the values by the least RSSI 
+            for (int i=0; i<8;i++){
+                int min_index = i;
+                for (int j=i; j<8; j++){
+                    if (uiPeerMacAddressStorage[i].fRSSI < uiPeerMacAddressStorage[min_index].fRSSI){
+                        min_index = j;
+                    }
+                }
+                int temp = uiPeerMacAddressStorage[i].fRSSI;
+                uiPeerMacAddressStorage[i].fRSSI = uiPeerMacAddressStorage[min_index].fRSSI;
+                uiPeerMacAddressStorage[min_index].fRSSI = temp;
+                
+            }
+
+            if (uiPeerMacAddressStorage[0].uiMacAddress == uiThisFloorNodeMacID){
+                //Change base station to this mac address
+                Serial.printf("Changing BaseStation to this mac address!\n");
+                
+            } else {
+                //disconnect base station from this mac address. 
+
+            }
         }
+
     }
 
 
@@ -200,6 +227,7 @@ private:
         for (int i = 0; i < count; i++) sum += rssiSamples[i];
         avgRSSI = (float)sum / count;
         //Serial.printf("Average RSSI: %.2f\n", avgRSSI);
+        setFloorRssi(getFloorID(), avgRSSI);
     }
 
 
@@ -246,8 +274,10 @@ private:
                 Serial.printf("%02X", strucTXMessage.src_addr[i]);
                 if (i < 5) Serial.print(":");
             }
+
             //Stores this Nodes Mac address. 
-            storePeerAddress(macToShortInt(strucTXMessage.src_addr));
+            uiThisFloorNodeMacID = macToShortInt(strucTXMessage.src_addr);
+            storePeerDetails(macToShortInt(strucTXMessage.src_addr), avgRSSI);
         }
     }
 
@@ -283,9 +313,15 @@ private:
         }
         Serial.printf(" | Value: %s\n", buf);
 
-        // Optional: store MAC and parse message
-        storePeerAddress(macToShortInt(info->src_addr));
-        parseRoomEspString(String(buf));
+        String msg(buf);
+
+        uint8_t f_id, rssiVal;
+        if(extractFloorRssiFromSingle(msg, f_id, rssiVal)){
+            // Store peer details mac and rssi.
+            storePeerDetails(macToShortInt(info->src_addr), rssiVal);
+        }
+
+        parseRoomEspString(msg);
     }
 
 
@@ -317,6 +353,17 @@ private:
             sendEspNowMsg(strucTXMessage);
             delay(1000);
         }
+    }
+
+
+    void updateFloorData(){
+        //Add functions here to convert bredans code into builder functions
+
+        //Update average RSSI
+        updateRSSI();
+
+        //Set Floor RSSI
+        setFloorRssi(getFloorID(), getRSSI());
     }
 
 
@@ -366,9 +413,15 @@ public:
 
     //Send floor data over esp now
     void sendFloorData(){
+
+        //Sends the floor RSSI.
+        String data = buildFloorRssiEspString(getFloorID());
+        data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
+        sendEspNowMsg(strucTXMessage);
+
         for (uint8_t i=1; i<_uiNumRoom+1; i++){
             // Serial.printf("Room ID is %d\n", i);
-            String data = buildRoomEspString(getFloorID(), i);
+            data = buildRoomEspString(getFloorID(), i);
             //convert string to char[250];
             data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
             strucTXMessage.payload[sizeof(strucTXMessage.payload) - 1] = '\0';

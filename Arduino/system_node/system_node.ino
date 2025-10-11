@@ -17,7 +17,7 @@ void setup() {
   objFloor.setupNetwork();
 
   //Setup the floor
-  objFloor.setFloorID(0b0000'0010);
+  objFloor.setFloorID(0b0000'0001);
   objFloor.setNumberOfRooms(2);
 
   //floor 1

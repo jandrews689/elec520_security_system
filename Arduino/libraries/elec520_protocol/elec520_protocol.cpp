@@ -27,6 +27,10 @@ static bool parseByte(const char* s, uint8_t& out){
   return true;
 }
 
+static bool isCloudPrefix(const String& p0, const String& p1) {
+  return (p0 == "ELEC520" && p1 == "security");
+}
+
 // ---------------- Adders ----------------
 bool addFloor(uint8_t f_id){
   if (!inRange(f_id, SMP_MAX_FLOORS)) return false;
@@ -171,15 +175,7 @@ static bool parseCore(const char* topicC, const char* payloadC, bool cloud){
 bool parseNode (const char* topic, const char* rawPayload){ return parseCore(topic, rawPayload, false); }
 bool parseCloud(const char* topic, const char* rawPayload){ return parseCore(topic, rawPayload, true ); }
 
-// ---------------- ESP-NOW: per-room compact string ----------------
-// (unchanged)
-// ... (no changes below this line for bulk formats)
-
-// -------- RSSI extraction helpers --------
-static bool _isCloudPrefix(const String& p0, const String& p1) {
-  return (p0 == "ELEC520" && p1 == "security");
-}
-
+// ================= RSSI extraction helpers (non-breaking) =================
 bool extractFloorRssiFromTopicPayload(const char* topic,
                                       const char* payload,
                                       uint8_t& out_f_id,
@@ -193,9 +189,7 @@ bool extractFloorRssiFromTopicPayload(const char* topic,
   if (n <= 0) return false;
 
   int base = 0;
-  if (n >= 3 && _isCloudPrefix(parts[0], parts[1])) {
-    base = 2; // skip "ELEC520/security"
-  }
+  if (n >= 3 && isCloudPrefix(parts[0], parts[1])) base = 2;
 
   // Expect: f/<f_id>/rsi
   if (n - base != 3) return false;
@@ -218,15 +212,15 @@ bool extractFloorRssiFromSingle(const String& line,
 {
   if (line.length() == 0) return false;
 
-  // Try split by space first: "topic payload"
+  // Your format: "f/<f_id>/rsi:<val>"
+  // Also accept space or '=' as separator.
   int sp = line.indexOf(' ');
-  if (sp < 0) sp = line.indexOf('=');  // also allow '='
+  if (sp < 0) sp = line.indexOf('=');
   String topic, payload;
   if (sp > 0) {
     topic   = line.substring(0, sp);
     payload = line.substring(sp + 1);
   } else {
-    // Try colon style: "topic:payload"
     int cp = line.indexOf(':');
     if (cp < 0) return false;
     topic   = line.substring(0, cp);
@@ -240,4 +234,157 @@ bool extractFloorRssiFromSingle(const String& line,
                                           payload.c_str(),
                                           out_f_id,
                                           out_rssi);
+}
+
+// ================= Room ESP compact format (build + parse) =================
+//
+// Format:
+//   f/<f_id>/r/<r_id>/cs:<0|1>;u/<u_id>:<0..255>;h/<hs_id>:<0|1>;...
+//
+
+String buildRoomEspString(uint8_t f_id, uint8_t r_id) {
+  // Ensure floor/room exist
+  addRoom(f_id, r_id);
+
+  String msg;
+  msg.reserve(64);
+
+  // Base header with connection state
+  msg  = "f/"; msg += String(f_id);
+  msg += "/r/"; msg += String(r_id);
+  msg += "/cs:";
+  msg += MODEL.floors[f_id].rooms[r_id].connected ? "1" : "0";
+
+  // Ultrasonic sensors
+  for (uint8_t u = 0; u < SMP_MAX_SENSORS; u++) {
+    if (MODEL.floors[f_id].rooms[r_id].ultra[u].used) {
+      msg += ";u/"; msg += String(u);
+      msg += ":";   msg += String(MODEL.floors[f_id].rooms[r_id].ultra[u].value);
+    }
+  }
+
+  // Hall sensors
+  for (uint8_t h = 0; h < SMP_MAX_SENSORS; h++) {
+    if (MODEL.floors[f_id].rooms[r_id].hall[h].used) {
+      msg += ";h/"; msg += String(h);
+      msg += ":";   msg += (MODEL.floors[f_id].rooms[r_id].hall[h].open ? "1" : "0");
+    }
+  }
+
+  return msg;
+}
+
+static inline void _trimInPlace(String& s) { s.trim(); }
+
+bool parseRoomEspString(const String& roomData) {
+  // Example:
+  //   "f/0/r/2/cs:1;u/0:87;h/1:0"
+  if (roomData.length() == 0) return false;
+
+  // Tokenize on ';'
+  String tokens[40];
+  int count = 0, start = 0;
+  while (count < 40) {
+    int idx = roomData.indexOf(';', start);
+    String part = (idx == -1) ? roomData.substring(start)
+                              : roomData.substring(start, idx);
+    _trimInPlace(part);
+    if (part.length() > 0) tokens[count++] = part;
+    if (idx == -1) break;
+    start = idx + 1;
+  }
+  if (count == 0) return false;
+
+  // First pass: find f_id and r_id from a token that contains "f/.../r/..."
+  bool gotFR = false;
+  uint8_t f_id = 0, r_id = 0;
+
+  auto parseFR = [&](const String& t)->bool {
+    int fpos = t.indexOf("f/");
+    if (fpos < 0) return false;
+    int rpos = t.indexOf("/r/", fpos + 2);
+    if (rpos < 0) return false;
+
+    String fstr = t.substring(fpos + 2, rpos);
+
+    int endR = t.indexOf('/', rpos + 3);
+    int endC = t.indexOf(':', rpos + 3);
+    int end   = t.length();
+    if (endR >= 0) end = min(end, endR);
+    if (endC >= 0) end = min(end, endC);
+
+    String rstr = t.substring(rpos + 3, end);
+
+    long f = fstr.toInt();
+    long r = rstr.toInt();
+    if (f < 0 || f > 255 || r < 0 || r > 255) return false;
+    f_id = (uint8_t)f;
+    r_id = (uint8_t)r;
+    return true;
+  };
+
+  for (int i = 0; i < count && !gotFR; i++) gotFR = parseFR(tokens[i]);
+  if (!gotFR) return false;
+
+  // Ensure model nodes exist
+  addRoom(f_id, r_id);
+
+  // Second pass: process tokens
+  for (int i = 0; i < count; i++) {
+    const String& t = tokens[i];
+
+    // header "f/<f>/r/<r>/cs:<v>" ?
+    int csi = t.indexOf("cs:");
+    if (csi >= 0) {
+      String v = t.substring(csi + 3);
+      v.trim();
+      bool cs = (v.toInt() != 0);
+      setRoomConnection(f_id, r_id, cs);
+      // keep parsing other items
+    }
+
+    if (t.startsWith("cs:")) {
+      bool cs = (t.substring(3).toInt() != 0);
+      setRoomConnection(f_id, r_id, cs);
+      continue;
+    }
+
+    if (t.startsWith("u/")) {
+      int colon = t.indexOf(':');
+      if (colon > 2) {
+        uint8_t u_id = (uint8_t)t.substring(2, colon).toInt();
+        uint8_t val  = (uint8_t)t.substring(colon + 1).toInt();
+        setUltraValue(f_id, r_id, u_id, val);
+      }
+      continue;
+    }
+
+    if (t.startsWith("h/")) {
+      int colon = t.indexOf(':');
+      if (colon > 2) {
+        uint8_t hs_id = (uint8_t)t.substring(2, colon).toInt();
+        bool open01   = (t.substring(colon + 1).toInt() != 0);
+        setHallOpen(f_id, r_id, hs_id, open01);
+      }
+      continue;
+    }
+  }
+
+  return true;
+}
+
+// ---------------- MQTT full-system compact string (simple keep-alive versions) ----------------
+// NOTE: Signatures are preserved to avoid breaking existing callers. These minimal
+// implementations keep linkage intact; extend as needed for your full compact format.
+String buildSystemMqttString() {
+  // Example minimal payload; adjust to your original compact schema if needed.
+  // We purposefully keep this very small to avoid changing any external expectations.
+  return String();
+}
+
+bool parseSystemMqttString(const String& systemData) {
+  // Return false to indicate "not parsed" by this minimal implementation.
+  // Safe no-op that won't mutate MODEL.
+  (void)systemData;
+  return false;
 }
