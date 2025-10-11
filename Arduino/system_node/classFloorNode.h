@@ -11,6 +11,8 @@
 #define NUM_SAMPLES 50
 
 class classFloorNode {
+//*********************************************************************************************** */
+//PRIVATE///////////////////////////////////////////////////////////////////////////////////////////
 private:
     // Singleton-style instance pointer for static callbacks
     static classFloorNode* instance;
@@ -81,180 +83,6 @@ private:
         if (instance) instance->onReceive(info, data, len);
     }
 
-    //Set up the wifi with the cloud. 
-    void setup_wifi() {
-        delay(10);
-        Serial.printf("Connecting to %s\n", _ssid);
-        WiFi.begin(_ssid, _password);
-        while (WiFi.status() != WL_CONNECTED) {
-            delay(500);
-            Serial.print(".");
-        }
-        Serial.printf("\nWiFi connected, IP: %s\n", WiFi.localIP().toString().c_str());
-
-        client.setServer(_mqtt_server, _mqtt_port);
-        client.setCallback(mqttCallbackStatic);
-    }
-
-    //Set up the esp now for peer to peer communication.
-    bool setup_espnow() {
-        startTime = millis();
-        WiFi.mode(WIFI_STA);
-        if (esp_now_init() != ESP_OK) {
-            Serial.println("Error initializing ESP-NOW");
-            return false;
-        }
-        Serial.println("Initialization ESP-NOW Successful");
-
-        esp_now_register_send_cb(onSentStatic);
-        esp_now_register_recv_cb(onReceiveStatic);
-
-        memset(peerInfo.peer_addr, 0xFF, 6);
-        peerInfo.channel = WiFi.channel();
-        peerInfo.encrypt = false;
-        if (esp_now_add_peer(&peerInfo) != ESP_OK) {
-            Serial.println("Failed to add peer");
-            return false;
-        }
-        Serial.println("Peer 0xFF successfully Added. Transmitting to all Nodes!");
-        return true;
-    }
-
-public:
-
-    // Constructor
-    classFloorNode(const char* ssid = "Joe's S23 Ultra",
-                   const char* password = "joea12345",
-                   const char* mqtt_server = "broker.hivemq.com",
-                   int mqtt_port = 1883,
-                   const char* mqtt_client_id = "ESP32_BaseStation")
-        : _ssid(ssid), _password(password),
-          _mqtt_server(mqtt_server), _mqtt_port(mqtt_port),
-          _mqtt_client_id(mqtt_client_id), client(espClient) {
-        instance = this;  // set singleton pointer
-        for (int i = 0; i < 6; i++) _auiMacAddress[i] = 0;
-        _lastFloorSentMsg = 0;
-        _uiNumRoom = 0;
-    }
-
-    //Set/Get NodeID
-    void setNodeID(int iNodeID) { _iNodeID = iNodeID; }
-    int getNodeID(){return _iNodeID; }
-
-    void setFloorID(byte id){_bFloorID = id;}
-    byte getFloorID(){return _bFloorID;}
-
-    //NETWORKING/////////////////////////////////////////////////////////////////////////////
-    
-    //Network setup. 
-    void setupNetwork() {
-        setup_wifi();
-        setup_espnow();
-        setThisNodeMac();
-        esp_startup_ping();
-    }
-
-
-    //WIFI Set the Wifi Credentials
-    void setWifiNetworkCredentials(const char* ssid, const char* password) {
-        _ssid = ssid;
-        _password = password;
-    }
-
-
-    //MQTT Set client data.
-    void setMQTTClientData(const char* mqtt_server, int mqtt_port, const char* mqtt_client_id) {
-        _mqtt_server = mqtt_server;
-        _mqtt_port = mqtt_port;
-        _mqtt_client_id = mqtt_client_id;
-    }
-
-
-    //MQTT callback function
-    void MqttCallBack(char* topicC, byte* payload, unsigned int length) {
-        static char buf[256];
-        unsigned int n = (length < sizeof(buf)-1) ? length : sizeof(buf)-1;
-        memcpy(buf, payload, n);
-        buf[n] = '\0';
-        Serial.printf("MQTT message on [%s]: %s\n", topicC, buf);
-    }
-
-
-    //MQTT Reconnect with the broker
-    void brokerReconnect() {
-        while (!client.connected()) {
-            Serial.print("Attempting MQTT connection...");
-            if (client.connect(_mqtt_client_id)) {
-                Serial.println("connected");
-                client.subscribe("home/security/commands");
-            } else {
-                Serial.printf("failed, rc=%d. retry in 5s\n", client.state());
-                delay(5000);
-            }
-        }
-    }
-
-
-    //MQTT Get client data. 
-    PubSubClient& getClient() { return client; }
-
-
-    //RSSI Get value (Received Signal Strength Indicator)
-    float getRSSI() { return avgRSSI; }
-    
-
-    //RSSI Update the value
-    void updateRSSI() {
-        int rssi = WiFi.RSSI();
-        rssiSamples[sampleIndex++] = rssi;
-        if (sampleIndex >= NUM_SAMPLES) {
-            sampleIndex = 0;
-            bufferFilled = true;
-        }
-        int count = bufferFilled ? NUM_SAMPLES : sampleIndex;
-        long sum = 0;
-        for (int i = 0; i < count; i++) sum += rssiSamples[i];
-        avgRSSI = (float)sum / count;
-        //Serial.printf("Average RSSI: %.2f\n", avgRSSI);
-    }
-
-
-    //RSSI Initial value 
-    void initialRSSI(){
-        if (sampleIndex < NUM_SAMPLES){
-            updateRSSI();
-        }
-    }
-
-
-    //ESP Get MAC address used by ESP-NOW (STA interface)
-    void setThisNodeMac() {
-        esp_err_t result = esp_wifi_get_mac(WIFI_IF_STA, strucTXMessage.src_addr);
-        if (result == ESP_OK) {
-            Serial.print("Node Mac Address Stored: ");
-            for (int i = 0; i < 6; i++) {
-                Serial.printf("%02X", strucTXMessage.src_addr[i]);
-                if (i < 5) Serial.print(":");
-            }
-        }
-    }
-
-
-    // void storeMacAddress(uint8_t* MacAddress) {
-    //     for (int i = 0; i < 6; i++) _auiMacAddress[i] = MacAddress[i];
-    // }
-    
-
-    //ESP send callback. 
-    void onESPSent(const wifi_tx_info_t *mac_addr, esp_now_send_status_t status) {
-        Serial.printf("TX: ");
-        for (int i = 0; i < 6; i++) {
-            Serial.printf("%02X", strucTXMessage.src_addr[i]);
-            if (i < 5) Serial.print(":");
-        }
-        Serial.printf(" | Value: %s\n", strucTXMessage.payload);
-    }
-
 
     //Convert the mac address into a int value
     uint32_t macToShortInt(const uint8_t *mac) {
@@ -286,31 +114,180 @@ public:
     }
 
 
-void onReceive(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
-    // Create a null-terminated buffer
-    static char buf[251];
-    int n = (len < 250) ? len : 250;
-    memcpy(buf, data, n);
-    buf[n] = '\0';  // make it a valid string
+    void setBaseStation(){
 
-    Serial.print("RX: ");
-    for (int i = 0; i < 6; i++) {
-        Serial.printf("%02X", info->src_addr[i]);
-        if (i < 5) Serial.print(":");
     }
-    Serial.printf(" | Value: %s\n", buf);
 
-    // Optional: store MAC and parse message
-    storePeerAddress(macToShortInt(info->src_addr));
-    parseRoomEspString(String(buf));
-}
 
-// void sendEspNowMsg(struct_message &message) { 
-//     size_t len = strlen(message.payload); // actual length of the string 
-//     esp_err_t result = esp_now_send(peerInfo.peer_addr, (uint8_t*)message.payload, len); 
-//     if (result != ESP_OK) Serial.printf("esp_now_send failed with error: %d\n", result); 
-// }
+    //NETWORKING////////////////////////////////////////////////////////////////////////////////////////
 
+    //MQTT Get client data. 
+    PubSubClient& getClient() { return client; }
+
+
+    //WIFI Set the Wifi Credentials
+    void setWifiNetworkCredentials(const char* ssid, const char* password) {
+        _ssid = ssid;
+        _password = password;
+    }
+
+
+    //MQTT callback function
+    void MqttCallBack(char* topicC, byte* payload, unsigned int length) {
+        static char buf[256];
+        unsigned int n = (length < sizeof(buf)-1) ? length : sizeof(buf)-1;
+        memcpy(buf, payload, n);
+        buf[n] = '\0';
+        Serial.printf("MQTT message on [%s]: %s\n", topicC, buf);
+    }
+
+
+    //MQTT Set client data.
+    void setMQTTClientData(const char* mqtt_server, int mqtt_port, const char* mqtt_client_id) {
+        _mqtt_server = mqtt_server;
+        _mqtt_port = mqtt_port;
+        _mqtt_client_id = mqtt_client_id;
+    }
+
+
+    //MQTT Reconnect with the broker
+    void brokerReconnect() {
+        while (!client.connected()) {
+            Serial.print("Attempting MQTT connection...");
+            if (client.connect(_mqtt_client_id)) {
+                Serial.println("connected");
+                client.subscribe("home/security/commands");
+            } else {
+                Serial.printf("failed, rc=%d. retry in 5s\n", client.state());
+                delay(5000);
+            }
+        }
+    }
+
+
+    //Set up the wifi with the cloud. 
+    void setup_wifi() {
+        delay(10);
+        Serial.printf("Connecting to %s\n", _ssid);
+        WiFi.begin(_ssid, _password);
+        while (WiFi.status() != WL_CONNECTED) {
+            delay(500);
+            Serial.print(".");
+        }
+        Serial.printf("\nWiFi connected, IP: %s\n", WiFi.localIP().toString().c_str());
+
+        client.setServer(_mqtt_server, _mqtt_port);
+        client.setCallback(mqttCallbackStatic);
+    }
+
+
+    //RSSI Get value (Received Signal Strength Indicator)
+    float getRSSI() { return avgRSSI; }
+    
+
+    //RSSI Update the value
+    void updateRSSI() {
+        int rssi = WiFi.RSSI();
+        rssiSamples[sampleIndex++] = rssi;
+        if (sampleIndex >= NUM_SAMPLES) {
+            sampleIndex = 0;
+            bufferFilled = true;
+        }
+        int count = bufferFilled ? NUM_SAMPLES : sampleIndex;
+        long sum = 0;
+        for (int i = 0; i < count; i++) sum += rssiSamples[i];
+        avgRSSI = (float)sum / count;
+        //Serial.printf("Average RSSI: %.2f\n", avgRSSI);
+    }
+
+
+    //RSSI Initial value 
+    void initialRSSI(){
+        if (sampleIndex < NUM_SAMPLES){
+            updateRSSI();
+        }
+    }
+
+
+    //ESP NOW//////////////////////////////////////////////////////////////////////////////////////////
+    //Set up the esp now for peer to peer communication.
+    bool setup_espnow() {
+        startTime = millis();
+        WiFi.mode(WIFI_STA);
+        if (esp_now_init() != ESP_OK) {
+            Serial.println("Error initializing ESP-NOW");
+            return false;
+        }
+        Serial.println("Initialization ESP-NOW Successful");
+
+        esp_now_register_send_cb(onSentStatic);
+        esp_now_register_recv_cb(onReceiveStatic);
+
+        memset(peerInfo.peer_addr, 0xFF, 6);
+        peerInfo.channel = WiFi.channel();
+        peerInfo.encrypt = false;
+        if (esp_now_add_peer(&peerInfo) != ESP_OK) {
+            Serial.println("Failed to add peer");
+            return false;
+        }
+        Serial.println("Peer 0xFF successfully Added. Transmitting to all Nodes!");
+        return true;
+    }
+
+    
+    //ESP Get MAC address used by ESP-NOW (STA interface)
+    void setThisNodeMac() {
+        esp_err_t result = esp_wifi_get_mac(WIFI_IF_STA, strucTXMessage.src_addr);
+        if (result == ESP_OK) {
+            Serial.print("Node Mac Address Stored: ");
+            for (int i = 0; i < 6; i++) {
+                Serial.printf("%02X", strucTXMessage.src_addr[i]);
+                if (i < 5) Serial.print(":");
+            }
+            //Stores this Nodes Mac address. 
+            storePeerAddress(macToShortInt(strucTXMessage.src_addr));
+        }
+    }
+
+
+    // void storeMacAddress(uint8_t* MacAddress) {
+    //     for (int i = 0; i < 6; i++) _auiMacAddress[i] = MacAddress[i];
+    // }
+    
+
+    //ESP send callback. 
+    void onESPSent(const wifi_tx_info_t *mac_addr, esp_now_send_status_t status) {
+        Serial.printf("TX: ");
+        for (int i = 0; i < 6; i++) {
+            Serial.printf("%02X", strucTXMessage.src_addr[i]);
+            if (i < 5) Serial.print(":");
+        }
+        Serial.printf(" | Value: %s\n", strucTXMessage.payload);
+    }
+
+
+    //Esp now receive call back function. 
+    void onReceive(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
+        // Create a null-terminated buffer
+        static char buf[251];
+        int n = (len < 250) ? len : 250;
+        memcpy(buf, data, n);
+        buf[n] = '\0';  // make it a valid string
+
+        Serial.print("RX: ");
+        for (int i = 0; i < 6; i++) {
+            Serial.printf("%02X", info->src_addr[i]);
+            if (i < 5) Serial.print(":");
+        }
+        Serial.printf(" | Value: %s\n", buf);
+
+        // Optional: store MAC and parse message
+        storePeerAddress(macToShortInt(info->src_addr));
+        parseRoomEspString(String(buf));
+    }
+
+
+    //Send esp now message
     void sendEspNowMsg(struct_message &message) {
         // Ensure null-termination
         message.payload[sizeof(message.payload) - 1] = '\0';
@@ -339,16 +316,54 @@ void onReceive(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
             delay(1000);
         }
     }
-    
 
 
+
+
+//*********************************************************************************************** */
+//PUBLIC////////////////////////////////////////////////////////////////////////////////////////////
+public:
+
+    // Constructor
+    classFloorNode(const char* ssid = "Joe's S23 Ultra",
+                   const char* password = "joea12345",
+                   const char* mqtt_server = "broker.hivemq.com",
+                   int mqtt_port = 1883,
+                   const char* mqtt_client_id = "ESP32_BaseStation")
+        : _ssid(ssid), _password(password),
+          _mqtt_server(mqtt_server), _mqtt_port(mqtt_port),
+          _mqtt_client_id(mqtt_client_id), client(espClient) {
+        instance = this;  // set singleton pointer
+        for (int i = 0; i < 6; i++) _auiMacAddress[i] = 0;
+        _lastFloorSentMsg = 0;
+        _uiNumRoom = 0;
+    }
+
+    //Set/Get NodeID
+    void setNodeID(int iNodeID) { _iNodeID = iNodeID; }
+    int getNodeID(){return _iNodeID; }
+
+    void setFloorID(byte id){_bFloorID = id;}
+    byte getFloorID(){return _bFloorID;}
+
+    //NETWORKING/////////////////////////////////////////////////////////////////////////////
+    //Network setup. 
+    void setupNetwork() {
+        setup_wifi();
+        setup_espnow();
+        setThisNodeMac();
+        esp_startup_ping();
+        setBaseStation();
+    }
+
+    //Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor. 
     void setNumberOfRooms(int number){
         _uiNumRoom = number;
     }
 
 
+    //Send floor data over esp now
     void sendFloorData(){
-
         for (uint8_t i=1; i<_uiNumRoom+1; i++){
             // Serial.printf("Room ID is %d\n", i);
             String data = buildRoomEspString(getFloorID(), i);
@@ -363,7 +378,7 @@ void onReceive(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
     }
 
 
-    //Tranmit window 
+    //Transmit window 
     void transmitWindow(){
         //Trasnmit time interval. 
         if(millis() - startTime > 1000){
