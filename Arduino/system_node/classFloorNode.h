@@ -36,6 +36,8 @@ private:
 
     int _iNodeID = 0; //need to update this value frrom the peermacaddressstorage. 
 
+    byte _bFloorID = 0b0000'0001;
+
 
     // Message structure
     typedef struct struct_message {
@@ -59,7 +61,7 @@ private:
     int iPA = 0;                                //Peer address storage element.
 
     unsigned long startTime;
-    uint8_t uiTransmitPosition = 0;
+    byte bTransmitPosition = 0b0000'0001;
 
     unsigned long _lastFloorSentMsg; //
 
@@ -138,6 +140,9 @@ public:
     //Set/Get NodeID
     void setNodeID(int iNodeID) { _iNodeID = iNodeID; }
     int getNodeID(){return _iNodeID; }
+
+    void setFloorID(byte id){_bFloorID = id;}
+    byte getFloorID(){return _bFloorID;}
 
     //NETWORKING/////////////////////////////////////////////////////////////////////////////
     
@@ -343,25 +348,36 @@ void onReceive(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
 
 
     void sendFloorData(){
-        if (millis() - _lastFloorSentMsg > 1000){
-            //Compile the floor data into string. 
 
-            for (uint8_t i=1; i<_uiNumRoom+1; i++){
-                // Serial.printf("Room ID is %d\n", i);
-                String data = buildRoomEspString(0b0000'0001, i);
-                //convert string to char[250];
-                data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
-                strucTXMessage.payload[sizeof(strucTXMessage.payload) - 1] = '\0';
-                //Send the data over esp now. 
-                sendEspNowMsg(strucTXMessage);
-                delay(20);
-            }
-
-            _lastFloorSentMsg = millis();
-            
+        for (uint8_t i=1; i<_uiNumRoom+1; i++){
+            // Serial.printf("Room ID is %d\n", i);
+            String data = buildRoomEspString(getFloorID(), i);
+            //convert string to char[250];
+            data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
+            strucTXMessage.payload[sizeof(strucTXMessage.payload) - 1] = '\0';
+            //Send the data over esp now. 
+            sendEspNowMsg(strucTXMessage);
+            delay(20);
         }
+
     }
 
+
+    //Tranmit window 
+    void transmitWindow(){
+        //Trasnmit time interval. 
+        if(millis() - startTime > 1000){
+            //Increment the transmit window position. 
+            bTransmitPosition = (bTransmitPosition<<1);
+            //Roll over. 
+            if (bTransmitPosition == 0b0000'0000) bTransmitPosition = 0b0000'0001;
+            startTime = millis();
+            //If ID match, then send data.
+            if (getFloorID() == bTransmitPosition) {
+                sendFloorData();
+            } 
+        }
+    }
 };
 
 // Define static instance pointer
