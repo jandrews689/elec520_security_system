@@ -86,6 +86,7 @@ String nodeTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id);   // f/{f}/r/{r}/
 String nodeTopicFloorRssi(uint8_t f_id);                     // f/{f}/rsi
 
 // -------- Topic builders (Cloud: WITH header) --------
+String cloudTopicFloor(uint8_t f_id);                       //  ELEC520/security/f/{f}
 String cloudTopicSystemState();                              // ELEC520/security/s/st
 String cloudTopicKeypad();                                   // ELEC520/security/s/ke
 String cloudTopicNetwork();                                  // ELEC520/security/n/st
@@ -135,5 +136,11 @@ bool extractFloorRssiFromTopicPayload(const char* topic,
 bool extractFloorRssiFromSingle(const String& line,
                                 uint8_t& out_f_id,
                                 uint8_t& out_rssi);
+
+
+// NEW: Build compact MQTT message for one floor
+String buildFloorMqttString(uint8_t f_id);
+
+bool parseSystemMqttString(const String& systemData);
 
 #endif // ELEC520_PROTOCOL_H

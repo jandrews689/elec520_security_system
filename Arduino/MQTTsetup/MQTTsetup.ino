@@ -56,7 +56,7 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     if (client.connect(mqtt_client_id)) {
       Serial.println("connected");
-      client.subscribe("home/security/commands"); // subscribe to commands
+      client.subscribe("ELEC520/security/#"); // subscribe to commands
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -84,7 +84,7 @@ void loop() {
   if (millis() - lastMsg > 5000) {
     lastMsg = millis();
     
-    client.publish("home/security/status", "System Armed");
+    client.publish("ELEC520/security", "System Armed");
     Serial.println("Status published: System Armed. Message Count:" + String(message_ID));
     message_ID ++;
   }

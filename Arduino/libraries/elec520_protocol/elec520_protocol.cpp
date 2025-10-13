@@ -106,6 +106,12 @@ String nodeTopicFloorRssi(uint8_t f_id)       { return "f/"+String(f_id)+"/rsi";
 
 // ---------------- Topic builders (Cloud) ----------------
 static inline String _CLOUD_BASE(){ return "ELEC520/security/"; }
+
+//Builds topic for the floor. 
+String cloudTopicFloor(uint8_t f_id) {
+    return "ELEC520/security/f/" + String(f_id);
+}
+
 String cloudTopicSystemState()                  { return _CLOUD_BASE()+"s/st"; }
 String cloudTopicKeypad()                       { return _CLOUD_BASE()+"s/ke"; }
 String cloudTopicNetwork()                      { return _CLOUD_BASE()+"n/st"; }
@@ -387,4 +393,49 @@ bool parseSystemMqttString(const String& systemData) {
   // Safe no-op that won't mutate MODEL.
   (void)systemData;
   return false;
+}
+
+
+// ---------------------------------------------------------------------------
+// Build ESP-NOW message for floor RSSI
+// Format: f/<f_id>/rsi:<value>
+// ---------------------------------------------------------------------------
+String buildFloorRssiEspString(uint8_t f_id) {
+    if (!addFloor(f_id)) return "";
+
+    String msg;
+    msg.reserve(20);
+    msg = "f/";
+    msg += String(f_id);
+    msg += "/rsi:";
+    msg += String(MODEL.floors[f_id].rssi);
+
+    return msg;
+}
+
+
+// Add this in elec520_protocol.cpp
+String buildFloorMqttString(uint8_t f_id) {
+    if (!MODEL.floors[f_id].used) return "";
+
+    String msg;
+    msg.reserve(512);
+
+    // Floor connection and RSSI
+    msg += "f/"; msg += String(f_id);
+    msg += "/cs:"; msg += (MODEL.floors[f_id].connected ? "1" : "0");
+    msg += ";f/"; msg += String(f_id);
+    msg += "/rsi:"; msg += String(MODEL.floors[f_id].rssi);
+
+    // Each room on this floor
+    for (uint8_t r = 0; r < SMP_MAX_ROOMS; r++) {
+        if (!MODEL.floors[f_id].rooms[r].used) continue;
+        String roomPart = buildRoomEspString(f_id, r);
+        if (roomPart.length() > 0) {
+            msg += ";";
+            msg += roomPart;
+        }
+    }
+
+    return msg;
 }

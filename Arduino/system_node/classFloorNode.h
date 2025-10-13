@@ -40,6 +40,7 @@ private:
 
     byte _bFloorID = 0b0000'0001;
 
+    int iNumOfFloors = 2; //Need to figure out a way to define this.
 
     // Message structure
     typedef struct struct_message {
@@ -167,7 +168,12 @@ private:
         unsigned int n = (length < sizeof(buf)-1) ? length : sizeof(buf)-1;
         memcpy(buf, payload, n);
         buf[n] = '\0';
-        Serial.printf("MQTT message on [%s]: %s\n", topicC, buf);
+
+        //Parse the Mqtt data into MODEL. 
+        parseSystemMqttString(String(buf));
+
+        // Serial.printf("MQTT Callback [%s]: %s\n", topicC, buf);
+
     }
 
 
@@ -182,16 +188,19 @@ private:
     //MQTT Reconnect with the broker
     void brokerReconnect() {
         while (!client.connected()) {
-            Serial.print("Attempting MQTT connection...");
+            Serial.print("Attempting MQTT connection...\n");
             if (client.connect(_mqtt_client_id)) {
                 Serial.println("connected");
-                client.subscribe("home/security/commands");
+                client.subscribe("ELEC520/security/#");
             } else {
                 Serial.printf("failed, rc=%d. retry in 5s\n", client.state());
                 delay(5000);
             }
         }
     }
+
+
+
 
 
     //Set up the wifi with the cloud. 
@@ -274,7 +283,7 @@ private:
                 Serial.printf("%02X", strucTXMessage.src_addr[i]);
                 if (i < 5) Serial.print(":");
             }
-
+            Serial.print("\n");
             //Stores this Nodes Mac address. 
             uiThisFloorNodeMacID = macToShortInt(strucTXMessage.src_addr);
             storePeerDetails(macToShortInt(strucTXMessage.src_addr), avgRSSI);
@@ -318,7 +327,7 @@ private:
         uint8_t f_id, rssiVal;
         if(extractFloorRssiFromSingle(msg, f_id, rssiVal)){
             // Store peer details mac and rssi.
-            storePeerDetails(macToShortInt(info->src_addr), rssiVal);
+            // storePeerDetails(macToShortInt(info->src_addr), rssiVal);
         }
 
         parseRoomEspString(msg);
@@ -402,7 +411,7 @@ public:
         setup_espnow();
         setThisNodeMac();
         esp_startup_ping();
-        setBaseStation();
+        //setBaseStation();
     }
 
     //Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor. 
@@ -414,14 +423,14 @@ public:
     //Send floor data over esp now
     void sendFloorData(){
 
-        //Sends the floor RSSI.
-        String data = buildFloorRssiEspString(getFloorID());
-        data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
-        sendEspNowMsg(strucTXMessage);
+        // //Sends the floor RSSI.
+        // String data = buildFloorRssiEspString(getFloorID());
+        // data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
+        // sendEspNowMsg(strucTXMessage);
 
         for (uint8_t i=1; i<_uiNumRoom+1; i++){
             // Serial.printf("Room ID is %d\n", i);
-            data = buildRoomEspString(getFloorID(), i);
+            String data = buildRoomEspString(getFloorID(), i);
             //convert string to char[250];
             data.toCharArray(strucTXMessage.payload, sizeof(strucTXMessage.payload));
             strucTXMessage.payload[sizeof(strucTXMessage.payload) - 1] = '\0';
@@ -448,6 +457,45 @@ public:
             } 
         }
     }
+
+
+    //MQTT loop
+    void mqttOperate(){
+        if (!client.connected()) {
+            brokerReconnect();
+        }
+        client.loop();
+
+        // Example publish system status every 5 seconds
+        static unsigned long publishMsg = 0;
+        if (millis() - publishMsg > 5000) {
+            publishMsg = millis();
+            
+            //Publish to client. 
+            String topic;
+            String payload;
+
+            //Publish system data
+
+
+            //Publish floor data
+            for (int i=1; i<iNumOfFloors+1; i++){
+                topic = cloudTopicFloor(i);
+                // topic = "ELEC520/security";
+                payload = buildFloorMqttString(i);
+                client.publish(topic.c_str(), payload.c_str());
+                Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
+                delay(20);
+            }
+        }
+
+    }
+
+
+    void setNumOfFloors(int value){
+        iNumOfFloors = value;
+    }
+
 };
 
 // Define static instance pointer
