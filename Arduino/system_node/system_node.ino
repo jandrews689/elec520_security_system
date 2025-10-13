@@ -17,23 +17,25 @@ void setup() {
   objFloor.setupNetwork();
 
   //Setup the floor
+  objFloor.setFloorID(0b0000'0001);
   objFloor.setNumberOfRooms(2);
 
-  addFloor  (0b0000'0001);
+  //floor 1
+  addFloor  (objFloor.getFloorID());
 
-  addRoom   (0b0000'0001, 0b0000'0001);
+    addRoom   (objFloor.getFloorID(), 0b0000'0001);
 
-  addUltra  (0b0000'0001, 0b0000'0001, 0b0000'0001);
+      addUltra  (objFloor.getFloorID(), 0b0000'0001, 0b0000'0001);
 
-  addHall   (0b0000'0001, 0b0000'0001, 0b0000'0001);
-  addHall   (0b0000'0001, 0b0000'0001, 0b0000'0010);
+      addHall   (objFloor.getFloorID(), 0b0000'0001, 0b0000'0001);
+      addHall   (objFloor.getFloorID(), 0b0000'0001, 0b0000'0010);
 
-  addRoom   (0b0000'0001, 0b0000'0010);
+    addRoom   (objFloor.getFloorID(), 0b0000'0010);
 
-  addUltra  (0b0000'0001, 0b0000'0010, 0b0000'0001);
+      addUltra  (objFloor.getFloorID(), 0b0000'0010, 0b0000'0001);
 
-  addHall   (0b0000'0001, 0b0000'0010, 0b0000'0001);
-  addHall   (0b0000'0001, 0b0000'0010, 0b0000'0010);
+      addHall   (objFloor.getFloorID(), 0b0000'0010, 0b0000'0001);
+      addHall   (objFloor.getFloorID(), 0b0000'0010, 0b0000'0010);
 
 
 
@@ -49,7 +51,13 @@ void setup() {
 //LOOP/////////////////////////////////////////////////////////////////////////////////////////
 void loop() {
 
-  objFloor.sendFloorData();
+  //i2c
+
+  //setstring fx -> model
+
+
+  //gen esp string and sending over esp
+  objFloor.transmitWindow();
   
 
 }
