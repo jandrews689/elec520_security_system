@@ -388,12 +388,52 @@ String buildSystemMqttString() {
   return String();
 }
 
+
+// ---------------------------------------------------------------------------
+// Parse MQTT system data string (semicolon-separated)
+// Each token is topic-like and uses ':' to separate topic and value
+// Example:
+//   "s/st:1;s/ke:0;n/st:1;n/mc:AA:BB:CC;f/0/cs:1;f/0/rsi:187;f/0/r/0/cs:1;f/0/r/0/u/0:90;f/0/r/0/h/0:1"
+// ---------------------------------------------------------------------------
 bool parseSystemMqttString(const String& systemData) {
-  // Return false to indicate "not parsed" by this minimal implementation.
-  // Safe no-op that won't mutate MODEL.
-  (void)systemData;
-  return false;
+    if (systemData.length() == 0) return false;
+
+    // Split on ';' into tokens
+    String tokens[256];
+    int count = 0, start = 0;
+    while (count < 256) {
+        int idx = systemData.indexOf(';', start);
+        String part = (idx == -1) ? systemData.substring(start)
+                                  : systemData.substring(start, idx);
+        part.trim();
+        if (part.length() > 0) tokens[count++] = part;
+        if (idx == -1) break;
+        start = idx + 1;
+    }
+
+    bool anyParsed = false;
+
+    // Process each token
+    for (int i = 0; i < count; i++) {
+        const String& token = tokens[i];
+        int colon = token.indexOf(':');
+        if (colon <= 0) continue;
+
+        String topic = token.substring(0, colon);
+        String payload = token.substring(colon + 1);
+
+        topic.trim();
+        payload.trim();
+
+        // Use the same internal logic that parses MQTT or ESP-NOW messages
+        if (parseNode(topic.c_str(), payload.c_str())) {
+            anyParsed = true;
+        }
+    }
+
+    return anyParsed;
 }
+
 
 
 // ---------------------------------------------------------------------------
@@ -414,23 +454,31 @@ String buildFloorRssiEspString(uint8_t f_id) {
 }
 
 
-// Add this in elec520_protocol.cpp
+// Build MQTT floor. 
 String buildFloorMqttString(uint8_t f_id) {
     if (!MODEL.floors[f_id].used) return "";
-
     String msg;
     msg.reserve(512);
 
-    // Floor connection and RSSI
-    msg += "f/"; msg += String(f_id);
-    msg += "/cs:"; msg += (MODEL.floors[f_id].connected ? "1" : "0");
-    msg += ";f/"; msg += String(f_id);
-    msg += "/rsi:"; msg += String(MODEL.floors[f_id].rssi);
+    // Floor connection and RSSI (no redundant "f/<f_id>/")
+    msg += "cs:";
+    msg += (MODEL.floors[f_id].connected ? "1" : "0");
+    msg += ";rsi:";
+    msg += String(MODEL.floors[f_id].rssi);
 
     // Each room on this floor
     for (uint8_t r = 0; r < SMP_MAX_ROOMS; r++) {
         if (!MODEL.floors[f_id].rooms[r].used) continue;
+
+        // Build compact per-room string (but remove floor prefix)
         String roomPart = buildRoomEspString(f_id, r);
+
+        // Remove redundant "f/<f_id>/" prefix if present
+        String prefix = "f/" + String(f_id) + "/";
+        if (roomPart.startsWith(prefix)) {
+            roomPart.remove(0, prefix.length());
+        }
+
         if (roomPart.length() > 0) {
             msg += ";";
             msg += roomPart;
@@ -439,3 +487,4 @@ String buildFloorMqttString(uint8_t f_id) {
 
     return msg;
 }
+
