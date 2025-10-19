@@ -63,8 +63,6 @@ bool setFloorConnection(uint8_t f_id, bool cs01);
 bool setRoomConnection(uint8_t f_id, uint8_t r_id, bool cs01);
 bool setUltraValue(uint8_t f_id, uint8_t r_id, uint8_t u_id, uint8_t val);
 bool setHallOpen(uint8_t f_id, uint8_t r_id, uint8_t hs_id, bool open01);
-
-// NEW: RSSI setter (non-breaking addition)
 bool setFloorRssi(uint8_t f_id, uint8_t rssi);
 
 void resetModel();
@@ -82,7 +80,6 @@ String nodeTopicFloorConnection(uint8_t f_id);               // f/{f}/cs
 String nodeTopicRoomConnection(uint8_t f_id,uint8_t r_id);   // f/{f}/r/{r}/cs
 String nodeTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id);  // f/{f}/r/{r}/u/{u}
 String nodeTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id);   // f/{f}/r/{r}/h/{h}
-// NEW: floor RSSI
 String nodeTopicFloorRssi(uint8_t f_id);                     // f/{f}/rsi
 
 // -------- Topic builders (Cloud: WITH header) --------
@@ -95,7 +92,6 @@ String cloudTopicFloorConnection(uint8_t f_id);              // ELEC520/security
 String cloudTopicRoomConnection(uint8_t f_id,uint8_t r_id);  // ELEC520/security/f/{f}/r/{r}/cs
 String cloudTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id); // ELEC520/security/f/{f}/r/{r}/u/{u}
 String cloudTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id); // ELEC520/security/f/{f}/r/{r}/h/{h}
-// NEW: floor RSSI
 String cloudTopicFloorRssi(uint8_t f_id);                    // ELEC520/security/f/{f}/rsi
 
 // -------- ESP-NOW per-room compact string --------
@@ -103,7 +99,7 @@ String cloudTopicFloorRssi(uint8_t f_id);                    // ELEC520/security
 String buildRoomEspString(uint8_t f_id, uint8_t r_id);
 bool   parseRoomEspString(const String& roomData);
 
-// NEW: Floor RSSI ESP-NOW message builder (no header)
+// Floor RSSI ESP-NOW message builder
 String buildFloorRssiEspString(uint8_t f_id);
 
 // -------- MQTT full-system compact string (single message) --------
