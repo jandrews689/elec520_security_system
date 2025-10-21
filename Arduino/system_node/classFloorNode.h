@@ -365,14 +365,15 @@ private:
     }
 
 
-    void updateFloorData(){
+    void 
+    (){
         //Add functions here to convert bredans code into builder functions
 
         //Update average RSSI
-        updateRSSI();
+        // updateRSSI();
 
         //Set Floor RSSI
-        setFloorRssi(getFloorID(), getRSSI());
+        // setFloorRssi(getFloorID(), getRSSI());
     }
 
 
