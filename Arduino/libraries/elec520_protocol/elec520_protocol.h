@@ -96,4 +96,7 @@ bool   parseRoomEspString(const String& roomData);
 String buildSystemMqttString();
 bool   parseSystemMqttString(const String& systemData);
 
+// -------- MQTT per-floor compact string (payload for ELEC520/security/f/{f}) --------
+String buildFloorMqttString(uint8_t f_id);
+
 #endif // ELEC520_PROTOCOL_H

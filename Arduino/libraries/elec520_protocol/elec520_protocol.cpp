@@ -72,9 +72,6 @@ String nodeTopicKeypad()                         { return "s/ke"; }
 String nodeTopicNetwork()                        { return "n/st"; }
 String nodeTopicMac()                            { return "n/mc"; }
 String nodeTopicFloorConnection(uint8_t f_id)    { return "f/"+String(f_id)+"/cs"; }
-String nodeTopicRoomConnection(uint8_t f_id,uint8_t r_id){ return "f/"+String(f_id)+"/r/"+String(r_id)+"/cs"; }
-String nodeTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id){ return "f/"+String(f_id)+"/r/"+String(r_id)+"/u/"+String(u_id); }
-String nodeTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id){ return "f/"+String(f_id)+"/r/"+String(r_id)+"/h/"+String(hs_id); }
 String nodeTopicFloorTimestamp(uint8_t f_id)     { return "f/"+String(f_id)+"/ts"; }
 String nodeTopicRoomTimestamp(uint8_t f_id,uint8_t r_id){ return "f/"+String(f_id)+"/r/"+String(r_id)+"/ts"; }
 
@@ -276,7 +273,57 @@ bool parseRoomEspString(const String& roomData) {
 }
 
 // ---------------- MQTT full-system compact string ----------------
-String buildSystemMqttString() { return String(); }
+// Payload example:
+//   "s/st:1;s/ke:0;n/st:1;n/mc:AA:BB:CC:DD:EE:FF;
+//    f/0/cs:1;f/0/ts:1698312345;f/0/r/0/cs:1;f/0/r/0/ts:1698312390;
+//    f/0/r/0/u/0:87;f/0/r/0/h/0:1;f/1/cs:0; ..."
+String buildSystemMqttString() {
+  String out;
+  out.reserve(1024); // adjust if your model is large
+
+  auto add = [&](const String& token){
+    if (token.length() == 0) return;
+    if (out.length() > 0 && out[out.length()-1] != ';') out += ';';
+    out += token;
+  };
+
+  // System-level
+  add("s/st:" + String(MODEL.systemState));
+  add("s/ke:" + String(MODEL.keypad));
+  add("n/st:" + String(MODEL.network));
+  if (MODEL.mac.length() > 0) add("n/mc:" + MODEL.mac);
+
+  // Floors, rooms, sensors
+  for (uint8_t f = 0; f < SMP_MAX_FLOORS; ++f) {
+    FloorNode& F = MODEL.floors[f];
+    if (!F.used) continue;
+
+    add("f/" + String(f) + "/cs:" + String(F.connected ? "1" : "0"));
+    if (F.ts != 0) add("f/" + String(f) + "/ts:" + String(F.ts));
+
+    for (uint8_t r = 0; r < SMP_MAX_ROOMS; ++r) {
+      RoomNode& R = F.rooms[r];
+      if (!R.used) continue;
+
+      add("f/" + String(f) + "/r/" + String(r) + "/cs:" + String(R.connected ? "1" : "0"));
+      if (R.ts != 0) add("f/" + String(f) + "/r/" + String(r) + "/ts:" + String(R.ts));
+
+      for (uint8_t u = 0; u < SMP_MAX_SENSORS; ++u) {
+        if (!R.ultra[u].used) continue;
+        add("f/" + String(f) + "/r/" + String(r) + "/u/" + String(u) + ":" + String(R.ultra[u].value));
+      }
+      for (uint8_t h = 0; h < SMP_MAX_SENSORS; ++h) {
+        if (!R.hall[h].used) continue;
+        add("f/" + String(f) + "/r/" + String(r) + "/h/" + String(h) + ":" + String(R.hall[h].open ? "1" : "0"));
+      }
+    }
+  }
+
+  // Ensure no stray leading ';'
+  if (out.startsWith(";")) out.remove(0, 1);
+  return out;
+}
+
 
 // ---------------- Parse MQTT full-system compact string ----------------
 bool parseSystemMqttString(const String& systemData) {
@@ -311,5 +358,58 @@ bool parseSystemMqttString(const String& systemData) {
     }
   }
 
-  return anyParsed;
+    return anyParsed;
 }
+
+  String buildFloorMqttString(uint8_t f_id) {
+    if (f_id >= SMP_MAX_FLOORS) return String();
+
+    FloorNode& F = MODEL.floors[f_id];
+    if (!F.used) return String();
+
+    String out;
+    out.reserve(160);
+
+    // Floor connection + timestamp
+    out += "cs:"; out += (F.connected ? "1" : "0");
+    if (F.ts != 0) {
+      out += ";ts:"; out += String(F.ts);
+    }
+
+  // Rooms
+  for (uint8_t r = 0; r < SMP_MAX_ROOMS; ++r) {
+    RoomNode& R = F.rooms[r];
+    if (!R.used) continue;
+
+    // Room connection
+    out += ";r/"; out += String(r);
+    out += "/cs:"; out += (R.connected ? "1" : "0");
+
+    // Room timestamp
+    if (R.ts != 0) {
+      out += ";r/"; out += String(r);
+      out += "/ts:"; out += String(R.ts);
+    }
+
+    // Ultrasonic sensors
+    for (uint8_t u = 0; u < SMP_MAX_SENSORS; ++u) {
+      if (!R.ultra[u].used) continue;
+      out += ";r/"; out += String(r);
+      out += "/u/"; out += String(u);
+      out += ":";   out += String(R.ultra[u].value);
+    }
+
+    // Hall sensors
+    for (uint8_t h = 0; h < SMP_MAX_SENSORS; ++h) {
+      if (!R.hall[h].used) continue;
+      out += ";r/"; out += String(r);
+      out += "/h/"; out += String(h);
+      out += ":";   out += (R.hall[h].open ? "1" : "0");
+    }
+  }
+
+  return out;
+}
+
+
+

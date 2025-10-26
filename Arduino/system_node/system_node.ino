@@ -1,3 +1,5 @@
+#include <elec520_nano.h>
+#include <elec520_protocol.h>
 #include "classFloorNode.h"
 
 const char* ssid = "Joe's S23 Ultra"; 
