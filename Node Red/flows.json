@@ -1,0 +1,933 @@
+[
+    {
+        "id": "24cf997c7034cb7c",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "fd179ad6a3d5e2d2",
+        "type": "group",
+        "z": "24cf997c7034cb7c",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "53cbca24ffb0b909",
+            "027b5a738224b816",
+            "ad440404adf910e4",
+            "6ee8d32c5fac46ee",
+            "55c6bb195a4e7319",
+            "13254f5b55935bc1",
+            "0f8132a773321341",
+            "ecf87ae5148f3b3a"
+        ],
+        "x": 874,
+        "y": 79,
+        "w": 412,
+        "h": 184.5
+    },
+    {
+        "id": "1ff204338f95197a",
+        "type": "group",
+        "z": "24cf997c7034cb7c",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "593800badc18ec0d",
+            "c994485b159c70b8",
+            "e319e11de6bbda05",
+            "c1938394473b927f",
+            "b2d4e2d1493f7137",
+            "b578e40c2dc1535d",
+            "251888de4118d19d",
+            "cb8393d41483168e"
+        ],
+        "x": 874,
+        "y": 279,
+        "w": 412,
+        "h": 184.5
+    },
+    {
+        "id": "8ad54f0a953d463f",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "6c2aa679d22f12d9",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "c4ba943dc4ad7a06",
+        "type": "ui_tab",
+        "name": "Floor 1",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "c02d5f75a6844843",
+        "type": "ui_group",
+        "name": "Room 1",
+        "tab": "c4ba943dc4ad7a06",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6d55a94b612c3ee4",
+        "type": "ui_group",
+        "name": "Room 2",
+        "tab": "c4ba943dc4ad7a06",
+        "order": 2,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b482ba385b28f724",
+        "type": "mqtt in",
+        "z": "24cf997c7034cb7c",
+        "name": "",
+        "topic": "ELEC520/security/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "8ad54f0a953d463f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "105282683ea12f55",
+                "3f960cecbcfad42d"
+            ]
+        ]
+    },
+    {
+        "id": "105282683ea12f55",
+        "type": "debug",
+        "z": "24cf997c7034cb7c",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 160,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "3f960cecbcfad42d",
+        "type": "function",
+        "z": "24cf997c7034cb7c",
+        "name": "ELEC520/security/#",
+        "func": "// Example topic: ELEC520/security/f/1/r/1/cs\nlet topic = msg.topic;\n\n// Extract floor number using regex\nlet match = topic.match(/ELEC520\\/security\\/f\\/(\\d+)(\\/|$)/);\n\nif (match) {\n    let floor = match[1]; // e.g. \"1\", \"2\", etc.\n    msg.floor = parseInt(floor);\n\n    // Example for multi-output function (1 output per floor)\n    // Assuming 8 outputs configured in the Function node\n    let outputs = new Array(8).fill(null);\n    outputs[msg.floor - 1] = msg;\n    return outputs;\n} else {\n    // If topic doesn't match expected pattern\n    node.warn(\"Unexpected topic format: \" + topic);\n    return null;\n}\n",
+        "outputs": 8,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 180,
+        "wires": [
+            [
+                "e39a7062115c8a49",
+                "0e0fe5349c1c6f70"
+            ],
+            [
+                "8d7b2b10a08ad6b2"
+            ],
+            [
+                "41a67ea9d3e66ca3"
+            ],
+            [
+                "e90c5ae49b65f495"
+            ],
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "e39a7062115c8a49",
+        "type": "debug",
+        "z": "24cf997c7034cb7c",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "0e0fe5349c1c6f70",
+        "type": "function",
+        "z": "24cf997c7034cb7c",
+        "name": "parseFloor",
+        "func": "// Example payload:\n// cs:0;r/1/cs:0;r/1/u/1:120;r/1/h/1:1;r/1/h/2:0;r/2/cs:1;r/2/u/1:98;r/2/h/1:0;r/2/h/2:1\n\nlet payload = msg.payload;\nlet parts = payload.split(\";\");\n\nlet floorConnected = null;\nlet rooms = {};  // temporary store\n\nfor (let part of parts) {\n    if (!part) continue;\n\n    let [key, value] = part.split(\":\");\n    value = parseInt(value);\n\n    // Floor-level connection status\n    if (key === \"cs\") {\n        floorConnected = value;\n        continue;\n    }\n\n    // Room-based info\n    let match = key.match(/^r\\/(\\d+)\\/(.*)$/);\n    if (!match) continue;\n\n    let roomId = parseInt(match[1]);\n    let rest = match[2];\n\n    // Make sure room object exists\n    if (!rooms[roomId]) {\n        rooms[roomId] = {\n            floorConnected: floorConnected,\n            roomId: roomId,\n            roomConnected: null,\n            hall: [],\n            ultra: []\n        };\n    }\n\n    if (rest === \"cs\") {\n        rooms[roomId].roomConnected = value;\n    } else if (rest.startsWith(\"h/\")) {\n        rooms[roomId].hall.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            state: value\n        });\n    } else if (rest.startsWith(\"u/\")) {\n        rooms[roomId].ultra.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            value: value\n        });\n    }\n}\n\n// Create an array of outputs (one per room, max 8)\nlet outputs = new Array(8).fill(null);\n\nfor (let [roomId, data] of Object.entries(rooms)) {\n    let index = data.roomId - 1; // output numbering starts from 0\n    outputs[index] = { payload: data };\n}\n\nreturn outputs;\n",
+        "outputs": 8,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 180,
+        "wires": [
+            [
+                "03f42dd352837dbd",
+                "53cbca24ffb0b909"
+            ],
+            [
+                "593800badc18ec0d"
+            ],
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "03f42dd352837dbd",
+        "type": "debug",
+        "z": "24cf997c7034cb7c",
+        "name": "debug 10",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "8d7b2b10a08ad6b2",
+        "type": "function",
+        "z": "24cf997c7034cb7c",
+        "name": "parseFloor",
+        "func": "// Example payload:\n// cs:0;r/1/cs:0;r/1/u/1:120;r/1/h/1:1;r/1/h/2:0;r/2/cs:1;r/2/u/1:98;r/2/h/1:0;r/2/h/2:1\n\nlet payload = msg.payload;\nlet parts = payload.split(\";\");\n\nlet floorConnected = null;\nlet rooms = {};  // temporary store\n\nfor (let part of parts) {\n    if (!part) continue;\n\n    let [key, value] = part.split(\":\");\n    value = parseInt(value);\n\n    // Floor-level connection status\n    if (key === \"cs\") {\n        floorConnected = value;\n        continue;\n    }\n\n    // Room-based info\n    let match = key.match(/^r\\/(\\d+)\\/(.*)$/);\n    if (!match) continue;\n\n    let roomId = parseInt(match[1]);\n    let rest = match[2];\n\n    // Make sure room object exists\n    if (!rooms[roomId]) {\n        rooms[roomId] = {\n            floorConnected: floorConnected,\n            roomId: roomId,\n            roomConnected: null,\n            hall: [],\n            ultra: []\n        };\n    }\n\n    if (rest === \"cs\") {\n        rooms[roomId].roomConnected = value;\n    } else if (rest.startsWith(\"h/\")) {\n        rooms[roomId].hall.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            state: value\n        });\n    } else if (rest.startsWith(\"u/\")) {\n        rooms[roomId].ultra.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            value: value\n        });\n    }\n}\n\n// Create an array of outputs (one per room, max 8)\nlet outputs = new Array(8).fill(null);\n\nfor (let [roomId, data] of Object.entries(rooms)) {\n    let index = data.roomId - 1; // output numbering starts from 0\n    outputs[index] = { payload: data };\n}\n\nreturn outputs;\n",
+        "outputs": 8,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 260,
+        "wires": [
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "41a67ea9d3e66ca3",
+        "type": "function",
+        "z": "24cf997c7034cb7c",
+        "name": "parseFloor",
+        "func": "// Example payload:\n// cs:0;r/1/cs:0;r/1/u/1:120;r/1/h/1:1;r/1/h/2:0;r/2/cs:1;r/2/u/1:98;r/2/h/1:0;r/2/h/2:1\n\nlet payload = msg.payload;\nlet parts = payload.split(\";\");\n\nlet floorConnected = null;\nlet rooms = {};  // temporary store\n\nfor (let part of parts) {\n    if (!part) continue;\n\n    let [key, value] = part.split(\":\");\n    value = parseInt(value);\n\n    // Floor-level connection status\n    if (key === \"cs\") {\n        floorConnected = value;\n        continue;\n    }\n\n    // Room-based info\n    let match = key.match(/^r\\/(\\d+)\\/(.*)$/);\n    if (!match) continue;\n\n    let roomId = parseInt(match[1]);\n    let rest = match[2];\n\n    // Make sure room object exists\n    if (!rooms[roomId]) {\n        rooms[roomId] = {\n            floorConnected: floorConnected,\n            roomId: roomId,\n            roomConnected: null,\n            hall: [],\n            ultra: []\n        };\n    }\n\n    if (rest === \"cs\") {\n        rooms[roomId].roomConnected = value;\n    } else if (rest.startsWith(\"h/\")) {\n        rooms[roomId].hall.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            state: value\n        });\n    } else if (rest.startsWith(\"u/\")) {\n        rooms[roomId].ultra.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            value: value\n        });\n    }\n}\n\n// Create an array of outputs (one per room, max 8)\nlet outputs = new Array(8).fill(null);\n\nfor (let [roomId, data] of Object.entries(rooms)) {\n    let index = data.roomId - 1; // output numbering starts from 0\n    outputs[index] = { payload: data };\n}\n\nreturn outputs;\n",
+        "outputs": 8,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 340,
+        "wires": [
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "e90c5ae49b65f495",
+        "type": "function",
+        "z": "24cf997c7034cb7c",
+        "name": "parseFloor",
+        "func": "// Example payload:\n// cs:0;r/1/cs:0;r/1/u/1:120;r/1/h/1:1;r/1/h/2:0;r/2/cs:1;r/2/u/1:98;r/2/h/1:0;r/2/h/2:1\n\nlet payload = msg.payload;\nlet parts = payload.split(\";\");\n\nlet floorConnected = null;\nlet rooms = {};  // temporary store\n\nfor (let part of parts) {\n    if (!part) continue;\n\n    let [key, value] = part.split(\":\");\n    value = parseInt(value);\n\n    // Floor-level connection status\n    if (key === \"cs\") {\n        floorConnected = value;\n        continue;\n    }\n\n    // Room-based info\n    let match = key.match(/^r\\/(\\d+)\\/(.*)$/);\n    if (!match) continue;\n\n    let roomId = parseInt(match[1]);\n    let rest = match[2];\n\n    // Make sure room object exists\n    if (!rooms[roomId]) {\n        rooms[roomId] = {\n            floorConnected: floorConnected,\n            roomId: roomId,\n            roomConnected: null,\n            hall: [],\n            ultra: []\n        };\n    }\n\n    if (rest === \"cs\") {\n        rooms[roomId].roomConnected = value;\n    } else if (rest.startsWith(\"h/\")) {\n        rooms[roomId].hall.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            state: value\n        });\n    } else if (rest.startsWith(\"u/\")) {\n        rooms[roomId].ultra.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            value: value\n        });\n    }\n}\n\n// Create an array of outputs (one per room, max 8)\nlet outputs = new Array(8).fill(null);\n\nfor (let [roomId, data] of Object.entries(rooms)) {\n    let index = data.roomId - 1; // output numbering starts from 0\n    outputs[index] = { payload: data };\n}\n\nreturn outputs;\n",
+        "outputs": 8,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 420,
+        "wires": [
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "53cbca24ffb0b909",
+        "type": "function",
+        "z": "24cf997c7034cb7c",
+        "g": "fd179ad6a3d5e2d2",
+        "name": "parseRoom",
+        "func": "// Input example (from parseFloor output):\n// msg.payload = { roomId: 1, roomConnected: 1, hall: [...], ultra: [...] }\n\nlet room = msg.payload;\nlet msgs = [];\n\n// Room connection status\nmsgs.push({\n    topic: `room/${room.roomId}/cs`,\n    payload: room.roomConnected\n});\n\n// Hall sensors\nfor (let h of room.hall) {\n    msgs.push({\n        topic: `room/${room.roomId}/hall/${h.id}`,\n        payload: h.state\n    });\n}\n\n// Ultrasonic sensors\nfor (let u of room.ultra) {\n    msgs.push({\n        topic: `room/${room.roomId}/ultra/${u.id}`,\n        payload: u.value\n    });\n}\n\n// Return as separate messages from one output\nreturn [msgs];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 140,
+        "wires": [
+            [
+                "027b5a738224b816"
+            ]
+        ]
+    },
+    {
+        "id": "027b5a738224b816",
+        "type": "switch",
+        "z": "24cf997c7034cb7c",
+        "g": "fd179ad6a3d5e2d2",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "room/1/cs",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/1/hall/1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/1/hall/2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/1/ultra/1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/1/ultra/2",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 5,
+        "x": 950,
+        "y": 200,
+        "wires": [
+            [
+                "ad440404adf910e4",
+                "6ee8d32c5fac46ee"
+            ],
+            [
+                "ad440404adf910e4",
+                "55c6bb195a4e7319"
+            ],
+            [
+                "ad440404adf910e4",
+                "13254f5b55935bc1"
+            ],
+            [
+                "ad440404adf910e4",
+                "0f8132a773321341"
+            ],
+            [
+                "ad440404adf910e4",
+                "ecf87ae5148f3b3a"
+            ]
+        ]
+    },
+    {
+        "id": "ad440404adf910e4",
+        "type": "debug",
+        "z": "24cf997c7034cb7c",
+        "g": "fd179ad6a3d5e2d2",
+        "name": "debug 18",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "6ee8d32c5fac46ee",
+        "type": "ui_gauge",
+        "z": "24cf997c7034cb7c",
+        "g": "fd179ad6a3d5e2d2",
+        "name": "",
+        "group": "c02d5f75a6844843",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Connection",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1190,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "55c6bb195a4e7319",
+        "type": "ui_gauge",
+        "z": "24cf997c7034cb7c",
+        "g": "fd179ad6a3d5e2d2",
+        "name": "",
+        "group": "c02d5f75a6844843",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Hall 1",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "13254f5b55935bc1",
+        "type": "ui_gauge",
+        "z": "24cf997c7034cb7c",
+        "g": "fd179ad6a3d5e2d2",
+        "name": "",
+        "group": "c02d5f75a6844843",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Hall 2",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "0f8132a773321341",
+        "type": "ui_gauge",
+        "z": "24cf997c7034cb7c",
+        "g": "fd179ad6a3d5e2d2",
+        "name": "",
+        "group": "c02d5f75a6844843",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Ultra 1",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "ecf87ae5148f3b3a",
+        "type": "ui_gauge",
+        "z": "24cf997c7034cb7c",
+        "g": "fd179ad6a3d5e2d2",
+        "name": "",
+        "group": "c02d5f75a6844843",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Ultra 2",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "593800badc18ec0d",
+        "type": "function",
+        "z": "24cf997c7034cb7c",
+        "g": "1ff204338f95197a",
+        "name": "parseRoom",
+        "func": "// Input example (from parseFloor output):\n// msg.payload = { roomId: 1, roomConnected: 1, hall: [...], ultra: [...] }\n\nlet room = msg.payload;\nlet msgs = [];\n\n// Room connection status\nmsgs.push({\n    topic: `room/${room.roomId}/cs`,\n    payload: room.roomConnected\n});\n\n// Hall sensors\nfor (let h of room.hall) {\n    msgs.push({\n        topic: `room/${room.roomId}/hall/${h.id}`,\n        payload: h.state\n    });\n}\n\n// Ultrasonic sensors\nfor (let u of room.ultra) {\n    msgs.push({\n        topic: `room/${room.roomId}/ultra/${u.id}`,\n        payload: u.value\n    });\n}\n\n// Return as separate messages from one output\nreturn [msgs];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 340,
+        "wires": [
+            [
+                "c994485b159c70b8"
+            ]
+        ]
+    },
+    {
+        "id": "c994485b159c70b8",
+        "type": "switch",
+        "z": "24cf997c7034cb7c",
+        "g": "1ff204338f95197a",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "room/2/cs",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/2/hall/1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/2/hall/2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/2/ultra/1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/2/ultra/2",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 5,
+        "x": 950,
+        "y": 400,
+        "wires": [
+            [
+                "e319e11de6bbda05",
+                "c1938394473b927f"
+            ],
+            [
+                "e319e11de6bbda05",
+                "b2d4e2d1493f7137"
+            ],
+            [
+                "e319e11de6bbda05",
+                "b578e40c2dc1535d"
+            ],
+            [
+                "e319e11de6bbda05",
+                "251888de4118d19d"
+            ],
+            [
+                "e319e11de6bbda05",
+                "cb8393d41483168e"
+            ]
+        ]
+    },
+    {
+        "id": "e319e11de6bbda05",
+        "type": "debug",
+        "z": "24cf997c7034cb7c",
+        "g": "1ff204338f95197a",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "c1938394473b927f",
+        "type": "ui_gauge",
+        "z": "24cf997c7034cb7c",
+        "g": "1ff204338f95197a",
+        "name": "",
+        "group": "6d55a94b612c3ee4",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Connection",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1190,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "b2d4e2d1493f7137",
+        "type": "ui_gauge",
+        "z": "24cf997c7034cb7c",
+        "g": "1ff204338f95197a",
+        "name": "",
+        "group": "6d55a94b612c3ee4",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Hall 1",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "b578e40c2dc1535d",
+        "type": "ui_gauge",
+        "z": "24cf997c7034cb7c",
+        "g": "1ff204338f95197a",
+        "name": "",
+        "group": "6d55a94b612c3ee4",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Hall 2",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "251888de4118d19d",
+        "type": "ui_gauge",
+        "z": "24cf997c7034cb7c",
+        "g": "1ff204338f95197a",
+        "name": "",
+        "group": "6d55a94b612c3ee4",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Ultra 1",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "cb8393d41483168e",
+        "type": "ui_gauge",
+        "z": "24cf997c7034cb7c",
+        "g": "1ff204338f95197a",
+        "name": "",
+        "group": "6d55a94b612c3ee4",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Ultra 2",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "cd3c4a523bd68605",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
