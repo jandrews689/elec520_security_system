@@ -286,14 +286,14 @@ private:
     }
 
 
-    //ESP Startup ping - Used for estabishing contact with other nodes.
-    void esp_startup_ping() {
-        //Try establish connection for 5 seconds. 
-        while (millis() - startTime < 5000) {
-            sendEspNowMsg(strucTXMessage);
-            delay(1000);
-        }
-    }
+    // //ESP Startup ping - Used for estabishing contact with other nodes.
+    // void esp_startup_ping() {
+    //     //Try establish connection for 5 seconds. 
+    //     while (millis() - startTime < 5000) {
+    //         sendEspNowMsg(strucTXMessage);
+    //         delay(1000);
+    //     }
+    // }
 
 
 //*********************************************************************************************** */
@@ -328,7 +328,7 @@ public:
         setup_wifi();
         setup_espnow();
         setThisNodeMac();
-        esp_startup_ping();
+        // esp_startup_ping();
         //setBaseStation();
     }
 
