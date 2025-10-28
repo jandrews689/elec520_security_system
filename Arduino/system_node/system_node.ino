@@ -28,28 +28,8 @@ const char* mqtt_client_id = "BaseStation";
 classFloorNode objFloor(ssid, password, mqtt_server, mqtt_port, mqtt_client_id);
 
 bool xCloudConnectionNode = false;
-// bool xI2CComplete = false;
 
-// String buildStringFromChars(char incomingChar, bool &messageComplete) {
-//   static String buffer = "";
-  
-//   // Reset completion flag
-//   messageComplete = false;
-
-//   if (incomingChar == '\n') {
-//     // End of message — mark complete
-//     messageComplete = true;
-//     String completeMessage = buffer;
-//     buffer = ""; // reset for next message
-//     return completeMessage;
-//   } else if (incomingChar != '\r') {
-//     // Append normal characters (ignore carriage returns)
-//     buffer += incomingChar;
-//   }
-
-//   // Not complete yet, return empty
-//   return "";
-// }
+int count = 0;
 
 
 //SETUP////////////////////////////////////////////////////////////////////////////////
@@ -151,7 +131,7 @@ void loop() {
   //Mqtt pub and sub
   if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
   
-  int count++;
+  count++;
   if (count > 500) {
     count = 0;
     //Spew everything onto the serial. 
