@@ -63,6 +63,9 @@ void resetModel();
 bool parseNode (const char* topic, const char* rawPayload);
 bool parseCloud(const char* topic, const char* rawPayload);
 
+// Convenience parser for single "topic:value" strings, e.g. "f/1/r/1/h/1:1"
+bool parseTokenLine(const String& tokenLine);
+
 // -------- Topic builders (Node, no prefix) --------
 String nodeTopicSystemState();                               // s/st
 String nodeTopicKeypad();                                    // s/ke
@@ -98,5 +101,11 @@ bool   parseSystemMqttString(const String& systemData);
 
 // -------- MQTT per-floor compact string (payload for ELEC520/security/f/{f}) --------
 String buildFloorMqttString(uint8_t f_id);
+
+
+// ----- Debug helpers -----
+// Pretty, multi-line dump of the entire MODEL to any Arduino Stream (e.g., Serial)
+void debugPrintModel(Stream& out);
+
 
 #endif // ELEC520_PROTOCOL_H

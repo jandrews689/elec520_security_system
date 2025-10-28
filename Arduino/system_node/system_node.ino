@@ -7,10 +7,17 @@
 
 #define SDA_PIN   21
 #define SCL_PIN   22
-
-// I2C address range to scan (room 1-8)
 #define ADDR_MIN  0x12
 #define ADDR_MAX  0x20
+#define NUM_ADDR  (ADDR_MAX - ADDR_MIN + 1)
+#define REQ_BYTES 30
+#define POLL_DELAY_MS 10
+
+static String rxBuf[NUM_ADDR];
+static String lastMsg[NUM_ADDR];
+
+static inline int idxFromAddr(uint8_t a){ return (a<ADDR_MIN||a>ADDR_MAX)?-1:(a-ADDR_MIN); }
+static inline bool isPrintableAscii(char c){ return c == '\n' || c == '\r' || (c >= 32 && c <= 126); }
 
 const char* ssid = "Joe's S23 Ultra"; 
 const char* password = "joea12345"; 
@@ -21,28 +28,28 @@ const char* mqtt_client_id = "BaseStation";
 classFloorNode objFloor(ssid, password, mqtt_server, mqtt_port, mqtt_client_id);
 
 bool xCloudConnectionNode = false;
-bool xI2CComplete = false;
+// bool xI2CComplete = false;
 
-String buildStringFromChars(char incomingChar, bool &messageComplete) {
-  static String buffer = "";
+// String buildStringFromChars(char incomingChar, bool &messageComplete) {
+//   static String buffer = "";
   
-  // Reset completion flag
-  messageComplete = false;
+//   // Reset completion flag
+//   messageComplete = false;
 
-  if (incomingChar == '\n') {
-    // End of message — mark complete
-    messageComplete = true;
-    String completeMessage = buffer;
-    buffer = ""; // reset for next message
-    return completeMessage;
-  } else if (incomingChar != '\r') {
-    // Append normal characters (ignore carriage returns)
-    buffer += incomingChar;
-  }
+//   if (incomingChar == '\n') {
+//     // End of message — mark complete
+//     messageComplete = true;
+//     String completeMessage = buffer;
+//     buffer = ""; // reset for next message
+//     return completeMessage;
+//   } else if (incomingChar != '\r') {
+//     // Append normal characters (ignore carriage returns)
+//     buffer += incomingChar;
+//   }
 
-  // Not complete yet, return empty
-  return "";
-}
+//   // Not complete yet, return empty
+//   return "";
+// }
 
 
 //SETUP////////////////////////////////////////////////////////////////////////////////
@@ -89,51 +96,54 @@ void setup() {
 
 //LOOP/////////////////////////////////////////////////////////////////////////////////////////
 void loop() {
-  const size_t REQ = 30; // bytes to request matches Nano cap
   static uint8_t addr = ADDR_MIN;
 
-  // Try to request one line from the current address
+  // quick probe
   Wire.beginTransmission(addr);
-  // A zero length write = end and do requestFrom next.
-  uint8_t txStatus = Wire.endTransmission(true); // send STOP
-
-  // If we have a connection try and read from the requests
-  if (txStatus == 0) {
-    size_t got = Wire.requestFrom((int)addr, (int)REQ, (int)true);
-    if (got > 0) {
-      // Read bytes, print as a line
-      while (Wire.available()) {
-        char nanoData = (char)Wire.read();
-        String msg = buildStringFromChars(nanoData, xI2CComplete);
-        if (xI2CComplete){
-          Serial.print(msg);
-          parseRoomEspString(msg);
+  uint8_t txStatus = Wire.endTransmission(true);
+  if (txStatus == 0){
+    // device ACKed; try to read
+    size_t got = Wire.requestFrom((int)addr, (int)REQ_BYTES, (int)true);
+    if (got > 0){
+      int idx = idxFromAddr(addr);
+      if (idx >= 0){
+        // read exactly 'got' bytes, filter non-printables
+        for (size_t i = 0; i < got; ++i){
+          char c = (char)Wire.read();
+          if (!isPrintableAscii(c)) continue;     // drop 0x00/0xFF/etc.
+          rxBuf[idx] += c;
         }
-        
+        // extract full lines ending with '\n'
+        for (;;){
+          int nl = rxBuf[idx].indexOf('\n');
+          if (nl < 0) break;
+          String line = rxBuf[idx].substring(0, nl);
+          rxBuf[idx].remove(0, nl + 1);
+
+          // sanity check: only accept our protocol lines
+          if (line.startsWith("f/")){
+            lastMsg[idx] = line;
+            Serial.println(line);
+            // parseRoomEspString(line); //protocol process
+            parseTokenLine(line);
+          }
+        }
       }
-      // Ensure line break even if Nano didn’t send one
-      Serial.println();
     }
   }
-
-
-
   // Move to next address
   addr++;
   if (addr > ADDR_MAX) addr = ADDR_MIN;
 
-  // Small delay so we’re not hammering the bus
+  // // Small delay so we’re not hammering the bus
   delay(10);
-
-  //i2c
-  // objFloor.updateFloorData();
-  //setstring fx -> model
-
-
-  //convert char to string;
-
-
-
+  
+  // Test without I2C/////////////////////////////////////////
+    // String nanoHallTest = nanoTokenHall(1, 1, 1, 1);
+    // Serial.print(nanoHallTest);
+    // Serial.println();
+    // parseTokenLine(nanoHallTest);
+  /////////////////////////////////////////////////////////////
 
   //gen esp string and sending over esp
   objFloor.transmitWindow();
@@ -141,6 +151,12 @@ void loop() {
   //Mqtt pub and sub
   if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
   
-  
+  int count++;
+  if (count > 500) {
+    count = 0;
+    //Spew everything onto the serial. 
+    debugPrintModel(Serial);
+  }
+
 
 }

@@ -167,6 +167,21 @@ static bool parseCore(const char* topicC, const char* payloadC, bool cloud){
 bool parseNode (const char* topic, const char* rawPayload){ return parseCore(topic, rawPayload, false); }
 bool parseCloud(const char* topic, const char* rawPayload){ return parseCore(topic, rawPayload, true ); }
 
+bool parseTokenLine(const String& tokenLine) {
+  if (tokenLine.length() == 0) return false;
+
+  int colonIndex = tokenLine.indexOf(':');
+  if (colonIndex <= 0) return false; // no topic before colon
+
+  String topic   = tokenLine.substring(0, colonIndex);
+  String payload = tokenLine.substring(colonIndex + 1);
+
+  topic.trim();
+  payload.trim();
+
+  return parseNode(topic.c_str(), payload.c_str());
+}
+
 // ================= Room ESP compact format (build + parse) =================
 String buildRoomEspString(uint8_t f_id, uint8_t r_id) {
   addRoom(f_id, r_id);
@@ -412,4 +427,54 @@ bool parseSystemMqttString(const String& systemData) {
 }
 
 
+void debugPrintModel(Stream& out) {
+  out.println(F("=== ELEC520 MODEL DUMP ==="));
+
+  // System-level
+  out.print(F("System State (s/st): ")); out.println(MODEL.systemState);
+  out.print(F("Keypad      (s/ke): ")); out.println(MODEL.keypad);
+  out.print(F("Network     (n/st): ")); out.println(MODEL.network);
+  out.print(F("MAC         (n/mc): ")); out.println(MODEL.mac);
+
+  // Floors
+  for (uint8_t f = 0; f < SMP_MAX_FLOORS; ++f) {
+    FloorNode& F = MODEL.floors[f];
+    if (!F.used) continue;
+
+    out.println();
+    out.print  (F("Floor ")); out.print(f);
+    out.print  (F("  connected: ")); out.println(F.connected ? F("1") : F("0"));
+    out.print  (F("         ts: ")); out.println(F.ts);
+
+    // Rooms
+    for (uint8_t r = 0; r < SMP_MAX_ROOMS; ++r) {
+      RoomNode& R = F.rooms[r];
+      if (!R.used) continue;
+
+      out.print  (F("  Room ")); out.print(r);
+      out.print  (F("   connected: ")); out.println(R.connected ? F("1") : F("0"));
+      out.print  (F("           ts: ")); out.println(R.ts);
+
+      // Ultrasonic sensors
+      bool anyU = false;
+      for (uint8_t u = 0; u < SMP_MAX_SENSORS; ++u) {
+        if (!R.ultra[u].used) continue;
+        if (!anyU) { out.println(F("    Ultra:")); anyU = true; }
+        out.print(F("      u/")); out.print(u);
+        out.print(F(" = ")); out.println(R.ultra[u].value);
+      }
+
+      // Hall sensors
+      bool anyH = false;
+      for (uint8_t h = 0; h < SMP_MAX_SENSORS; ++h) {
+        if (!R.hall[h].used) continue;
+        if (!anyH) { out.println(F("    Hall:")); anyH = true; }
+        out.print(F("      h/")); out.print(h);
+        out.print(F(" = ")); out.println(R.hall[h].open ? F("1") : F("0"));
+      }
+    }
+  }
+
+  out.println(F("=== END MODEL DUMP ==="));
+}
 
