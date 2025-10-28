@@ -1,3 +1,5 @@
+#include <elec520_nano.h>
+#include <elec520_protocol.h>
 #include "classFloorNode.h"
 
 const char* ssid = "Joe's S23 Ultra"; 
@@ -17,32 +19,26 @@ void setup() {
   objFloor.setupNetwork();
 
   //Setup the floor
-  objFloor.setFloorID(0b0000'0001);
+  objFloor.setFloorID(1);
   objFloor.setNumberOfRooms(2);
   objFloor.setNumOfFloors(2);
 
   //floor 1
   addFloor  (objFloor.getFloorID());
 
-    addRoom   (objFloor.getFloorID(), 0b0000'0001);
+    addRoom   (objFloor.getFloorID(), 1);
 
-      addUltra  (objFloor.getFloorID(), 0b0000'0001, 0b0000'0001);
+      addUltra  (objFloor.getFloorID(), 1, 1);
 
-      addHall   (objFloor.getFloorID(), 0b0000'0001, 0b0000'0001);
-      addHall   (objFloor.getFloorID(), 0b0000'0001, 0b0000'0010);
+      addHall   (objFloor.getFloorID(), 1, 1);
+      addHall   (objFloor.getFloorID(), 1, 2);
 
-    addRoom   (objFloor.getFloorID(), 0b0000'0010);
+    addRoom   (objFloor.getFloorID(), 2);
 
-      addUltra  (objFloor.getFloorID(), 0b0000'0010, 0b0000'0001);
+      addUltra  (objFloor.getFloorID(), 2, 1);
 
-      addHall   (objFloor.getFloorID(), 0b0000'0010, 0b0000'0001);
-      addHall   (objFloor.getFloorID(), 0b0000'0010, 0b0000'0010);
-
-
-
-  
-
-
+      addHall   (objFloor.getFloorID(), 2, 1);
+      addHall   (objFloor.getFloorID(), 2, 2);
 
 }
 
