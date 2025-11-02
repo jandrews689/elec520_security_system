@@ -1,5 +1,12 @@
 [
     {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
         "id": "24cf997c7034cb7c",
         "type": "tab",
         "label": "Flow 1",
@@ -200,11 +207,20 @@
         "hidden": false
     },
     {
+        "id": "4668730d6eedc4bd",
+        "type": "ui_tab",
+        "name": "Floor 1",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
         "id": "c02d5f75a6844843",
         "type": "ui_group",
         "name": "Room 1",
         "tab": "c4ba943dc4ad7a06",
-        "order": 1,
+        "order": 2,
         "disp": true,
         "width": 6,
         "collapse": false,
@@ -215,11 +231,65 @@
         "type": "ui_group",
         "name": "Room 2",
         "tab": "c4ba943dc4ad7a06",
+        "order": 3,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a7cde148daaaec4e",
+        "type": "ui_group",
+        "name": "Remote Tools",
+        "tab": "c4ba943dc4ad7a06",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6ab08d173cb21739",
+        "type": "ui_group",
+        "name": "Room 1",
+        "tab": "c4ba943dc4ad7a06",
         "order": 2,
         "disp": true,
         "width": 6,
         "collapse": false,
         "className": ""
+    },
+    {
+        "id": "a43d6ed283f42894",
+        "type": "ui_group",
+        "name": "Room 2",
+        "tab": "c4ba943dc4ad7a06",
+        "order": 3,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "cdc7d4d0fc91a92c",
+        "type": "ui_group",
+        "name": "Remote Tools",
+        "tab": "c4ba943dc4ad7a06",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3cc11d24.ff01a2",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 350,
+        "y": 80,
+        "wires": []
     },
     {
         "id": "b482ba385b28f724",
@@ -239,7 +309,8 @@
         "wires": [
             [
                 "105282683ea12f55",
-                "3f960cecbcfad42d"
+                "3f960cecbcfad42d",
+                "b397f1b249a32c2f"
             ]
         ]
     },
@@ -264,7 +335,7 @@
         "type": "function",
         "z": "24cf997c7034cb7c",
         "name": "ELEC520/security/#",
-        "func": "// Example topic: ELEC520/security/f/1/r/1/cs\nlet topic = msg.topic;\n\n// Extract floor number using regex\nlet match = topic.match(/ELEC520\\/security\\/f\\/(\\d+)(\\/|$)/);\n\nif (match) {\n    let floor = match[1]; // e.g. \"1\", \"2\", etc.\n    msg.floor = parseInt(floor);\n\n    // Example for multi-output function (1 output per floor)\n    // Assuming 8 outputs configured in the Function node\n    let outputs = new Array(8).fill(null);\n    outputs[msg.floor - 1] = msg;\n    return outputs;\n} else {\n    // If topic doesn't match expected pattern\n    node.warn(\"Unexpected topic format: \" + topic);\n    return null;\n}\n",
+        "func": "// node.warn(\"Incoming topic: \" + msg.topic);\n\n// Example topic: ELEC520/security/f/1/r/1/cs\nlet topic = msg.topic;\n\n// node.warn(\"Topic seen by parser: '\" + topic + \"'\");\n// Extract floor or system section\nlet match = topic.match(/ELEC520\\/security\\/(hw|cl)\\/(f\\/(\\d+)|s)(\\/|$)/);\n\n// node.warn(match);\n\nif (match) {\n    let outputs = new Array(8).fill(null);\n\n    // if (match[1]) {\n    //     msg.systemState = \n    // }\n\n    if (match[2]) {\n        // Floor topic\n        msg.floor = parseInt(match[2]);\n        outputs[msg.floor - 1] = msg;\n        return outputs;\n    } else {\n        // System topic (s)\n        // node.warn(\"System topic received: \" + topic);\n        // optional: handle system message here or just ignore\n        return null;\n    }\n\n} else {\n    node.warn(\"Unexpected topic format: \" + topic);\n    return null;\n}\n",
         "outputs": 8,
         "timeout": 0,
         "noerr": 0,
@@ -520,7 +591,7 @@
         "z": "24cf997c7034cb7c",
         "g": "fd179ad6a3d5e2d2",
         "name": "debug 18",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -529,6 +600,200 @@
         "statusType": "auto",
         "x": 1180,
         "y": 120,
+        "wires": []
+    },
+    {
+        "id": "593800badc18ec0d",
+        "type": "function",
+        "z": "24cf997c7034cb7c",
+        "g": "1ff204338f95197a",
+        "name": "parseRoom",
+        "func": "// Input example (from parseFloor output):\n// msg.payload = { roomId: 1, roomConnected: 1, hall: [...], ultra: [...] }\n\nlet room = msg.payload;\nlet msgs = [];\n\n// Room connection status\nmsgs.push({\n    topic: `room/${room.roomId}/cs`,\n    payload: room.roomConnected\n});\n\n// Hall sensors\nfor (let h of room.hall) {\n    msgs.push({\n        topic: `room/${room.roomId}/hall/${h.id}`,\n        payload: h.state\n    });\n}\n\n// Ultrasonic sensors\nfor (let u of room.ultra) {\n    msgs.push({\n        topic: `room/${room.roomId}/ultra/${u.id}`,\n        payload: u.value\n    });\n}\n\n// Return as separate messages from one output\nreturn [msgs];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 340,
+        "wires": [
+            [
+                "c994485b159c70b8"
+            ]
+        ]
+    },
+    {
+        "id": "c994485b159c70b8",
+        "type": "switch",
+        "z": "24cf997c7034cb7c",
+        "g": "1ff204338f95197a",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "room/2/cs",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/2/hall/1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/2/hall/2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/2/ultra/1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "room/2/ultra/2",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 5,
+        "x": 950,
+        "y": 400,
+        "wires": [
+            [
+                "e319e11de6bbda05",
+                "c1938394473b927f"
+            ],
+            [
+                "e319e11de6bbda05",
+                "b2d4e2d1493f7137"
+            ],
+            [
+                "e319e11de6bbda05",
+                "b578e40c2dc1535d"
+            ],
+            [
+                "e319e11de6bbda05",
+                "251888de4118d19d"
+            ],
+            [
+                "e319e11de6bbda05",
+                "cb8393d41483168e"
+            ]
+        ]
+    },
+    {
+        "id": "e319e11de6bbda05",
+        "type": "debug",
+        "z": "24cf997c7034cb7c",
+        "g": "1ff204338f95197a",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "7e237124465d84ea",
+        "type": "debug",
+        "z": "24cf997c7034cb7c",
+        "name": "debug 4",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "fc2026064787cb68",
+        "type": "function",
+        "z": "24cf997c7034cb7c",
+        "name": "function 1",
+        "func": "msg.topic = \"ELEC520/security/cl/s/st\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 620,
+        "wires": [
+            [
+                "c7d4e80c7a2040a9",
+                "7e237124465d84ea"
+            ]
+        ]
+    },
+    {
+        "id": "c7d4e80c7a2040a9",
+        "type": "mqtt out",
+        "z": "24cf997c7034cb7c",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "8ad54f0a953d463f",
+        "x": 610,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "b397f1b249a32c2f",
+        "type": "function",
+        "z": "24cf997c7034cb7c",
+        "name": "system state",
+        "func": "// node.warn(\"Incoming topic: \" + msg.topic);\n\n// Example topic: ELEC520/security/f/1/r/1/cs\nlet topic = msg.topic;\n\n// node.warn(\"Topic seen by parser: '\" + topic + \"'\");\n// Extract floor or system section\nlet match = topic.match(/ELEC520\\/security\\/(hw)\\/s\\/(\\w+)$/);\n\n// node.warn(match);\n\nif (!match) {\n    node.warn(\"Unexpected system topic: \" + topic);\n    return null;\n}\n\n// match[1] will be \"st\" ELEC520/security/s/st\nlet subTopic = match[2];\n\nif (subTopic === \"st\") {\n    //System state topic\n    msg.systemState = msg.payload;\n    return msg;\n} else if (subTopic === \"cl\") {\n    return;\n}\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 60,
+        "wires": [
+            [
+                "9c2d8dde2c1cf787",
+                "dbf513034095bcfd"
+            ]
+        ]
+    },
+    {
+        "id": "dbf513034095bcfd",
+        "type": "debug",
+        "z": "24cf997c7034cb7c",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 40,
         "wires": []
     },
     {
@@ -677,107 +942,6 @@
         "wires": []
     },
     {
-        "id": "593800badc18ec0d",
-        "type": "function",
-        "z": "24cf997c7034cb7c",
-        "g": "1ff204338f95197a",
-        "name": "parseRoom",
-        "func": "// Input example (from parseFloor output):\n// msg.payload = { roomId: 1, roomConnected: 1, hall: [...], ultra: [...] }\n\nlet room = msg.payload;\nlet msgs = [];\n\n// Room connection status\nmsgs.push({\n    topic: `room/${room.roomId}/cs`,\n    payload: room.roomConnected\n});\n\n// Hall sensors\nfor (let h of room.hall) {\n    msgs.push({\n        topic: `room/${room.roomId}/hall/${h.id}`,\n        payload: h.state\n    });\n}\n\n// Ultrasonic sensors\nfor (let u of room.ultra) {\n    msgs.push({\n        topic: `room/${room.roomId}/ultra/${u.id}`,\n        payload: u.value\n    });\n}\n\n// Return as separate messages from one output\nreturn [msgs];\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 970,
-        "y": 340,
-        "wires": [
-            [
-                "c994485b159c70b8"
-            ]
-        ]
-    },
-    {
-        "id": "c994485b159c70b8",
-        "type": "switch",
-        "z": "24cf997c7034cb7c",
-        "g": "1ff204338f95197a",
-        "name": "",
-        "property": "topic",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "room/2/cs",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "room/2/hall/1",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "room/2/hall/2",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "room/2/ultra/1",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "room/2/ultra/2",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 5,
-        "x": 950,
-        "y": 400,
-        "wires": [
-            [
-                "e319e11de6bbda05",
-                "c1938394473b927f"
-            ],
-            [
-                "e319e11de6bbda05",
-                "b2d4e2d1493f7137"
-            ],
-            [
-                "e319e11de6bbda05",
-                "b578e40c2dc1535d"
-            ],
-            [
-                "e319e11de6bbda05",
-                "251888de4118d19d"
-            ],
-            [
-                "e319e11de6bbda05",
-                "cb8393d41483168e"
-            ]
-        ]
-    },
-    {
-        "id": "e319e11de6bbda05",
-        "type": "debug",
-        "z": "24cf997c7034cb7c",
-        "g": "1ff204338f95197a",
-        "name": "debug 3",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1180,
-        "y": 320,
-        "wires": []
-    },
-    {
         "id": "c1938394473b927f",
         "type": "ui_gauge",
         "z": "24cf997c7034cb7c",
@@ -923,7 +1087,112 @@
         "wires": []
     },
     {
-        "id": "cd3c4a523bd68605",
+        "id": "9c2d8dde2c1cf787",
+        "type": "ui_text",
+        "z": "24cf997c7034cb7c",
+        "group": "a7cde148daaaec4e",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "State",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 910,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "0387a4bf0843d216",
+        "type": "ui_button",
+        "z": "24cf997c7034cb7c",
+        "name": "",
+        "group": "a7cde148daaaec4e",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Disarmed",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "DISARMED",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 140,
+        "y": 620,
+        "wires": [
+            [
+                "fc2026064787cb68"
+            ]
+        ]
+    },
+    {
+        "id": "3892e94aa852f67b",
+        "type": "ui_button",
+        "z": "24cf997c7034cb7c",
+        "name": "",
+        "group": "a7cde148daaaec4e",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Armed",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "ARMED",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 130,
+        "y": 660,
+        "wires": [
+            [
+                "fc2026064787cb68"
+            ]
+        ]
+    },
+    {
+        "id": "c025aa46b33bb280",
+        "type": "ui_button",
+        "z": "24cf997c7034cb7c",
+        "name": "",
+        "group": "a7cde148daaaec4e",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Alarm",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "ALARM",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 130,
+        "y": 700,
+        "wires": [
+            [
+                "fc2026064787cb68"
+            ]
+        ]
+    },
+    {
+        "id": "421f265b9081ef6e",
         "type": "global-config",
         "env": [],
         "modules": {

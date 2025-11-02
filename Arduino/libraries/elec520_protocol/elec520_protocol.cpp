@@ -76,21 +76,22 @@ String nodeTopicFloorTimestamp(uint8_t f_id)     { return "f/"+String(f_id)+"/ts
 String nodeTopicRoomTimestamp(uint8_t f_id,uint8_t r_id){ return "f/"+String(f_id)+"/r/"+String(r_id)+"/ts"; }
 
 // ---------------- Topic builders (Cloud) ----------------
-static inline String _CLOUD_BASE(){ return "ELEC520/security/"; }
+// Now emit under ELEC520/security/hw/...
+static inline String _CLOUD_BASE_HW(){ return "ELEC520/security/hw/"; }
 
 String cloudTopicFloor(uint8_t f_id) {
-  return "ELEC520/security/f/" + String(f_id);
+  return _CLOUD_BASE_HW() + String("f/") + String(f_id);
 }
-String cloudTopicSystemState()                    { return _CLOUD_BASE()+"s/st"; }
-String cloudTopicKeypad()                         { return _CLOUD_BASE()+"s/ke"; }
-String cloudTopicNetwork()                        { return _CLOUD_BASE()+"n/st"; }
-String cloudTopicMac()                            { return _CLOUD_BASE()+"n/mc"; }
-String cloudTopicFloorConnection(uint8_t f_id)    { return _CLOUD_BASE()+"f/"+String(f_id)+"/cs"; }
-String cloudTopicRoomConnection(uint8_t f_id,uint8_t r_id){ return _CLOUD_BASE()+"f/"+String(f_id)+"/r/"+String(r_id)+"/cs"; }
-String cloudTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id){ return _CLOUD_BASE()+"f/"+String(f_id)+"/r/"+String(r_id)+"/u/"+String(u_id); }
-String cloudTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id){ return _CLOUD_BASE()+"f/"+String(f_id)+"/r/"+String(r_id)+"/h/"+String(hs_id); }
-String cloudTopicFloorTimestamp(uint8_t f_id)     { return _CLOUD_BASE()+"f/"+String(f_id)+"/ts"; }
-String cloudTopicRoomTimestamp(uint8_t f_id,uint8_t r_id){ return _CLOUD_BASE()+"f/"+String(f_id)+"/r/"+String(r_id)+"/ts"; }
+String cloudTopicSystemState()                    { return _CLOUD_BASE_HW()+"s/st"; }
+String cloudTopicKeypad()                         { return _CLOUD_BASE_HW()+"s/ke"; }
+String cloudTopicNetwork()                        { return _CLOUD_BASE_HW()+"n/st"; }
+String cloudTopicMac()                            { return _CLOUD_BASE_HW()+"n/mc"; }
+String cloudTopicFloorConnection(uint8_t f_id)    { return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/cs"; }
+String cloudTopicRoomConnection(uint8_t f_id,uint8_t r_id){ return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/r/"+String(r_id)+"/cs"; }
+String cloudTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id){ return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/r/"+String(r_id)+"/u/"+String(u_id); }
+String cloudTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id){ return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/r/"+String(r_id)+"/h/"+String(hs_id); }
+String cloudTopicFloorTimestamp(uint8_t f_id)     { return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/ts"; }
+String cloudTopicRoomTimestamp(uint8_t f_id,uint8_t r_id){ return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/r/"+String(r_id)+"/ts"; }
 
 // ---------------- Parsers (INLINED MODEL UPDATES) ----------------
 static bool parseCore(const char* topicC, const char* payloadC, bool cloud){
@@ -103,8 +104,10 @@ static bool parseCore(const char* topicC, const char* payloadC, bool cloud){
 
   int base = 0;
   if (cloud){
-    if (n < 3 || p[0]!="ELEC520" || p[1]!="security") return false;
-    base = 2;
+    // Require: ELEC520/security/(hw|cl)/...
+    if (n < 4 || p[0]!="ELEC520" || p[1]!="security") return false;
+    if (!(p[2]=="hw" || p[2]=="cl")) return false;
+    base = 3;
   }
 
   // s/st, s/ke, n/st, n/mc
@@ -288,10 +291,6 @@ bool parseRoomEspString(const String& roomData) {
 }
 
 // ---------------- MQTT full-system compact string ----------------
-// Payload example:
-//   "s/st:1;s/ke:0;n/st:1;n/mc:AA:BB:CC:DD:EE:FF;
-//    f/0/cs:1;f/0/ts:1698312345;f/0/r/0/cs:1;f/0/r/0/ts:1698312390;
-//    f/0/r/0/u/0:87;f/0/r/0/h/0:1;f/1/cs:0; ..."
 String buildSystemMqttString() {
   String out;
   out.reserve(1024); // adjust if your model is large
@@ -334,7 +333,6 @@ String buildSystemMqttString() {
     }
   }
 
-  // Ensure no stray leading ';'
   if (out.startsWith(";")) out.remove(0, 1);
   return out;
 }
@@ -373,23 +371,23 @@ bool parseSystemMqttString(const String& systemData) {
     }
   }
 
-    return anyParsed;
+  return anyParsed;
 }
 
-  String buildFloorMqttString(uint8_t f_id) {
-    if (f_id >= SMP_MAX_FLOORS) return String();
+String buildFloorMqttString(uint8_t f_id) {
+  if (f_id >= SMP_MAX_FLOORS) return String();
 
-    FloorNode& F = MODEL.floors[f_id];
-    if (!F.used) return String();
+  FloorNode& F = MODEL.floors[f_id];
+  if (!F.used) return String();
 
-    String out;
-    out.reserve(160);
+  String out;
+  out.reserve(160);
 
-    // Floor connection + timestamp
-    out += "cs:"; out += (F.connected ? "1" : "0");
-    if (F.ts != 0) {
-      out += ";ts:"; out += String(F.ts);
-    }
+  // Floor connection + timestamp
+  out += "cs:"; out += (F.connected ? "1" : "0");
+  if (F.ts != 0) {
+    out += ";ts:"; out += String(F.ts);
+  }
 
   // Rooms
   for (uint8_t r = 0; r < SMP_MAX_ROOMS; ++r) {
@@ -425,7 +423,6 @@ bool parseSystemMqttString(const String& systemData) {
 
   return out;
 }
-
 
 void debugPrintModel(Stream& out) {
   out.println(F("=== ELEC520 MODEL DUMP ==="));
@@ -477,4 +474,3 @@ void debugPrintModel(Stream& out) {
 
   out.println(F("=== END MODEL DUMP ==="));
 }
-
