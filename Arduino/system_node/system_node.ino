@@ -50,7 +50,7 @@ void setup() {
   //Setup the floor
   objFloor.setFloorID(1);
   objFloor.setNumberOfRooms(2);
-  objFloor.setNumOfFloors(2);
+  objFloor.setNumOfFloors(1);
 
   //floor 1
   addFloor  (objFloor.getFloorID());

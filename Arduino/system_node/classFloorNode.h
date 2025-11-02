@@ -54,9 +54,18 @@ private:
 
 
     // --- Static callbacks that forward into the instance ---
-    static void mqttCallbackStatic(char* topic, byte* payload, unsigned int length);
-    static void onSentStatic(const wifi_tx_info_t *mac_addr, esp_now_send_status_t status);
-    static void onReceiveStatic(const esp_now_recv_info_t* info, const uint8_t* data, int len);
+    static void mqttCallbackStatic(char* topic, byte* payload, unsigned int length) {
+        if (instance) instance->MqttCallBack(topic, payload, length);
+    }
+
+    static void onSentStatic(const wifi_tx_info_t *mac_addr, esp_now_send_status_t status) {
+        if (instance) instance->onESPSent(mac_addr, status);
+    }
+
+    static void onReceiveStatic(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
+        if (instance) instance->onReceive(info, data, len);
+    }
+
 
 
     //MQTT Get client data. 
@@ -103,14 +112,11 @@ private:
 public:
 
     // Constructor
-    classFloorNode(const char* ssid = "Joe's S23 Ultra",
-                   const char* password = "joea12345",
-                   const char* mqtt_server = "broker.hivemq.com",
-                   int mqtt_port = 1883,
-                   const char* mqtt_client_id = "ESP32_BaseStation")
-        : _ssid(ssid), _password(password),
-          _mqtt_server(mqtt_server), _mqtt_port(mqtt_port),
-          _mqtt_client_id(mqtt_client_id), client(espClient);
+    classFloorNode(const char* ssid,
+                   const char* password,
+                   const char* mqtt_server,
+                   int mqtt_port,
+                   const char* mqtt_client_id);
 
 
     //Set the Floor ID

@@ -1,47 +1,36 @@
 #include <classFloorNode.h>
 
-// --- Static callbacks that forward into the instance ---
-static void mqttCallbackStatic(char* topic, byte* payload, unsigned int length) {
-    if (instance) instance->MqttCallBack(topic, payload, length);
-}
-
-static void onSentStatic(const wifi_tx_info_t *mac_addr, esp_now_send_status_t status) {
-    if (instance) instance->onESPSent(mac_addr, status);
-}
-
-static void onReceiveStatic(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
-    if (instance) instance->onReceive(info, data, len);
-}
 
 //NETWORKING////////////////////////////////////////////////////////////////////////////////////////
 
 //MQTT Get client data. 
-PubSubClient& getClient() { return client; }
+PubSubClient& classFloorNode::getClient() { return client; }
 
 
 //WIFI Set the Wifi Credentials
-void setWifiNetworkCredentials(const char* ssid, const char* password) {
+void classFloorNode::setWifiNetworkCredentials(const char* ssid, const char* password) {
     _ssid = ssid;
     _password = password;
 }
 
 
 //MQTT callback function
-void MqttCallBack(char* topicC, byte* payload, unsigned int length) {
+void classFloorNode::MqttCallBack(char* topicC, byte* payload, unsigned int length) {
     static char buf[256];
     unsigned int n = (length < sizeof(buf)-1) ? length : sizeof(buf)-1;
     memcpy(buf, payload, n);
     buf[n] = '\0';
 
     //Parse the Mqtt data into MODEL. 
-    parseSystemMqttString(String(buf));
+    // parseSystemMqttString(String(buf));
+    parseCloud(topicC, buf);
 
-    // Serial.printf("MQTT Callback [%s]: %s\n", topicC, buf);
+    Serial.printf("MQTT Callback [%s]: %s\n", topicC, buf);
 }
 
 
 //MQTT Set client data.
-void setMQTTClientData(const char* mqtt_server, int mqtt_port, const char* mqtt_client_id) {
+void classFloorNode::setMQTTClientData(const char* mqtt_server, int mqtt_port, const char* mqtt_client_id) {
     _mqtt_server = mqtt_server;
     _mqtt_port = mqtt_port;
     _mqtt_client_id = mqtt_client_id;
@@ -49,7 +38,7 @@ void setMQTTClientData(const char* mqtt_server, int mqtt_port, const char* mqtt_
 
 
 //MQTT Reconnect with the broker
-void brokerReconnect() {
+void classFloorNode::brokerReconnect() {
     while (!client.connected()) {
         Serial.print("Attempting MQTT connection...\n");
         if (client.connect(_mqtt_client_id)) {
@@ -64,7 +53,7 @@ void brokerReconnect() {
 
 
 //Set up the wifi with the cloud. 
-void setup_wifi() {
+void classFloorNode::setup_wifi() {
     delay(10);
     Serial.printf("Connecting to %s\n", _ssid);
     WiFi.begin(_ssid, _password);
@@ -81,7 +70,7 @@ void setup_wifi() {
 
 //ESP NOW//////////////////////////////////////////////////////////////////////////////////////////
 //Set up the esp now for peer to peer communication.
-bool setup_espnow() {
+bool classFloorNode::setup_espnow() {
     startTime = millis();
     WiFi.mode(WIFI_STA);
     if (esp_now_init() != ESP_OK) {
@@ -106,7 +95,7 @@ bool setup_espnow() {
 
 
 //ESP send callback. 
-void onESPSent(const wifi_tx_info_t *mac_addr, esp_now_send_status_t status) {
+void classFloorNode::onESPSent(const wifi_tx_info_t *mac_addr, esp_now_send_status_t status) {
     Serial.printf("TX: ");
     for (int i = 0; i < 6; i++) {
         Serial.printf("%02X", strucTXMessage.src_addr[i]);
@@ -117,7 +106,7 @@ void onESPSent(const wifi_tx_info_t *mac_addr, esp_now_send_status_t status) {
 
 
 //Esp now receive call back function. 
-void onReceive(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
+void classFloorNode::onReceive(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
     // Create a null-terminated buffer
     static char buf[251];
     int n = (len < 250) ? len : 250;
@@ -136,7 +125,7 @@ void onReceive(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
 
 
 //Send esp now message
-void sendEspNowMsg(struct_message &message) {
+void classFloorNode::sendEspNowMsg(struct_message &message) {
     // Ensure null-termination
     message.payload[sizeof(message.payload) - 1] = '\0';
     size_t len = strnlen(message.payload, sizeof(message.payload));
@@ -156,7 +145,7 @@ void sendEspNowMsg(struct_message &message) {
 //PUBLIC////////////////////////////////////////////////////////////////////////////////////////////
 
 // Constructor
-classFloorNode(const char* ssid = "Joe's S23 Ultra",
+classFloorNode::classFloorNode(const char* ssid = "Joe's S23 Ultra",
                 const char* password = "joea12345",
                 const char* mqtt_server = "broker.hivemq.com",
                 int mqtt_port = 1883,
@@ -165,8 +154,6 @@ classFloorNode(const char* ssid = "Joe's S23 Ultra",
         _mqtt_server(mqtt_server), _mqtt_port(mqtt_port),
         _mqtt_client_id(mqtt_client_id), client(espClient) {
     instance = this;  // set singleton pointer
-    for (int i = 0; i < 6; i++) _auiMacAddress[i] = 0;
-    _lastFloorSentMsg = 0;
     _uiNumRoom = 0;
 }
 
@@ -174,28 +161,28 @@ classFloorNode(const char* ssid = "Joe's S23 Ultra",
 // void setNodeID(int iNodeID) { _iNodeID = iNodeID; }
 // int getNodeID(){return _iNodeID; }
 
-void setFloorID(byte id){_bFloorID = id;}
-byte getFloorID(){return _bFloorID;}
+void classFloorNode::setFloorID(byte id){_bFloorID = id;}
+byte classFloorNode::getFloorID(){return _bFloorID;}
 
-void setNumOfFloors(int value){
+void classFloorNode::setNumOfFloors(int value){
     iNumOfFloors = value;
 }
 
 //NETWORKING/////////////////////////////////////////////////////////////////////////////
 //Network setup. 
-void setupNetwork() {
+void classFloorNode::setupNetwork() {
     setup_wifi();
     setup_espnow();
 }
 
 //Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor. 
-void setNumberOfRooms(int number){
+void classFloorNode::setNumberOfRooms(int number){
     _uiNumRoom = number;
 }
 
 
 //Send floor data over esp now
-void sendFloorData(){
+void classFloorNode::sendFloorData(){
     for (uint8_t i=1; i<_uiNumRoom+1; i++){
         // Serial.printf("Room ID is %d\n", i);
         String data = buildRoomEspString(getFloorID(), i);
@@ -210,8 +197,14 @@ void sendFloorData(){
 }
 
 
+//Transmit system data
+void classFloorNode::sendSystemData(){
+    
+}
+
+
 //Transmit window 
-void transmitWindow(){
+void classFloorNode::transmitWindow(){
     //Trasnmit time interval. 
     if(millis() - startTime > 1000){
         //Increment the transmit window position. 
@@ -228,7 +221,7 @@ void transmitWindow(){
 
 
 //MQTT loop
-void mqttOperate(){
+void classFloorNode::mqttOperate(){
     if (!client.connected()) {
         brokerReconnect();
     }
