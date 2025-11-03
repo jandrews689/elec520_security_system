@@ -3,7 +3,6 @@
 
 #include <cstdint>
 #include <PubSubClient.h>
-#include <esp_now.h>
 #include <esp_wifi.h>
 #include <WiFi.h>
 #include "elec520_protocol.h"
@@ -23,14 +22,13 @@ private:
     const char* _mqtt_server; 
     int _mqtt_port; 
     const char* _mqtt_client_id; 
-    int message_ID = 0;
     WiFiClient espClient;
 
     //MQTT setup variables
     PubSubClient client;
 
     byte _bFloorID = 0b0000'0001;
-    int iNumOfFloors = 2; //Need to figure out a way to define this.
+    int _iNumOfFloors; //Need to figure out a way to define this.
 
     // Message structure
     typedef struct struct_message {
@@ -39,14 +37,6 @@ private:
         uint8_t src_addr[6];      //source address (used for RX messages not TX messages)
     } struct_message;
 
-    struct_message strucTXMessage;
-    struct_message strucRXMessage;
-    esp_now_peer_info_t peerInfo = {}; //ESP Peer information.
-
-    // Peer Node structure
-    typedef struct peer_node_data {
-        uint32_t uiMacAddress;
-    } peer_node_data;
 
     unsigned long startTime;
     byte bTransmitPosition = 0b0000'0001;
@@ -57,15 +47,6 @@ private:
     static void mqttCallbackStatic(char* topic, byte* payload, unsigned int length) {
         if (instance) instance->MqttCallBack(topic, payload, length);
     }
-
-    static void onSentStatic(const wifi_tx_info_t *mac_addr, esp_now_send_status_t status) {
-        if (instance) instance->onESPSent(mac_addr, status);
-    }
-
-    static void onReceiveStatic(const esp_now_recv_info_t* info, const uint8_t* data, int len) {
-        if (instance) instance->onReceive(info, data, len);
-    }
-
 
 
     //MQTT Get client data. 
@@ -92,23 +73,6 @@ private:
     void setup_wifi();
 
 
-    //ESP NOW//////////////////////////////////////////////////////////////////////////////////////////
-    //Set up the esp now for peer to peer communication.
-    bool setup_espnow();
-
-
-    //ESP send callback. 
-    void onESPSent(const wifi_tx_info_t *mac_addr, esp_now_send_status_t status);
-
-
-    //Esp now receive call back function. 
-    void onReceive(const esp_now_recv_info_t* info, const uint8_t* data, int len);
-
-
-    //Send esp now message
-    void sendEspNowMsg(struct_message &message);
-
-
 public:
 
     // Constructor
@@ -119,7 +83,7 @@ public:
                    const char* mqtt_client_id);
 
 
-    //Set the Floor ID
+    //Set the Floor ID, helper function to make system buildering easier to read. 
     void setFloorID(byte id);
 
 
@@ -127,7 +91,7 @@ public:
     byte getFloorID();
 
 
-    //Set the number of floors in the system
+    //Set the number of floors in the system, used by MMQT 
     void setNumOfFloors(int value);
 
 
@@ -137,14 +101,6 @@ public:
 
     //Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor. 
     void setNumberOfRooms(int number);
-
-
-    //Send floor data over esp now
-    void sendFloorData();
-
-
-    //Transmit window 
-    void transmitWindow();
 
 
     //MQTT loop

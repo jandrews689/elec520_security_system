@@ -125,8 +125,6 @@ void loop() {
     // parseTokenLine(nanoHallTest);
   /////////////////////////////////////////////////////////////
 
-  //gen esp string and sending over esp
-  objFloor.transmitWindow();
 
   //Mqtt pub and sub
   if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
