@@ -1,22 +1,15 @@
 [
     {
-        "id": "f6f2187d.f17ca8",
+        "id": "9088ffe0b9f7bcfc",
         "type": "tab",
         "label": "Flow 1",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "24cf997c7034cb7c",
-        "type": "tab",
-        "label": "Flow 1",
-        "disabled": false,
-        "info": ""
-    },
-    {
-        "id": "fd179ad6a3d5e2d2",
+        "id": "c13e60180aaa05c8",
         "type": "group",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "style": {
             "stroke": "#999999",
             "stroke-opacity": "1",
@@ -27,42 +20,14 @@
             "color": "#a4a4a4"
         },
         "nodes": [
-            "53cbca24ffb0b909",
-            "027b5a738224b816",
-            "ad440404adf910e4",
-            "6ee8d32c5fac46ee",
-            "55c6bb195a4e7319",
-            "13254f5b55935bc1",
-            "0f8132a773321341",
-            "ecf87ae5148f3b3a"
-        ],
-        "x": 874,
-        "y": 79,
-        "w": 412,
-        "h": 184.5
-    },
-    {
-        "id": "1ff204338f95197a",
-        "type": "group",
-        "z": "24cf997c7034cb7c",
-        "style": {
-            "stroke": "#999999",
-            "stroke-opacity": "1",
-            "fill": "none",
-            "fill-opacity": "1",
-            "label": true,
-            "label-position": "nw",
-            "color": "#a4a4a4"
-        },
-        "nodes": [
-            "593800badc18ec0d",
-            "c994485b159c70b8",
-            "e319e11de6bbda05",
-            "c1938394473b927f",
-            "b2d4e2d1493f7137",
-            "b578e40c2dc1535d",
-            "251888de4118d19d",
-            "cb8393d41483168e"
+            "c5e87e566c9d8425",
+            "3cf6d85aa6bdbc50",
+            "3b1df19d58d5c670",
+            "a8f18b9841fdcba1",
+            "8503772b837db09e",
+            "942a865c3475648f",
+            "1b9aa8e69bac82a0",
+            "710c796902766b2e"
         ],
         "x": 874,
         "y": 279,
@@ -70,7 +35,35 @@
         "h": 184.5
     },
     {
-        "id": "8ad54f0a953d463f",
+        "id": "3f8175208f4b4166",
+        "type": "group",
+        "z": "9088ffe0b9f7bcfc",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "f4af1214051520b6",
+            "560fa5b0a26dd9d0",
+            "23be4b62d755941d",
+            "1e10ed58c13e0283",
+            "b517f4f2b8574a2d",
+            "70f1d2523bd6f22f",
+            "b8fd880e66244e71",
+            "dfa6787d49ecaeaf"
+        ],
+        "x": 874,
+        "y": 479,
+        "w": 412,
+        "h": 184.5
+    },
+    {
+        "id": "16070f5db00beafe",
         "type": "mqtt-broker",
         "name": "",
         "broker": "broker.hivemq.com",
@@ -101,7 +94,7 @@
         "sessionExpiry": ""
     },
     {
-        "id": "6c2aa679d22f12d9",
+        "id": "36018e46e6b206cc",
         "type": "ui_base",
         "theme": {
             "name": "theme-light",
@@ -198,25 +191,7 @@
         }
     },
     {
-        "id": "c4ba943dc4ad7a06",
-        "type": "ui_tab",
-        "name": "Floor 1",
-        "icon": "dashboard",
-        "order": 1,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "4668730d6eedc4bd",
-        "type": "ui_tab",
-        "name": "Floor 1",
-        "icon": "dashboard",
-        "order": 1,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "c02d5f75a6844843",
+        "id": "d8f10e9bdc22a990",
         "type": "ui_group",
         "name": "Room 1",
         "tab": "c4ba943dc4ad7a06",
@@ -227,7 +202,7 @@
         "className": ""
     },
     {
-        "id": "6d55a94b612c3ee4",
+        "id": "d5ad1e130da57024",
         "type": "ui_group",
         "name": "Room 2",
         "tab": "c4ba943dc4ad7a06",
@@ -238,7 +213,7 @@
         "className": ""
     },
     {
-        "id": "a7cde148daaaec4e",
+        "id": "a6e28288b9b9942c",
         "type": "ui_group",
         "name": "Remote Tools",
         "tab": "c4ba943dc4ad7a06",
@@ -249,7 +224,7 @@
         "className": ""
     },
     {
-        "id": "6ab08d173cb21739",
+        "id": "5e10a5d75dc41f96",
         "type": "ui_group",
         "name": "Room 1",
         "tab": "c4ba943dc4ad7a06",
@@ -260,7 +235,7 @@
         "className": ""
     },
     {
-        "id": "a43d6ed283f42894",
+        "id": "2e3607c2979bdf0a",
         "type": "ui_group",
         "name": "Room 2",
         "tab": "c4ba943dc4ad7a06",
@@ -271,7 +246,7 @@
         "className": ""
     },
     {
-        "id": "cdc7d4d0fc91a92c",
+        "id": "018b6d4dae4d45ee",
         "type": "ui_group",
         "name": "Remote Tools",
         "tab": "c4ba943dc4ad7a06",
@@ -282,42 +257,78 @@
         "className": ""
     },
     {
-        "id": "3cc11d24.ff01a2",
-        "type": "comment",
-        "z": "f6f2187d.f17ca8",
-        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
-        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
-        "x": 350,
-        "y": 80,
-        "wires": []
+        "id": "cbb63d0e673d4877",
+        "type": "ui_tab",
+        "name": "Floor 1",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
     },
     {
-        "id": "b482ba385b28f724",
+        "id": "4e5a253cfdc1567c",
+        "type": "ui_group",
+        "name": "Group 1",
+        "tab": "cbb63d0e673d4877",
+        "order": 2,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "e4bf600661a44d02",
+        "type": "ui_group",
+        "name": "Group 2",
+        "tab": "cbb63d0e673d4877",
+        "order": 3,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "f2c5d9088e4c1c81",
+        "type": "ui_group",
+        "name": "Group 3",
+        "tab": "cbb63d0e673d4877",
+        "order": 4,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "f0a98cc2c8378640",
+        "type": "ui_group",
+        "name": "Group 4",
+        "tab": "cbb63d0e673d4877",
+        "order": 1,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "28f2f7fb2cef378d",
         "type": "mqtt in",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "",
         "topic": "ELEC520/security/#",
         "qos": "2",
         "datatype": "auto-detect",
-        "broker": "8ad54f0a953d463f",
+        "broker": "16070f5db00beafe",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
         "x": 130,
-        "y": 140,
+        "y": 340,
         "wires": [
             [
-                "105282683ea12f55",
-                "3f960cecbcfad42d",
-                "b397f1b249a32c2f"
+                "9713d19c4fc67c6f",
+                "cd9b3d01978e30ad",
+                "ab4a24166c499b03",
+                "fd361dcbe9c4ec6a"
             ]
         ]
     },
     {
-        "id": "105282683ea12f55",
+        "id": "9713d19c4fc67c6f",
         "type": "debug",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "debug 1",
         "active": false,
         "tosidebar": true,
@@ -327,15 +338,15 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 160,
-        "y": 100,
+        "y": 300,
         "wires": []
     },
     {
-        "id": "3f960cecbcfad42d",
+        "id": "cd9b3d01978e30ad",
         "type": "function",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "ELEC520/security/#",
-        "func": "// node.warn(\"Incoming topic: \" + msg.topic);\n\n// Example topic: ELEC520/security/f/1/r/1/cs\nlet topic = msg.topic;\n\n// node.warn(\"Topic seen by parser: '\" + topic + \"'\");\n// Extract floor or system section\nlet match = topic.match(/ELEC520\\/security\\/(hw|cl)\\/(f\\/(\\d+)|s)(\\/|$)/);\n\n// node.warn(match);\n\nif (match) {\n    let outputs = new Array(8).fill(null);\n\n    // if (match[1]) {\n    //     msg.systemState = \n    // }\n\n    if (match[2]) {\n        // Floor topic\n        msg.floor = parseInt(match[2]);\n        outputs[msg.floor - 1] = msg;\n        return outputs;\n    } else {\n        // System topic (s)\n        // node.warn(\"System topic received: \" + topic);\n        // optional: handle system message here or just ignore\n        return null;\n    }\n\n} else {\n    node.warn(\"Unexpected topic format: \" + topic);\n    return null;\n}\n",
+        "func": "// node.warn(\"Incoming topic: \" + msg.topic);\n\n// Example topic: ELEC520/security/f/1/r/1/cs\nlet topic = msg.topic;\n\n// node.warn(\"Topic seen by parser: '\" + topic + \"'\");\n// Extract floor or system section\nlet match = topic.match(/ELEC520\\/security\\/(hw|cl)\\/(f\\/(\\d+)|s)(\\/|$)/);\n\n// node.warn(match);\n\nif (match) {\n    let outputs = new Array(8).fill(null);\n\n    // if (match[1]) {\n    //     msg.systemState = \n    // }\n\n    if (match[2]) {\n        // Floor topic\n        msg.floor = parseInt(match[2]);\n        outputs[msg.floor - 1] = msg;\n        return outputs;\n    } else {\n        // System topic (s)\n        // node.warn(\"System topic received: \" + topic);\n        // optional: handle system message here or just ignore\n        return null;\n    }\n\n} else {\n    // node.warn(\"Unexpected topic format: \" + topic);\n    return null;\n}\n",
         "outputs": 8,
         "timeout": 0,
         "noerr": 0,
@@ -343,20 +354,20 @@
         "finalize": "",
         "libs": [],
         "x": 380,
-        "y": 180,
+        "y": 380,
         "wires": [
             [
-                "e39a7062115c8a49",
-                "0e0fe5349c1c6f70"
+                "870777d0ae35aa42",
+                "d1800eb906d866a0"
             ],
             [
-                "8d7b2b10a08ad6b2"
+                "f62bcc295f25c973"
             ],
             [
-                "41a67ea9d3e66ca3"
+                "c948c2566ab4f809"
             ],
             [
-                "e90c5ae49b65f495"
+                "1a9267fbf05b9f83"
             ],
             [],
             [],
@@ -365,9 +376,9 @@
         ]
     },
     {
-        "id": "e39a7062115c8a49",
+        "id": "870777d0ae35aa42",
         "type": "debug",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "debug 2",
         "active": false,
         "tosidebar": true,
@@ -377,13 +388,13 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 420,
-        "y": 100,
+        "y": 300,
         "wires": []
     },
     {
-        "id": "0e0fe5349c1c6f70",
+        "id": "d1800eb906d866a0",
         "type": "function",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "parseFloor",
         "func": "// Example payload:\n// cs:0;r/1/cs:0;r/1/u/1:120;r/1/h/1:1;r/1/h/2:0;r/2/cs:1;r/2/u/1:98;r/2/h/1:0;r/2/h/2:1\n\nlet payload = msg.payload;\nlet parts = payload.split(\";\");\n\nlet floorConnected = null;\nlet rooms = {};  // temporary store\n\nfor (let part of parts) {\n    if (!part) continue;\n\n    let [key, value] = part.split(\":\");\n    value = parseInt(value);\n\n    // Floor-level connection status\n    if (key === \"cs\") {\n        floorConnected = value;\n        continue;\n    }\n\n    // Room-based info\n    let match = key.match(/^r\\/(\\d+)\\/(.*)$/);\n    if (!match) continue;\n\n    let roomId = parseInt(match[1]);\n    let rest = match[2];\n\n    // Make sure room object exists\n    if (!rooms[roomId]) {\n        rooms[roomId] = {\n            floorConnected: floorConnected,\n            roomId: roomId,\n            roomConnected: null,\n            hall: [],\n            ultra: []\n        };\n    }\n\n    if (rest === \"cs\") {\n        rooms[roomId].roomConnected = value;\n    } else if (rest.startsWith(\"h/\")) {\n        rooms[roomId].hall.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            state: value\n        });\n    } else if (rest.startsWith(\"u/\")) {\n        rooms[roomId].ultra.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            value: value\n        });\n    }\n}\n\n// Create an array of outputs (one per room, max 8)\nlet outputs = new Array(8).fill(null);\n\nfor (let [roomId, data] of Object.entries(rooms)) {\n    let index = data.roomId - 1; // output numbering starts from 0\n    outputs[index] = { payload: data };\n}\n\nreturn outputs;\n",
         "outputs": 8,
@@ -393,14 +404,14 @@
         "finalize": "",
         "libs": [],
         "x": 630,
-        "y": 180,
+        "y": 380,
         "wires": [
             [
-                "03f42dd352837dbd",
-                "53cbca24ffb0b909"
+                "044df2e1eb82ee5f",
+                "c5e87e566c9d8425"
             ],
             [
-                "593800badc18ec0d"
+                "f4af1214051520b6"
             ],
             [],
             [],
@@ -411,9 +422,9 @@
         ]
     },
     {
-        "id": "03f42dd352837dbd",
+        "id": "044df2e1eb82ee5f",
         "type": "debug",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "debug 10",
         "active": false,
         "tosidebar": true,
@@ -423,13 +434,13 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 640,
-        "y": 100,
+        "y": 300,
         "wires": []
     },
     {
-        "id": "8d7b2b10a08ad6b2",
+        "id": "f62bcc295f25c973",
         "type": "function",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "parseFloor",
         "func": "// Example payload:\n// cs:0;r/1/cs:0;r/1/u/1:120;r/1/h/1:1;r/1/h/2:0;r/2/cs:1;r/2/u/1:98;r/2/h/1:0;r/2/h/2:1\n\nlet payload = msg.payload;\nlet parts = payload.split(\";\");\n\nlet floorConnected = null;\nlet rooms = {};  // temporary store\n\nfor (let part of parts) {\n    if (!part) continue;\n\n    let [key, value] = part.split(\":\");\n    value = parseInt(value);\n\n    // Floor-level connection status\n    if (key === \"cs\") {\n        floorConnected = value;\n        continue;\n    }\n\n    // Room-based info\n    let match = key.match(/^r\\/(\\d+)\\/(.*)$/);\n    if (!match) continue;\n\n    let roomId = parseInt(match[1]);\n    let rest = match[2];\n\n    // Make sure room object exists\n    if (!rooms[roomId]) {\n        rooms[roomId] = {\n            floorConnected: floorConnected,\n            roomId: roomId,\n            roomConnected: null,\n            hall: [],\n            ultra: []\n        };\n    }\n\n    if (rest === \"cs\") {\n        rooms[roomId].roomConnected = value;\n    } else if (rest.startsWith(\"h/\")) {\n        rooms[roomId].hall.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            state: value\n        });\n    } else if (rest.startsWith(\"u/\")) {\n        rooms[roomId].ultra.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            value: value\n        });\n    }\n}\n\n// Create an array of outputs (one per room, max 8)\nlet outputs = new Array(8).fill(null);\n\nfor (let [roomId, data] of Object.entries(rooms)) {\n    let index = data.roomId - 1; // output numbering starts from 0\n    outputs[index] = { payload: data };\n}\n\nreturn outputs;\n",
         "outputs": 8,
@@ -439,7 +450,7 @@
         "finalize": "",
         "libs": [],
         "x": 630,
-        "y": 260,
+        "y": 460,
         "wires": [
             [],
             [],
@@ -452,9 +463,9 @@
         ]
     },
     {
-        "id": "41a67ea9d3e66ca3",
+        "id": "c948c2566ab4f809",
         "type": "function",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "parseFloor",
         "func": "// Example payload:\n// cs:0;r/1/cs:0;r/1/u/1:120;r/1/h/1:1;r/1/h/2:0;r/2/cs:1;r/2/u/1:98;r/2/h/1:0;r/2/h/2:1\n\nlet payload = msg.payload;\nlet parts = payload.split(\";\");\n\nlet floorConnected = null;\nlet rooms = {};  // temporary store\n\nfor (let part of parts) {\n    if (!part) continue;\n\n    let [key, value] = part.split(\":\");\n    value = parseInt(value);\n\n    // Floor-level connection status\n    if (key === \"cs\") {\n        floorConnected = value;\n        continue;\n    }\n\n    // Room-based info\n    let match = key.match(/^r\\/(\\d+)\\/(.*)$/);\n    if (!match) continue;\n\n    let roomId = parseInt(match[1]);\n    let rest = match[2];\n\n    // Make sure room object exists\n    if (!rooms[roomId]) {\n        rooms[roomId] = {\n            floorConnected: floorConnected,\n            roomId: roomId,\n            roomConnected: null,\n            hall: [],\n            ultra: []\n        };\n    }\n\n    if (rest === \"cs\") {\n        rooms[roomId].roomConnected = value;\n    } else if (rest.startsWith(\"h/\")) {\n        rooms[roomId].hall.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            state: value\n        });\n    } else if (rest.startsWith(\"u/\")) {\n        rooms[roomId].ultra.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            value: value\n        });\n    }\n}\n\n// Create an array of outputs (one per room, max 8)\nlet outputs = new Array(8).fill(null);\n\nfor (let [roomId, data] of Object.entries(rooms)) {\n    let index = data.roomId - 1; // output numbering starts from 0\n    outputs[index] = { payload: data };\n}\n\nreturn outputs;\n",
         "outputs": 8,
@@ -464,7 +475,7 @@
         "finalize": "",
         "libs": [],
         "x": 630,
-        "y": 340,
+        "y": 540,
         "wires": [
             [],
             [],
@@ -477,9 +488,9 @@
         ]
     },
     {
-        "id": "e90c5ae49b65f495",
+        "id": "1a9267fbf05b9f83",
         "type": "function",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "parseFloor",
         "func": "// Example payload:\n// cs:0;r/1/cs:0;r/1/u/1:120;r/1/h/1:1;r/1/h/2:0;r/2/cs:1;r/2/u/1:98;r/2/h/1:0;r/2/h/2:1\n\nlet payload = msg.payload;\nlet parts = payload.split(\";\");\n\nlet floorConnected = null;\nlet rooms = {};  // temporary store\n\nfor (let part of parts) {\n    if (!part) continue;\n\n    let [key, value] = part.split(\":\");\n    value = parseInt(value);\n\n    // Floor-level connection status\n    if (key === \"cs\") {\n        floorConnected = value;\n        continue;\n    }\n\n    // Room-based info\n    let match = key.match(/^r\\/(\\d+)\\/(.*)$/);\n    if (!match) continue;\n\n    let roomId = parseInt(match[1]);\n    let rest = match[2];\n\n    // Make sure room object exists\n    if (!rooms[roomId]) {\n        rooms[roomId] = {\n            floorConnected: floorConnected,\n            roomId: roomId,\n            roomConnected: null,\n            hall: [],\n            ultra: []\n        };\n    }\n\n    if (rest === \"cs\") {\n        rooms[roomId].roomConnected = value;\n    } else if (rest.startsWith(\"h/\")) {\n        rooms[roomId].hall.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            state: value\n        });\n    } else if (rest.startsWith(\"u/\")) {\n        rooms[roomId].ultra.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            value: value\n        });\n    }\n}\n\n// Create an array of outputs (one per room, max 8)\nlet outputs = new Array(8).fill(null);\n\nfor (let [roomId, data] of Object.entries(rooms)) {\n    let index = data.roomId - 1; // output numbering starts from 0\n    outputs[index] = { payload: data };\n}\n\nreturn outputs;\n",
         "outputs": 8,
@@ -489,7 +500,7 @@
         "finalize": "",
         "libs": [],
         "x": 630,
-        "y": 420,
+        "y": 620,
         "wires": [
             [],
             [],
@@ -502,10 +513,10 @@
         ]
     },
     {
-        "id": "53cbca24ffb0b909",
+        "id": "c5e87e566c9d8425",
         "type": "function",
-        "z": "24cf997c7034cb7c",
-        "g": "fd179ad6a3d5e2d2",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "c13e60180aaa05c8",
         "name": "parseRoom",
         "func": "// Input example (from parseFloor output):\n// msg.payload = { roomId: 1, roomConnected: 1, hall: [...], ultra: [...] }\n\nlet room = msg.payload;\nlet msgs = [];\n\n// Room connection status\nmsgs.push({\n    topic: `room/${room.roomId}/cs`,\n    payload: room.roomConnected\n});\n\n// Hall sensors\nfor (let h of room.hall) {\n    msgs.push({\n        topic: `room/${room.roomId}/hall/${h.id}`,\n        payload: h.state\n    });\n}\n\n// Ultrasonic sensors\nfor (let u of room.ultra) {\n    msgs.push({\n        topic: `room/${room.roomId}/ultra/${u.id}`,\n        payload: u.value\n    });\n}\n\n// Return as separate messages from one output\nreturn [msgs];\n",
         "outputs": 1,
@@ -515,18 +526,18 @@
         "finalize": "",
         "libs": [],
         "x": 970,
-        "y": 140,
+        "y": 340,
         "wires": [
             [
-                "027b5a738224b816"
+                "3cf6d85aa6bdbc50"
             ]
         ]
     },
     {
-        "id": "027b5a738224b816",
+        "id": "3cf6d85aa6bdbc50",
         "type": "switch",
-        "z": "24cf997c7034cb7c",
-        "g": "fd179ad6a3d5e2d2",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "c13e60180aaa05c8",
         "name": "",
         "property": "topic",
         "propertyType": "msg",
@@ -561,35 +572,35 @@
         "repair": false,
         "outputs": 5,
         "x": 950,
-        "y": 200,
+        "y": 400,
         "wires": [
             [
-                "ad440404adf910e4",
-                "6ee8d32c5fac46ee"
+                "3b1df19d58d5c670",
+                "a8f18b9841fdcba1"
             ],
             [
-                "ad440404adf910e4",
-                "55c6bb195a4e7319"
+                "3b1df19d58d5c670",
+                "8503772b837db09e"
             ],
             [
-                "ad440404adf910e4",
-                "13254f5b55935bc1"
+                "3b1df19d58d5c670",
+                "942a865c3475648f"
             ],
             [
-                "ad440404adf910e4",
-                "0f8132a773321341"
+                "3b1df19d58d5c670",
+                "1b9aa8e69bac82a0"
             ],
             [
-                "ad440404adf910e4",
-                "ecf87ae5148f3b3a"
+                "3b1df19d58d5c670",
+                "710c796902766b2e"
             ]
         ]
     },
     {
-        "id": "ad440404adf910e4",
+        "id": "3b1df19d58d5c670",
         "type": "debug",
-        "z": "24cf997c7034cb7c",
-        "g": "fd179ad6a3d5e2d2",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "c13e60180aaa05c8",
         "name": "debug 18",
         "active": false,
         "tosidebar": true,
@@ -599,14 +610,14 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1180,
-        "y": 120,
+        "y": 320,
         "wires": []
     },
     {
-        "id": "593800badc18ec0d",
+        "id": "f4af1214051520b6",
         "type": "function",
-        "z": "24cf997c7034cb7c",
-        "g": "1ff204338f95197a",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "3f8175208f4b4166",
         "name": "parseRoom",
         "func": "// Input example (from parseFloor output):\n// msg.payload = { roomId: 1, roomConnected: 1, hall: [...], ultra: [...] }\n\nlet room = msg.payload;\nlet msgs = [];\n\n// Room connection status\nmsgs.push({\n    topic: `room/${room.roomId}/cs`,\n    payload: room.roomConnected\n});\n\n// Hall sensors\nfor (let h of room.hall) {\n    msgs.push({\n        topic: `room/${room.roomId}/hall/${h.id}`,\n        payload: h.state\n    });\n}\n\n// Ultrasonic sensors\nfor (let u of room.ultra) {\n    msgs.push({\n        topic: `room/${room.roomId}/ultra/${u.id}`,\n        payload: u.value\n    });\n}\n\n// Return as separate messages from one output\nreturn [msgs];\n",
         "outputs": 1,
@@ -616,18 +627,18 @@
         "finalize": "",
         "libs": [],
         "x": 970,
-        "y": 340,
+        "y": 540,
         "wires": [
             [
-                "c994485b159c70b8"
+                "560fa5b0a26dd9d0"
             ]
         ]
     },
     {
-        "id": "c994485b159c70b8",
+        "id": "560fa5b0a26dd9d0",
         "type": "switch",
-        "z": "24cf997c7034cb7c",
-        "g": "1ff204338f95197a",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "3f8175208f4b4166",
         "name": "",
         "property": "topic",
         "propertyType": "msg",
@@ -662,35 +673,35 @@
         "repair": false,
         "outputs": 5,
         "x": 950,
-        "y": 400,
+        "y": 600,
         "wires": [
             [
-                "e319e11de6bbda05",
-                "c1938394473b927f"
+                "23be4b62d755941d",
+                "1e10ed58c13e0283"
             ],
             [
-                "e319e11de6bbda05",
-                "b2d4e2d1493f7137"
+                "23be4b62d755941d",
+                "b517f4f2b8574a2d"
             ],
             [
-                "e319e11de6bbda05",
-                "b578e40c2dc1535d"
+                "23be4b62d755941d",
+                "70f1d2523bd6f22f"
             ],
             [
-                "e319e11de6bbda05",
-                "251888de4118d19d"
+                "23be4b62d755941d",
+                "b8fd880e66244e71"
             ],
             [
-                "e319e11de6bbda05",
-                "cb8393d41483168e"
+                "23be4b62d755941d",
+                "dfa6787d49ecaeaf"
             ]
         ]
     },
     {
-        "id": "e319e11de6bbda05",
+        "id": "23be4b62d755941d",
         "type": "debug",
-        "z": "24cf997c7034cb7c",
-        "g": "1ff204338f95197a",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "3f8175208f4b4166",
         "name": "debug 3",
         "active": false,
         "tosidebar": true,
@@ -700,13 +711,13 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1180,
-        "y": 320,
+        "y": 520,
         "wires": []
     },
     {
-        "id": "7e237124465d84ea",
+        "id": "515b13e30f701cbe",
         "type": "debug",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "debug 4",
         "active": false,
         "tosidebar": true,
@@ -717,13 +728,13 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 620,
-        "y": 620,
+        "y": 820,
         "wires": []
     },
     {
-        "id": "fc2026064787cb68",
+        "id": "b51a28880bd25de7",
         "type": "function",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "function 1",
         "func": "msg.topic = \"ELEC520/security/cl/s/st\";\n\nreturn msg;",
         "outputs": 1,
@@ -733,18 +744,18 @@
         "finalize": "",
         "libs": [],
         "x": 380,
-        "y": 620,
+        "y": 820,
         "wires": [
             [
-                "c7d4e80c7a2040a9",
-                "7e237124465d84ea"
+                "e8ea19a5528b0f2b",
+                "515b13e30f701cbe"
             ]
         ]
     },
     {
-        "id": "c7d4e80c7a2040a9",
+        "id": "e8ea19a5528b0f2b",
         "type": "mqtt out",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "",
         "topic": "",
         "qos": "",
@@ -754,36 +765,40 @@
         "userProps": "",
         "correl": "",
         "expiry": "",
-        "broker": "8ad54f0a953d463f",
+        "broker": "16070f5db00beafe",
         "x": 610,
-        "y": 660,
+        "y": 860,
         "wires": []
     },
     {
-        "id": "b397f1b249a32c2f",
+        "id": "ab4a24166c499b03",
         "type": "function",
-        "z": "24cf997c7034cb7c",
-        "name": "system state",
-        "func": "// node.warn(\"Incoming topic: \" + msg.topic);\n\n// Example topic: ELEC520/security/f/1/r/1/cs\nlet topic = msg.topic;\n\n// node.warn(\"Topic seen by parser: '\" + topic + \"'\");\n// Extract floor or system section\nlet match = topic.match(/ELEC520\\/security\\/(hw)\\/s\\/(\\w+)$/);\n\n// node.warn(match);\n\nif (!match) {\n    node.warn(\"Unexpected system topic: \" + topic);\n    return null;\n}\n\n// match[1] will be \"st\" ELEC520/security/s/st\nlet subTopic = match[2];\n\nif (subTopic === \"st\") {\n    //System state topic\n    msg.systemState = msg.payload;\n    return msg;\n} else if (subTopic === \"cl\") {\n    return;\n}\n\n",
-        "outputs": 1,
+        "z": "9088ffe0b9f7bcfc",
+        "name": "parseSystem",
+        "func": "// node.warn(\"Incoming topic: \" + msg.topic);\n\n// Example topic: ELEC520/security/f/1/r/1/cs\nlet topic = msg.topic;\n\n// node.warn(\"Topic seen by parser: '\" + topic + \"'\");\n// Extract floor or system section\nlet match = topic.match(/ELEC520\\/security\\/(hw)\\/(s)\\/(\\w+)$/);\n\nnode.warn(match);\n\nif (!match) {\n    // node.warn(\"Unexpected system topic:\n    \n    return null;\n}\n\nlet outputs = new Array(2).fill(null);\n\n// match[1] will be \"st\" ELEC520/security/s/st\nlet subTopic = match[3];\n\nif (subTopic === \"st\") {\n    //System state topic\n    outputs[0] = msg.payload;\n} else if (subTopic === \"ke\") {\n    //System state keypad\n    outputs[1] = msg.payload;\n}\n\n",
+        "outputs": 2,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 630,
-        "y": 60,
+        "y": 120,
         "wires": [
             [
-                "9c2d8dde2c1cf787",
-                "dbf513034095bcfd"
+                "786ab54c5ed10f36",
+                "7fcf787fa3b82b49"
+            ],
+            [
+                "c5ddb5d0ac3273cf",
+                "7fcf787fa3b82b49"
             ]
         ]
     },
     {
-        "id": "dbf513034095bcfd",
+        "id": "7fcf787fa3b82b49",
         "type": "debug",
-        "z": "24cf997c7034cb7c",
+        "z": "9088ffe0b9f7bcfc",
         "name": "debug 5",
         "active": true,
         "tosidebar": true,
@@ -793,161 +808,225 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1080,
-        "y": 40,
+        "y": 120,
         "wires": []
     },
     {
-        "id": "6ee8d32c5fac46ee",
-        "type": "ui_gauge",
-        "z": "24cf997c7034cb7c",
-        "g": "fd179ad6a3d5e2d2",
-        "name": "",
-        "group": "c02d5f75a6844843",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "Connection",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "1",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 1190,
-        "y": 140,
-        "wires": []
+        "id": "fd361dcbe9c4ec6a",
+        "type": "function",
+        "z": "9088ffe0b9f7bcfc",
+        "name": "parseNetwork",
+        "func": "// node.warn(\"Incoming topic: \" + msg.topic);\n\n// Example topic: ELEC520/security/f/1/r/1/cs\nlet topic = msg.topic;\n\n// node.warn(\"Topic seen by parser: '\" + topic + \"'\");\n// Extract floor or system section\nlet match = topic.match(/ELEC520\\/security\\/(hw)\\/(n)\\/(\\w+)$/);\n\nnode.warn(match);\n\nif (!match) {\n    // node.warn(\"Unexpected system topic:\n    \n    return null;\n}\n\nlet outputs = new Array(2).fill(null);\n\n// match[1] will be \"st\" ELEC520/security/s/st\nlet subTopic = match[3];\n\nif (subTopic === \"st\") {\n    //System state topic\n    outputs[0] = msg.payload;\n} else if (subTopic === \"mc\") {\n    //System state keypad\n    outputs[1] = msg.payload;\n}\n\n",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 200,
+        "wires": [
+            [
+                "540a653c6132b144",
+                "b0b4dc4bc4f77299"
+            ],
+            [
+                "14f19f1a5cd5d743",
+                "b0b4dc4bc4f77299"
+            ]
+        ]
     },
     {
-        "id": "55c6bb195a4e7319",
-        "type": "ui_gauge",
-        "z": "24cf997c7034cb7c",
-        "g": "fd179ad6a3d5e2d2",
-        "name": "",
-        "group": "c02d5f75a6844843",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "Hall 1",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "1",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 1170,
-        "y": 160,
-        "wires": []
-    },
-    {
-        "id": "13254f5b55935bc1",
-        "type": "ui_gauge",
-        "z": "24cf997c7034cb7c",
-        "g": "fd179ad6a3d5e2d2",
-        "name": "",
-        "group": "c02d5f75a6844843",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "Hall 2",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "1",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 1170,
-        "y": 180,
-        "wires": []
-    },
-    {
-        "id": "0f8132a773321341",
-        "type": "ui_gauge",
-        "z": "24cf997c7034cb7c",
-        "g": "fd179ad6a3d5e2d2",
-        "name": "",
-        "group": "c02d5f75a6844843",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "Ultra 1",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "100",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 1170,
+        "id": "b0b4dc4bc4f77299",
+        "type": "debug",
+        "z": "9088ffe0b9f7bcfc",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
         "y": 200,
         "wires": []
     },
     {
-        "id": "ecf87ae5148f3b3a",
-        "type": "ui_gauge",
-        "z": "24cf997c7034cb7c",
-        "g": "fd179ad6a3d5e2d2",
-        "name": "",
-        "group": "c02d5f75a6844843",
-        "order": 4,
+        "id": "786ab54c5ed10f36",
+        "type": "ui_text",
+        "z": "9088ffe0b9f7bcfc",
+        "group": "4e5a253cfdc1567c",
+        "order": 3,
         "width": 0,
         "height": 0,
-        "gtype": "gage",
-        "title": "Ultra 2",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "100",
-        "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
+        "name": "",
+        "label": "State",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
         "className": "",
-        "x": 1170,
-        "y": 220,
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 910,
+        "y": 120,
         "wires": []
     },
     {
-        "id": "c1938394473b927f",
-        "type": "ui_gauge",
-        "z": "24cf997c7034cb7c",
-        "g": "1ff204338f95197a",
+        "id": "c5ddb5d0ac3273cf",
+        "type": "ui_text",
+        "z": "9088ffe0b9f7bcfc",
+        "group": "4e5a253cfdc1567c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
         "name": "",
-        "group": "6d55a94b612c3ee4",
+        "label": "Keypad",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 920,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "540a653c6132b144",
+        "type": "ui_text",
+        "z": "9088ffe0b9f7bcfc",
+        "group": "4e5a253cfdc1567c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 910,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "14f19f1a5cd5d743",
+        "type": "ui_text",
+        "z": "9088ffe0b9f7bcfc",
+        "group": "4e5a253cfdc1567c",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "MAC",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 910,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "4bcbf4262e838f91",
+        "type": "ui_button",
+        "z": "9088ffe0b9f7bcfc",
+        "name": "",
+        "group": "f0a98cc2c8378640",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Disarmed",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "DISARMED",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 140,
+        "y": 820,
+        "wires": [
+            [
+                "b51a28880bd25de7"
+            ]
+        ]
+    },
+    {
+        "id": "bb5ac21e835bece1",
+        "type": "ui_button",
+        "z": "9088ffe0b9f7bcfc",
+        "name": "",
+        "group": "f0a98cc2c8378640",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Armed",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "ARMED",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 130,
+        "y": 860,
+        "wires": [
+            [
+                "b51a28880bd25de7"
+            ]
+        ]
+    },
+    {
+        "id": "b34596f475fecc50",
+        "type": "ui_button",
+        "z": "9088ffe0b9f7bcfc",
+        "name": "",
+        "group": "f0a98cc2c8378640",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Alarm",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "ALARM",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 130,
+        "y": 900,
+        "wires": [
+            [
+                "b51a28880bd25de7"
+            ]
+        ]
+    },
+    {
+        "id": "a8f18b9841fdcba1",
+        "type": "ui_gauge",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "c13e60180aaa05c8",
+        "name": "",
+        "group": "e4bf600661a44d02",
         "order": 0,
         "width": 0,
         "height": 0,
@@ -971,12 +1050,12 @@
         "wires": []
     },
     {
-        "id": "b2d4e2d1493f7137",
+        "id": "8503772b837db09e",
         "type": "ui_gauge",
-        "z": "24cf997c7034cb7c",
-        "g": "1ff204338f95197a",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "c13e60180aaa05c8",
         "name": "",
-        "group": "6d55a94b612c3ee4",
+        "group": "e4bf600661a44d02",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -1000,12 +1079,12 @@
         "wires": []
     },
     {
-        "id": "b578e40c2dc1535d",
+        "id": "942a865c3475648f",
         "type": "ui_gauge",
-        "z": "24cf997c7034cb7c",
-        "g": "1ff204338f95197a",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "c13e60180aaa05c8",
         "name": "",
-        "group": "6d55a94b612c3ee4",
+        "group": "e4bf600661a44d02",
         "order": 2,
         "width": 0,
         "height": 0,
@@ -1029,12 +1108,12 @@
         "wires": []
     },
     {
-        "id": "251888de4118d19d",
+        "id": "1b9aa8e69bac82a0",
         "type": "ui_gauge",
-        "z": "24cf997c7034cb7c",
-        "g": "1ff204338f95197a",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "c13e60180aaa05c8",
         "name": "",
-        "group": "6d55a94b612c3ee4",
+        "group": "e4bf600661a44d02",
         "order": 3,
         "width": 0,
         "height": 0,
@@ -1058,12 +1137,12 @@
         "wires": []
     },
     {
-        "id": "cb8393d41483168e",
+        "id": "710c796902766b2e",
         "type": "ui_gauge",
-        "z": "24cf997c7034cb7c",
-        "g": "1ff204338f95197a",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "c13e60180aaa05c8",
         "name": "",
-        "group": "6d55a94b612c3ee4",
+        "group": "e4bf600661a44d02",
         "order": 4,
         "width": 0,
         "height": 0,
@@ -1087,112 +1166,152 @@
         "wires": []
     },
     {
-        "id": "9c2d8dde2c1cf787",
-        "type": "ui_text",
-        "z": "24cf997c7034cb7c",
-        "group": "a7cde148daaaec4e",
-        "order": 3,
+        "id": "1e10ed58c13e0283",
+        "type": "ui_gauge",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "3f8175208f4b4166",
+        "name": "",
+        "group": "f2c5d9088e4c1c81",
+        "order": 5,
         "width": 0,
         "height": 0,
-        "name": "",
-        "label": "State",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
+        "gtype": "gage",
+        "title": "Connection",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
         "className": "",
-        "style": false,
-        "font": "",
-        "fontSize": 16,
-        "color": "#000000",
-        "x": 910,
-        "y": 40,
+        "x": 1190,
+        "y": 540,
         "wires": []
     },
     {
-        "id": "0387a4bf0843d216",
-        "type": "ui_button",
-        "z": "24cf997c7034cb7c",
+        "id": "b517f4f2b8574a2d",
+        "type": "ui_gauge",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "3f8175208f4b4166",
         "name": "",
-        "group": "a7cde148daaaec4e",
-        "order": 0,
+        "group": "f2c5d9088e4c1c81",
+        "order": 1,
         "width": 0,
         "height": 0,
-        "passthru": false,
-        "label": "Disarmed",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
+        "gtype": "gage",
+        "title": "Hall 1",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
         "className": "",
-        "icon": "",
-        "payload": "DISARMED",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 140,
+        "x": 1170,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "70f1d2523bd6f22f",
+        "type": "ui_gauge",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "3f8175208f4b4166",
+        "name": "",
+        "group": "f2c5d9088e4c1c81",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Hall 2",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "b8fd880e66244e71",
+        "type": "ui_gauge",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "3f8175208f4b4166",
+        "name": "",
+        "group": "f2c5d9088e4c1c81",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Ultra 1",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "dfa6787d49ecaeaf",
+        "type": "ui_gauge",
+        "z": "9088ffe0b9f7bcfc",
+        "g": "3f8175208f4b4166",
+        "name": "",
+        "group": "f2c5d9088e4c1c81",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Ultra 2",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
         "y": 620,
-        "wires": [
-            [
-                "fc2026064787cb68"
-            ]
-        ]
+        "wires": []
     },
     {
-        "id": "3892e94aa852f67b",
-        "type": "ui_button",
-        "z": "24cf997c7034cb7c",
-        "name": "",
-        "group": "a7cde148daaaec4e",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Armed",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "ARMED",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 130,
-        "y": 660,
-        "wires": [
-            [
-                "fc2026064787cb68"
-            ]
-        ]
-    },
-    {
-        "id": "c025aa46b33bb280",
-        "type": "ui_button",
-        "z": "24cf997c7034cb7c",
-        "name": "",
-        "group": "a7cde148daaaec4e",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Alarm",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "ALARM",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 130,
-        "y": 700,
-        "wires": [
-            [
-                "fc2026064787cb68"
-            ]
-        ]
-    },
-    {
-        "id": "421f265b9081ef6e",
+        "id": "afd50c13856dd49b",
         "type": "global-config",
         "env": [],
         "modules": {
