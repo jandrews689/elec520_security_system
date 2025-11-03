@@ -38,7 +38,7 @@ struct ProtocolModel {
   uint8_t   systemState = DISARMED; // s/st
   uint8_t   keypad      = NO_INPUT; // s/ke
   uint8_t   network     = 0;        // n/st
-  String    mac         = "";       // n/mc
+  String    mac         = "00:00:00:00:00:00";       // n/mc
   FloorNode floors[SMP_MAX_FLOORS]; // f/{f}
 };
 
@@ -96,9 +96,10 @@ String cloudTopicRoomTimestamp(uint8_t f_id,uint8_t r_id);   // ELEC520/security
 String buildRoomEspString(uint8_t f_id, uint8_t r_id);
 bool   parseRoomEspString(const String& roomData);
 
-// -------- MQTT full-system compact string --------
-String buildSystemMqttString();
-bool   parseSystemMqttString(const String& systemData);
+// -------- MQTT System string --------
+// String buildSystemMqttString();
+// String buildNetworkMqttString();
+bool   parseSystemMqttString(const String& systemData); //Are we using this?
 
 // -------- MQTT per-floor compact string (payload for ELEC520/security/hw/f/{f}) --------
 String buildFloorMqttString(uint8_t f_id);

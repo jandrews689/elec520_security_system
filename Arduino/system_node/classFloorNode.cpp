@@ -21,15 +21,10 @@ void classFloorNode::MqttCallBack(char* topicC, byte* payload, unsigned int leng
     memcpy(buf, payload, n);
     buf[n] = '\0';
 
-    //Parse the Mqtt data into MODEL. 
-    // parseSystemMqttString(String(buf));
+    parseCloud(topicC, buf);
+        
+    Serial.printf("MQTT Callback [%s]: %s\n", topicC, buf);
 
-    
-    if (parseCloud(topicC, buf);){
-        Serial.printf("MQTT Callback cloud [%s]: %s\n", topicC, buf);
-    }
-
-    Serial.printf("MQTT Callback ALL [%s]: %s\n", topicC, buf);
 }
 
 
@@ -116,12 +111,6 @@ void classFloorNode::setNumberOfRooms(int number){
 }
 
 
-// //Transmit system data
-// void classFloorNode::sendSystemData(){
-    
-// }
-
-
 //MQTT loop
 void classFloorNode::mqttOperate(){
     if (!client.connected()) {
@@ -133,13 +122,32 @@ void classFloorNode::mqttOperate(){
     static unsigned long publishMsg = 0;
     if (millis() - publishMsg > 5000) {
         publishMsg = millis();
-        
-        //Publish to client. 
         String topic;
         String payload;
 
-        //Publish system data
+        //Publish system state
+        topic = cloudTopicSystemState();
+        payload = MODEL.systemState;
+        client.publish(topic.c_str(), payload.c_str());
+        Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
 
+        //Publish keypad status
+        topic = cloudTopicKeypad();
+        payload = MODEL.keypad;
+        client.publish(topic.c_str(), payload.c_str());
+        Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
+
+        //Publish network status
+        topic = cloudTopicNetwork();
+        payload = MODEL.network;
+        client.publish(topic.c_str(), payload.c_str());
+        Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
+
+        //Publish Base Station mac address
+        topic = cloudTopicMac();
+        payload = MODEL.mac;
+        client.publish(topic.c_str(), payload.c_str());
+        Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
 
         //Publish floor data
         for (int i=1; i<_iNumOfFloors+1; i++){

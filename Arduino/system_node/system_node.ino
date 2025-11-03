@@ -129,12 +129,12 @@ void loop() {
   //Mqtt pub and sub
   if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
   
-  count++;
-  if (count > 500) {
-    count = 0;
-    //Spew everything onto the serial. 
-    debugPrintModel(Serial);
-  }
+  // count++;
+  // if (count > 500) {
+  //   count = 0;
+  //   //Spew everything onto the serial. 
+  //   debugPrintModel(Serial);
+  // }
 
 
 }

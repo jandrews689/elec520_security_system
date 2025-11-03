@@ -3,7 +3,6 @@
 
 #include <cstdint>
 #include <PubSubClient.h>
-#include <esp_wifi.h>
 #include <WiFi.h>
 #include "elec520_protocol.h"
 

@@ -290,52 +290,44 @@ bool parseRoomEspString(const String& roomData) {
   return true;
 }
 
-// ---------------- MQTT full-system compact string ----------------
-String buildSystemMqttString() {
-  String out;
-  out.reserve(1024); // adjust if your model is large
+// // ---------------- MQTT system string ----------------
+// String buildSystemMqttString() {
+//   String out;
+//   out.reserve(256); // adjust if your model is large
 
-  auto add = [&](const String& token){
-    if (token.length() == 0) return;
-    if (out.length() > 0 && out[out.length()-1] != ';') out += ';';
-    out += token;
-  };
+//   auto add = [&](const String& token){
+//     if (token.length() == 0) return;
+//     if (out.length() > 0 && out[out.length()-1] != ';') out += ';';
+//     out += token;
+//   };
 
-  // System-level
-  add("s/st:" + String(MODEL.systemState));
-  add("s/ke:" + String(MODEL.keypad));
-  add("n/st:" + String(MODEL.network));
-  if (MODEL.mac.length() > 0) add("n/mc:" + MODEL.mac);
+//   // System-level
+//   add("s/st:" + String(MODEL.systemState));
+//   add("s/ke:" + String(MODEL.keypad));
 
-  // Floors, rooms, sensors
-  for (uint8_t f = 0; f < SMP_MAX_FLOORS; ++f) {
-    FloorNode& F = MODEL.floors[f];
-    if (!F.used) continue;
+//   if (out.startsWith(";")) out.remove(0, 1);
+//   return out;
+// }
 
-    add("f/" + String(f) + "/cs:" + String(F.connected ? "1" : "0"));
-    if (F.ts != 0) add("f/" + String(f) + "/ts:" + String(F.ts));
 
-    for (uint8_t r = 0; r < SMP_MAX_ROOMS; ++r) {
-      RoomNode& R = F.rooms[r];
-      if (!R.used) continue;
+// // ---------------- MQTT network string ----------------
+// String buildNetworkMqttString() {
+//   String out;
+//   out.reserve(256); 
 
-      add("f/" + String(f) + "/r/" + String(r) + "/cs:" + String(R.connected ? "1" : "0"));
-      if (R.ts != 0) add("f/" + String(f) + "/r/" + String(r) + "/ts:" + String(R.ts));
+//   auto add = [&](const String& token){
+//     if (token.length() == 0) return;
+//     if (out.length() > 0 && out[out.length()-1] != ';') out += ';';
+//     out += token;
+//   };
 
-      for (uint8_t u = 0; u < SMP_MAX_SENSORS; ++u) {
-        if (!R.ultra[u].used) continue;
-        add("f/" + String(f) + "/r/" + String(r) + "/u/" + String(u) + ":" + String(R.ultra[u].value));
-      }
-      for (uint8_t h = 0; h < SMP_MAX_SENSORS; ++h) {
-        if (!R.hall[h].used) continue;
-        add("f/" + String(f) + "/r/" + String(r) + "/h/" + String(h) + ":" + String(R.hall[h].open ? "1" : "0"));
-      }
-    }
-  }
+//   // Network-level
+//   add("n/st:" + String(MODEL.network));
+//   if (MODEL.mac.length() > 0) add("n/mc:" + MODEL.mac);
 
-  if (out.startsWith(";")) out.remove(0, 1);
-  return out;
-}
+//   if (out.startsWith(";")) out.remove(0, 1);
+//   return out;
+// }
 
 
 // ---------------- Parse MQTT full-system compact string ----------------
