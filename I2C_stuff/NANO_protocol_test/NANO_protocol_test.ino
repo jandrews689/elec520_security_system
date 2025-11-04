@@ -1,7 +1,7 @@
 // -------- NANO ULTRASONIC + HALL (I²C SLAVE) --------
 #include <Arduino.h>
 #include <Wire.h>
-#include "elec520_protocol_nano.h"   // Joes header
+#include "elec520_nano.h"   // Joes header
 
 // ====== USER PARAMETERS ======
 #define I2C_ADDR   0x12       // Nano adresses from 0x12 to 0x20
@@ -77,7 +77,9 @@ static void onRequestHandler() {
   }
   // Ensure don't overflow the Wire TX buffer (32 bytes)
   String payload = outLine + "\n";
-  const size_t N = min((size_t)payload.length(), (size_t)30); // leave margin
+  //counter
+  int i = payload.length();
+  const size_t N = min((size_t)payload.length(), (size_t)i); // leave margin
   Wire.write((const uint8_t*)payload.c_str(), N);
   haveLine = false; 
 }
