@@ -1,21 +1,21 @@
-#include <classFloorNode.h>
+#include <securitySystemNetworkMQTT.h>
 
 
 //NETWORKING////////////////////////////////////////////////////////////////////////////////////////
 
 //MQTT Get client data. 
-PubSubClient& classFloorNode::getClient() { return client; }
+PubSubClient& securitySystemNetworkMQTT::getClient() { return client; }
 
 
 //WIFI Set the Wifi Credentials
-void classFloorNode::setWifiNetworkCredentials(const char* ssid, const char* password) {
+void securitySystemNetworkMQTT::setWifiNetworkCredentials(const char* ssid, const char* password) {
     _ssid = ssid;
     _password = password;
 }
 
 
 //MQTT callback function
-void classFloorNode::MqttCallBack(char* topicC, byte* payload, unsigned int length) {
+void securitySystemNetworkMQTT::MqttCallBack(char* topicC, byte* payload, unsigned int length) {
     static char buf[256];
     unsigned int n = (length < sizeof(buf)-1) ? length : sizeof(buf)-1;
     memcpy(buf, payload, n);
@@ -29,7 +29,7 @@ void classFloorNode::MqttCallBack(char* topicC, byte* payload, unsigned int leng
 
 
 //MQTT Set client data.
-void classFloorNode::setMQTTClientData(const char* mqtt_server, int mqtt_port, const char* mqtt_client_id) {
+void securitySystemNetworkMQTT::setMQTTClientData(const char* mqtt_server, int mqtt_port, const char* mqtt_client_id) {
     _mqtt_server = mqtt_server;
     _mqtt_port = mqtt_port;
     _mqtt_client_id = mqtt_client_id;
@@ -37,7 +37,7 @@ void classFloorNode::setMQTTClientData(const char* mqtt_server, int mqtt_port, c
 
 
 //MQTT Reconnect with the broker
-void classFloorNode::brokerReconnect() {
+void securitySystemNetworkMQTT::brokerReconnect() {
     while (!client.connected()) {
         Serial.print("Attempting MQTT connection...\n");
         if (client.connect(_mqtt_client_id)) {
@@ -52,7 +52,7 @@ void classFloorNode::brokerReconnect() {
 
 
 //Set up the wifi with the cloud. 
-void classFloorNode::setup_wifi() {
+void securitySystemNetworkMQTT::setup_wifi() {
     delay(10);
     Serial.printf("Connecting to %s\n", _ssid);
     WiFi.begin(_ssid, _password);
@@ -71,7 +71,7 @@ void classFloorNode::setup_wifi() {
 //PUBLIC////////////////////////////////////////////////////////////////////////////////////////////
 
 // Constructor
-classFloorNode::classFloorNode(const char* ssid = "Joe's S23 Ultra",
+securitySystemNetworkMQTT::securitySystemNetworkMQTT(const char* ssid = "Joe's S23 Ultra",
                 const char* password = "joea12345",
                 const char* mqtt_server = "broker.hivemq.com",
                 int mqtt_port = 1883,
@@ -88,31 +88,32 @@ classFloorNode::classFloorNode(const char* ssid = "Joe's S23 Ultra",
 
 
 //Set the Floor ID, helper function to make system buildering easier to read. 
-void classFloorNode::setFloorID(byte id){_bFloorID = id;}
+void securitySystemNetworkMQTT::setFloorID(byte id){_bFloorID = id;}
+
 
 //Get the Floor ID
-byte classFloorNode::getFloorID(){return _bFloorID;}
+byte securitySystemNetworkMQTT::getFloorID(){return _bFloorID;}
 
 
 //Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor. 
-void classFloorNode::setNumOfFloors(int value){
+void securitySystemNetworkMQTT::setNumOfFloors(int value){
     _iNumOfFloors = value;
 }
 
 //NETWORKING/////////////////////////////////////////////////////////////////////////////
 //Network setup. 
-void classFloorNode::setupNetwork() {
+void securitySystemNetworkMQTT::setupNetwork() {
     setup_wifi();
 }
 
 //Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor. 
-void classFloorNode::setNumberOfRooms(int number){
+void securitySystemNetworkMQTT::setNumberOfRooms(int number){
     _uiNumRoom = number;
 }
 
 
 //MQTT loop
-void classFloorNode::mqttOperate(){
+void securitySystemNetworkMQTT::mqttOperate(){
     if (!client.connected()) {
         brokerReconnect();
     }

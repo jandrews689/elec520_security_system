@@ -1,5 +1,5 @@
-#ifndef CLASS_FLOOR_NODE
-#define CLASS_FLOOR_NODE
+#ifndef CLASS_SECSYS_NETOWRK_MQTT
+#define CLASS_SECSYS_NETOWRK_MQTT
 
 #include <cstdint>
 #include <PubSubClient.h>
@@ -8,12 +8,12 @@
 
 #define NUM_SAMPLES 50
 
-class classFloorNode {
+class securitySystemNetworkMQTT {
 //*********************************************************************************************** */
 //PRIVATE///////////////////////////////////////////////////////////////////////////////////////////
 private:
     // Singleton-style instance pointer for static callbacks
-    static classFloorNode* instance;
+    static securitySystemNetworkMQTT* instance;
 
     //Wifi setup variables
     const char* _ssid;
@@ -75,7 +75,7 @@ private:
 public:
 
     // Constructor
-    classFloorNode(const char* ssid,
+    securitySystemNetworkMQTT(const char* ssid,
                    const char* password,
                    const char* mqtt_server,
                    int mqtt_port,
@@ -106,10 +106,9 @@ public:
     void mqttOperate();
 
 
-
 };
 
 // Define static instance pointer
-inline classFloorNode* classFloorNode::instance = nullptr;
+inline securitySystemNetworkMQTT* securitySystemNetworkMQTT::instance = nullptr;
 
 #endif

@@ -1,6 +1,6 @@
 #include <elec520_nano.h>
 #include <elec520_protocol.h>
-#include "classFloorNode.h"
+#include "securitySystemNetworkMQTT.h"
 #include <Arduino.h>
 #include <Wire.h>
 #include <WString.h>
@@ -25,11 +25,10 @@ const char* mqtt_server = "broker.hivemq.com";
 int mqtt_port = 1883; 
 const char* mqtt_client_id = "BaseStation";
 
-classFloorNode objFloor(ssid, password, mqtt_server, mqtt_port, mqtt_client_id);
-
-bool xCloudConnectionNode = false;
+securitySystemNetworkMQTT objFloor(ssid, password, mqtt_server, mqtt_port, mqtt_client_id);
 
 int count = 0;
+bool mqttSystemDebug = false;
 
 
 //SETUP////////////////////////////////////////////////////////////////////////////////
@@ -38,15 +37,17 @@ void setup() {
   Serial.begin(115200);
   delay(100);
 
+  //I2C SETUP//////////////////////////////////////////////////////////
   Wire.begin(SDA_PIN, SCL_PIN); // 100 kHz
   Wire.setTimeOut(50);
 
   Serial.println("ESP32 I2C master started. Polling 0x12..0x20");
 
 
-  //ESP setup
+  //ESP setup///////////////////////////////////////////////////////////
   objFloor.setupNetwork();
 
+  //Security Architecture Setup//////////////////////////////////////////
   //Setup the floor
   objFloor.setFloorID(1);
   objFloor.setNumberOfRooms(2);
@@ -54,28 +55,24 @@ void setup() {
 
   //floor 1
   addFloor  (objFloor.getFloorID());
-
     addRoom   (objFloor.getFloorID(), 1);
-
       addUltra  (objFloor.getFloorID(), 1, 1);
-
       addHall   (objFloor.getFloorID(), 1, 1);
       addHall   (objFloor.getFloorID(), 1, 2);
 
     addRoom   (objFloor.getFloorID(), 2);
-
       addUltra  (objFloor.getFloorID(), 2, 1);
-
       addHall   (objFloor.getFloorID(), 2, 1);
       addHall   (objFloor.getFloorID(), 2, 2);
-
+  ////////////////////////////////////////////////////////////////////////
 }
 
-// 0b0000_0000
 
 
 //LOOP/////////////////////////////////////////////////////////////////////////////////////////
 void loop() {
+
+  //I2C////////////////////////////////////////////////////////////////////////
   static uint8_t addr = ADDR_MIN;
 
   // quick probe
@@ -111,6 +108,7 @@ void loop() {
       }
     }
   }
+
   // Move to next address
   addr++;
   if (addr > ADDR_MAX) addr = ADDR_MIN;
@@ -123,18 +121,32 @@ void loop() {
     // Serial.print(nanoHallTest);
     // Serial.println();
     // parseTokenLine(nanoHallTest);
-  /////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////
 
 
-  //Mqtt pub and sub
+  //ESP32/////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+  ///////////////////////////////////////////////////////////////////////////////////
+
+
+  //MQTT//////////////////////////////////////////////////////////////////////////////
+  //MQTT loop - Full System cycle messaging. 
   if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
-  
-  // count++;
-  // if (count > 500) {
-  //   count = 0;
-  //   //Spew everything onto the serial. 
-  //   debugPrintModel(Serial);
-  // }
 
 
+  //MQTT System Serial Print Debugging
+  if (mqttSystemDebug) {
+    count++;
+    if (count > 500) {
+      count = 0;
+      //Spew everything onto the serial. 
+      debugPrintModel(Serial);
+    }
+  }
+  /////////////////////////////////////////////////////////////////////////////////////
 }
