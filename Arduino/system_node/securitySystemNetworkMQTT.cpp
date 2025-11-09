@@ -81,7 +81,6 @@ securitySystemNetworkMQTT::securitySystemNetworkMQTT(const char* ssid = "Joe's S
         _mqtt_client_id(mqtt_client_id), client(espClient) {
 
     instance = this;  // set singleton pointer
-    // _uiNumRoom = 0;
     _iNumOfFloors = 1;
     
 }

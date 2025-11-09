@@ -1,5 +1,5 @@
-#ifndef CLASS_SECSYS_NETOWRK_MQTT
-#define CLASS_SECSYS_NETOWRK_MQTT
+#ifndef CLASS_SECSYS_NETWORK_MQTT
+#define CLASS_SECSYS_NETWORK_MQTT
 
 #include <cstdint>
 #include <PubSubClient.h>
