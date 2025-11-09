@@ -45,12 +45,11 @@ void setup() {
 
 
   //ESP setup///////////////////////////////////////////////////////////
-  objFloor.setupNetwork();
+  objFloor.setup_wifi();
 
   //Security Architecture Setup//////////////////////////////////////////
   //Setup the floor
   objFloor.setFloorID(1);
-  objFloor.setNumberOfRooms(2);
   objFloor.setNumOfFloors(1);
 
   //floor 1

@@ -81,7 +81,7 @@ securitySystemNetworkMQTT::securitySystemNetworkMQTT(const char* ssid = "Joe's S
         _mqtt_client_id(mqtt_client_id), client(espClient) {
 
     instance = this;  // set singleton pointer
-    _uiNumRoom = 0;
+    // _uiNumRoom = 0;
     _iNumOfFloors = 1;
     
 }
@@ -100,16 +100,7 @@ void securitySystemNetworkMQTT::setNumOfFloors(int value){
     _iNumOfFloors = value;
 }
 
-//NETWORKING/////////////////////////////////////////////////////////////////////////////
-//Network setup. 
-void securitySystemNetworkMQTT::setupNetwork() {
-    setup_wifi();
-}
-
-//Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor. 
-void securitySystemNetworkMQTT::setNumberOfRooms(int number){
-    _uiNumRoom = number;
-}
+//NETWORKING//////////////////////////////////////////////////////////////////////////
 
 
 //MQTT loop

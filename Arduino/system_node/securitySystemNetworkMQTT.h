@@ -26,8 +26,9 @@ private:
     //MQTT setup variables
     PubSubClient client;
 
+    //System setup
     byte _bFloorID = 0b0000'0001;
-    int _iNumOfFloors; //Need to figure out a way to define this.
+    int _iNumOfFloors;
 
     // Message structure
     typedef struct struct_message {
@@ -35,11 +36,6 @@ private:
         char payload[250];        //value contained in message
         uint8_t src_addr[6];      //source address (used for RX messages not TX messages)
     } struct_message;
-
-
-    unsigned long startTime;
-    byte bTransmitPosition = 0b0000'0001;
-    uint8_t _uiNumRoom;
 
 
     // --- Static callbacks that forward into the instance ---
@@ -68,10 +64,6 @@ private:
     void brokerReconnect();
 
 
-    //Set up the wifi with the cloud. 
-    void setup_wifi();
-
-
 public:
 
     // Constructor
@@ -93,18 +85,13 @@ public:
     //Set the number of floors in the system, used by MMQT 
     void setNumOfFloors(int value);
 
-
-    //Network setup
-    void setupNetwork();
-
-
-    //Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor. 
-    void setNumberOfRooms(int number);
+    
+    //Set up the wifi with the cloud. 
+    void setup_wifi();
 
 
     //MQTT loop
     void mqttOperate();
-
 
 };
 
