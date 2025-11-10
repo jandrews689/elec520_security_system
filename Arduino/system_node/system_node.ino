@@ -65,6 +65,14 @@ void setup() {
       addHall   (objFloor.getFloorID(), 2, 2);
   ////////////////////////////////////////////////////////////////////////
 
+  // if (setPassword("001:12345678")){
+  //   int sep = userPassword.indexOf(':');
+  //   if (sep < 0 ) return false;
+  //   String u = userPassword.substring(0, sep);
+  //   String topic = cloudTopicPassword();
+  //   String payload = MODEL.password[];
+  // };
+
   // setPassword("001:12345678");
 
   // delay(50);
@@ -145,8 +153,8 @@ void loop() {
 
 
   //MQTT//////////////////////////////////////////////////////////////////////////////
-  // //MQTT loop - Full System cycle messaging. 
-  // if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
+  //MQTT loop - Full System cycle messaging. 
+  if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
 
 
   //MQTT System Serial Print Debugging
