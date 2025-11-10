@@ -71,11 +71,13 @@ bool setPassword(const String& userPassword) {
   int sep = userPassword.indexOf(':');
   if (sep < 0 ) return false;
   String u = userPassword.substring(0, sep);
-  String p = userPassword.substring(sep, 1);
+  String p = userPassword.substring(sep + 1);
   std::string user = u.c_str();
   std::string password = p.c_str();
-  Serial.printf("Password Store! User: %s, Password: %s\n", user, password);
   MODEL.password[user] = password;
+
+  Serial.printf("Password Stored! User: %s, Password: %s\n", user.c_str(), password.c_str());
+  
   return true; 
 }
 
@@ -433,9 +435,9 @@ void debugPrintModel(Stream& out) {
   out.println(F("Stored Passwords (s/pw): "));
   for (const auto& entry : MODEL.password) {
     out.print(F(" User: "));
-    out.print(F(entry.first.c_str()));
+    out.print(entry.first.c_str());
     out.print(F(" Password: "));
-    out.print(F(entry.second.c_str()));
+    out.println(entry.second.c_str());
   }
 
   out.print(F("Network     (n/st): ")); out.println(MODEL.network);

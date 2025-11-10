@@ -28,7 +28,7 @@ const char* mqtt_client_id = "BaseStation";
 securitySystemNetworkMQTT objFloor(ssid, password, mqtt_server, mqtt_port, mqtt_client_id);
 
 int count = 0;
-bool mqttSystemDebug = false;
+bool mqttSystemDebug = true;
 
 
 //SETUP////////////////////////////////////////////////////////////////////////////////
@@ -64,6 +64,10 @@ void setup() {
       addHall   (objFloor.getFloorID(), 2, 1);
       addHall   (objFloor.getFloorID(), 2, 2);
   ////////////////////////////////////////////////////////////////////////
+
+    setPassword("001:12345678");
+    setPassword("002:11112222");
+    setPassword("003:57576868");
 }
 
 
@@ -134,8 +138,8 @@ void loop() {
 
 
   //MQTT//////////////////////////////////////////////////////////////////////////////
-  //MQTT loop - Full System cycle messaging. 
-  if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
+  // //MQTT loop - Full System cycle messaging. 
+  // if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
 
 
   //MQTT System Serial Print Debugging
@@ -153,6 +157,7 @@ void loop() {
 
   //SYSTEM STATE////////////////////////////////////////////////////////////////////////
   // system state code here 
+  
 
 
 }
