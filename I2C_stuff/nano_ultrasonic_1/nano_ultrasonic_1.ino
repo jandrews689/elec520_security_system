@@ -1,4 +1,5 @@
 #include <Wire.h>
+#include <lite_header.h>
 #define I2C_ADDR  0x13 //change to slave adress you are uploading too (room 1 0x12 room 2 0x13)
 #define trigpin   6
 #define echopin   7

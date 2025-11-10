@@ -1,8 +1,5 @@
 #include "elec520_protocol.h"
 
-// ---------------- Global ----------------
-ProtocolModel MODEL;
-
 // ---------------- Internals ----------------
 static inline bool inRange(uint8_t v, uint8_t maxv){ return v < maxv; }
 
@@ -26,10 +23,15 @@ static bool parseByte(const char* s, uint8_t& out){
   out=(uint8_t)v;
   return true;
 }
-
-static bool isCloudPrefix(const String& p0, const String& p1) {
-  return (p0 == "ELEC520" && p1 == "security");
+static bool parseUint32(const char* s, uint32_t& out){
+  if (!s || !*s) return false;
+  unsigned long v=strtoul(s,nullptr,10);
+  out = (uint32_t)v;
+  return true;
 }
+
+// ---------------- Global ----------------
+ProtocolModel MODEL;
 
 // ---------------- Adders ----------------
 bool addFloor(uint8_t f_id){
@@ -56,74 +58,42 @@ bool addHall(uint8_t f_id, uint8_t r_id, uint8_t hs_id){
   return true;
 }
 
-// ---------------- Setters ----------------
+// ---------------- System-level setters (kept) ----------------
 bool setSystemState(uint8_t s) { MODEL.systemState = s; return true; }
-bool setKeypad(uint8_t k)      { MODEL.keypad      = k; return true; }
-bool setNetwork(uint8_t n)     { MODEL.network     = n; return true; }
-bool setMac(const String& mac) { MODEL.mac         = mac; return true; }
-
-bool setFloorConnection(uint8_t f_id, bool cs01){
-  if (!addFloor(f_id)) return false;
-  MODEL.floors[f_id].connected = cs01;
-  return true;
-}
-bool setRoomConnection(uint8_t f_id, uint8_t r_id, bool cs01){
-  if (!addRoom(f_id, r_id)) return false;
-  MODEL.floors[f_id].rooms[r_id].connected = cs01;
-  return true;
-}
-bool setUltraValue(uint8_t f_id, uint8_t r_id, uint8_t u_id, uint8_t val){
-  if (!addUltra(f_id, r_id, u_id)) return false;
-  MODEL.floors[f_id].rooms[r_id].ultra[u_id].value = val;
-  return true;
-}
-bool setHallOpen(uint8_t f_id, uint8_t r_id, uint8_t hs_id, bool open01){
-  if (!addHall(f_id, r_id, hs_id)) return false;
-  MODEL.floors[f_id].rooms[r_id].hall[hs_id].open = open01;
-  return true;
-}
-
-// NEW: RSSI setter
-bool setFloorRssi(uint8_t f_id, uint8_t rssi){
-  if (!addFloor(f_id)) return false;
-  MODEL.floors[f_id].rssi = rssi;
-  return true;
-}
+bool setKeypad(uint8_t k)      { MODEL.keypad = k;     return true; }
+bool setNetwork(uint8_t n)     { MODEL.network = n;    return true; }
+bool setMac(const String& mac) { MODEL.mac = mac;      return true; }
 
 void resetModel(){ MODEL = ProtocolModel(); }
 
 // ---------------- Topic builders (Node) ----------------
-String nodeTopicSystemState()                  { return "s/st"; }
-String nodeTopicKeypad()                       { return "s/ke"; }
-String nodeTopicNetwork()                      { return "n/st"; }
-String nodeTopicMac()                          { return "n/mc"; }
-String nodeTopicFloorConnection(uint8_t f_id)  { return "f/"+String(f_id)+"/cs"; }
-String nodeTopicRoomConnection(uint8_t f_id,uint8_t r_id){ return "f/"+String(f_id)+"/r/"+String(r_id)+"/cs"; }
-String nodeTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id){ return "f/"+String(f_id)+"/r/"+String(r_id)+"/u/"+String(u_id); }
-String nodeTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id){ return "f/"+String(f_id)+"/r/"+String(r_id)+"/h/"+String(hs_id); }
-// NEW: floor RSSI
-String nodeTopicFloorRssi(uint8_t f_id)       { return "f/"+String(f_id)+"/rsi"; }
+String nodeTopicSystemState()                    { return "s/st"; }
+String nodeTopicKeypad()                         { return "s/ke"; }
+String nodeTopicNetwork()                        { return "n/st"; }
+String nodeTopicMac()                            { return "n/mc"; }
+String nodeTopicFloorConnection(uint8_t f_id)    { return "f/"+String(f_id)+"/cs"; }
+String nodeTopicFloorTimestamp(uint8_t f_id)     { return "f/"+String(f_id)+"/ts"; }
+String nodeTopicRoomTimestamp(uint8_t f_id,uint8_t r_id){ return "f/"+String(f_id)+"/r/"+String(r_id)+"/ts"; }
 
 // ---------------- Topic builders (Cloud) ----------------
-static inline String _CLOUD_BASE(){ return "ELEC520/security/"; }
+// Now emit under ELEC520/security/hw/...
+static inline String _CLOUD_BASE_HW(){ return "ELEC520/security/hw/"; }
 
-//Builds topic for the floor. 
 String cloudTopicFloor(uint8_t f_id) {
-    return "ELEC520/security/f/" + String(f_id);
+  return _CLOUD_BASE_HW() + String("f/") + String(f_id);
 }
+String cloudTopicSystemState()                    { return _CLOUD_BASE_HW()+"s/st"; }
+String cloudTopicKeypad()                         { return _CLOUD_BASE_HW()+"s/ke"; }
+String cloudTopicNetwork()                        { return _CLOUD_BASE_HW()+"n/st"; }
+String cloudTopicMac()                            { return _CLOUD_BASE_HW()+"n/mc"; }
+String cloudTopicFloorConnection(uint8_t f_id)    { return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/cs"; }
+String cloudTopicRoomConnection(uint8_t f_id,uint8_t r_id){ return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/r/"+String(r_id)+"/cs"; }
+String cloudTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id){ return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/r/"+String(r_id)+"/u/"+String(u_id); }
+String cloudTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id){ return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/r/"+String(r_id)+"/h/"+String(hs_id); }
+String cloudTopicFloorTimestamp(uint8_t f_id)     { return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/ts"; }
+String cloudTopicRoomTimestamp(uint8_t f_id,uint8_t r_id){ return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/r/"+String(r_id)+"/ts"; }
 
-String cloudTopicSystemState()                  { return _CLOUD_BASE()+"s/st"; }
-String cloudTopicKeypad()                       { return _CLOUD_BASE()+"s/ke"; }
-String cloudTopicNetwork()                      { return _CLOUD_BASE()+"n/st"; }
-String cloudTopicMac()                          { return _CLOUD_BASE()+"n/mc"; }
-String cloudTopicFloorConnection(uint8_t f_id)  { return _CLOUD_BASE()+"f/"+String(f_id)+"/cs"; }
-String cloudTopicRoomConnection(uint8_t f_id,uint8_t r_id){ return _CLOUD_BASE()+"f/"+String(f_id)+"/r/"+String(r_id)+"/cs"; }
-String cloudTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id){ return _CLOUD_BASE()+"f/"+String(f_id)+"/r/"+String(r_id)+"/u/"+String(u_id); }
-String cloudTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id){ return _CLOUD_BASE()+"f/"+String(f_id)+"/r/"+String(r_id)+"/h/"+String(hs_id); }
-// NEW: floor RSSI
-String cloudTopicFloorRssi(uint8_t f_id)       { return _CLOUD_BASE()+"f/"+String(f_id)+"/rsi"; }
-
-// ---------------- Single-topic parsers (strict) ----------------
+// ---------------- Parsers (INLINED MODEL UPDATES) ----------------
 static bool parseCore(const char* topicC, const char* payloadC, bool cloud){
   if (!topicC || !payloadC) return false;
 
@@ -134,45 +104,64 @@ static bool parseCore(const char* topicC, const char* payloadC, bool cloud){
 
   int base = 0;
   if (cloud){
-    if (n < 3 || p[0]!="ELEC520" || p[1]!="security") return false;
-    base = 2;
+    // Require: ELEC520/security/(hw|cl)/...
+    if (n < 4 || p[0]!="ELEC520" || p[1]!="security") return false;
+    if (!(p[2]=="hw" || p[2]=="cl")) return false;
+    base = 3;
   }
 
   // s/st, s/ke, n/st, n/mc
-  if (n-base==2 && p[base]=="s" && p[base+1]=="st"){ uint8_t v; if(!parseByte(payloadC,v)) return false; return setSystemState(v); }
-  if (n-base==2 && p[base]=="s" && p[base+1]=="ke"){ uint8_t v; if(!parseByte(payloadC,v)) return false; return setKeypad(v); }
-  if (n-base==2 && p[base]=="n" && p[base+1]=="st"){ uint8_t v; if(!parseByte(payloadC,v)) return false; return setNetwork(v); }
-  if (n-base==2 && p[base]=="n" && p[base+1]=="mc"){ return setMac(String(payloadC)); }
+  if (n-base==2 && p[base]=="s" && p[base+1]=="st"){ uint8_t v; if(!parseByte(payloadC,v)) return false; MODEL.systemState=v; return true; }
+  if (n-base==2 && p[base]=="s" && p[base+1]=="ke"){ uint8_t v; if(!parseByte(payloadC,v)) return false; MODEL.keypad=v;      return true; }
+  if (n-base==2 && p[base]=="n" && p[base+1]=="st"){ uint8_t v; if(!parseByte(payloadC,v)) return false; MODEL.network=v;     return true; }
+  if (n-base==2 && p[base]=="n" && p[base+1]=="mc"){ MODEL.mac = String(payloadC); return true; }
 
   // f/{f}/cs
   if (n-base==3 && p[base]=="f" && p[base+2]=="cs"){
     uint8_t f = (uint8_t)p[base+1].toInt();
     bool b; if(!parseBool01(payloadC,b)) return false;
-    return setFloorConnection(f,b);
+    if (!addFloor(f)) return false;
+    MODEL.floors[f].connected = b;
+    return true;
   }
 
-  // NEW: f/{f}/rsi
-  if (n-base==3 && p[base]=="f" && p[base+2]=="rsi"){
+  // f/{f}/ts (Unix)
+  if (n-base==3 && p[base]=="f" && p[base+2]=="ts"){
     uint8_t f = (uint8_t)p[base+1].toInt();
-    uint8_t v; if(!parseByte(payloadC,v)) return false;
-    return setFloorRssi(f, v);
+    uint32_t ts; if(!parseUint32(payloadC, ts)) return false;
+    if (!addFloor(f)) return false;
+    MODEL.floors[f].ts = ts;
+    return true;
   }
 
-  // f/{f}/r/{r}/cs | u/{u} | h/{h}
+  // f/{f}/r/{r}/cs | u/{u} | h/{h} | ts
   if (n-base==5 && p[base]=="f" && p[base+2]=="r" && p[base+4]=="cs"){
     uint8_t f=(uint8_t)p[base+1].toInt(), r=(uint8_t)p[base+3].toInt();
     bool b; if(!parseBool01(payloadC,b)) return false;
-    return setRoomConnection(f,r,b);
+    if (!addRoom(f,r)) return false;
+    MODEL.floors[f].rooms[r].connected = b;
+    return true;
   }
   if (n-base==6 && p[base]=="f" && p[base+2]=="r" && p[base+4]=="u"){
     uint8_t f=(uint8_t)p[base+1].toInt(), r=(uint8_t)p[base+3].toInt(), u=(uint8_t)p[base+5].toInt();
     uint8_t v; if(!parseByte(payloadC,v)) return false;
-    return setUltraValue(f,r,u,v);
+    if (!addUltra(f,r,u)) return false;
+    MODEL.floors[f].rooms[r].ultra[u].value = v;
+    return true;
   }
   if (n-base==6 && p[base]=="f" && p[base+2]=="r" && p[base+4]=="h"){
     uint8_t f=(uint8_t)p[base+1].toInt(), r=(uint8_t)p[base+3].toInt(), h=(uint8_t)p[base+5].toInt();
     bool b; if(!parseBool01(payloadC,b)) return false;
-    return setHallOpen(f,r,h,b);
+    if (!addHall(f,r,h)) return false;
+    MODEL.floors[f].rooms[r].hall[h].open = b;
+    return true;
+  }
+  if (n-base==6 && p[base]=="f" && p[base+2]=="r" && p[base+4]=="ts"){
+    uint8_t f=(uint8_t)p[base+1].toInt(), r=(uint8_t)p[base+3].toInt();
+    uint32_t ts; if(!parseUint32(payloadC, ts)) return false;
+    if (!addRoom(f,r)) return false;
+    MODEL.floors[f].rooms[r].ts = ts;
+    return true;
   }
 
   return false;
@@ -181,110 +170,48 @@ static bool parseCore(const char* topicC, const char* payloadC, bool cloud){
 bool parseNode (const char* topic, const char* rawPayload){ return parseCore(topic, rawPayload, false); }
 bool parseCloud(const char* topic, const char* rawPayload){ return parseCore(topic, rawPayload, true ); }
 
-// ================= RSSI extraction helpers (non-breaking) =================
-bool extractFloorRssiFromTopicPayload(const char* topic,
-                                      const char* payload,
-                                      uint8_t& out_f_id,
-                                      uint8_t& out_rssi)
-{
-  if (!topic || !payload) return false;
+bool parseTokenLine(const String& tokenLine) {
+  if (tokenLine.length() == 0) return false;
 
-  String t = topic;
-  String parts[8];
-  int n = splitTopic(t, parts, 8);
-  if (n <= 0) return false;
+  int colonIndex = tokenLine.indexOf(':');
+  if (colonIndex <= 0) return false; // no topic before colon
 
-  int base = 0;
-  if (n >= 3 && isCloudPrefix(parts[0], parts[1])) base = 2;
+  String topic   = tokenLine.substring(0, colonIndex);
+  String payload = tokenLine.substring(colonIndex + 1);
 
-  // Expect: f/<f_id>/rsi
-  if (n - base != 3) return false;
-  if (parts[base] != "f" || parts[base + 2] != "rsi") return false;
+  topic.trim();
+  payload.trim();
 
-  long f = parts[base + 1].toInt();
-  if (f < 0 || f > 255) return false;
-
-  uint8_t rssiVal;
-  if (!parseByte(payload, rssiVal)) return false;
-
-  out_f_id = (uint8_t)f;
-  out_rssi = rssiVal;
-  return true;
-}
-
-bool extractFloorRssiFromSingle(const String& line,
-                                uint8_t& out_f_id,
-                                uint8_t& out_rssi)
-{
-  if (line.length() == 0) return false;
-
-  // Your format: "f/<f_id>/rsi:<val>"
-  // Also accept space or '=' as separator.
-  int sp = line.indexOf(' ');
-  if (sp < 0) sp = line.indexOf('=');
-  String topic, payload;
-  if (sp > 0) {
-    topic   = line.substring(0, sp);
-    payload = line.substring(sp + 1);
-  } else {
-    int cp = line.indexOf(':');
-    if (cp < 0) return false;
-    topic   = line.substring(0, cp);
-    payload = line.substring(cp + 1);
-  }
-
-  topic.trim(); payload.trim();
-  if (topic.length() == 0 || payload.length() == 0) return false;
-
-  return extractFloorRssiFromTopicPayload(topic.c_str(),
-                                          payload.c_str(),
-                                          out_f_id,
-                                          out_rssi);
+  return parseNode(topic.c_str(), payload.c_str());
 }
 
 // ================= Room ESP compact format (build + parse) =================
-//
-// Format:
-//   f/<f_id>/r/<r_id>/cs:<0|1>;u/<u_id>:<0..255>;h/<hs_id>:<0|1>;...
-//
-
 String buildRoomEspString(uint8_t f_id, uint8_t r_id) {
-  // Ensure floor/room exist
   addRoom(f_id, r_id);
 
-  String msg;
-  msg.reserve(64);
-
-  // Base header with connection state
+  String msg; msg.reserve(64);
   msg  = "f/"; msg += String(f_id);
   msg += "/r/"; msg += String(r_id);
-  msg += "/cs:";
-  msg += MODEL.floors[f_id].rooms[r_id].connected ? "1" : "0";
+  msg += "/cs:"; msg += (MODEL.floors[f_id].rooms[r_id].connected ? "1" : "0");
 
-  // Ultrasonic sensors
   for (uint8_t u = 0; u < SMP_MAX_SENSORS; u++) {
     if (MODEL.floors[f_id].rooms[r_id].ultra[u].used) {
       msg += ";u/"; msg += String(u);
       msg += ":";   msg += String(MODEL.floors[f_id].rooms[r_id].ultra[u].value);
     }
   }
-
-  // Hall sensors
   for (uint8_t h = 0; h < SMP_MAX_SENSORS; h++) {
     if (MODEL.floors[f_id].rooms[r_id].hall[h].used) {
       msg += ";h/"; msg += String(h);
       msg += ":";   msg += (MODEL.floors[f_id].rooms[r_id].hall[h].open ? "1" : "0");
     }
   }
-
   return msg;
 }
 
 static inline void _trimInPlace(String& s) { s.trim(); }
 
 bool parseRoomEspString(const String& roomData) {
-  // Example:
-  //   "f/0/r/2/cs:1;u/0:87;h/1:0"
   if (roomData.length() == 0) return false;
 
   // Tokenize on ';'
@@ -301,57 +228,37 @@ bool parseRoomEspString(const String& roomData) {
   }
   if (count == 0) return false;
 
-  // First pass: find f_id and r_id from a token that contains "f/.../r/..."
-  bool gotFR = false;
-  uint8_t f_id = 0, r_id = 0;
-
+  // Find f_id and r_id
+  bool gotFR = false; uint8_t f_id = 0, r_id = 0;
   auto parseFR = [&](const String& t)->bool {
-    int fpos = t.indexOf("f/");
-    if (fpos < 0) return false;
-    int rpos = t.indexOf("/r/", fpos + 2);
-    if (rpos < 0) return false;
-
+    int fpos = t.indexOf("f/"); if (fpos < 0) return false;
+    int rpos = t.indexOf("/r/", fpos + 2); if (rpos < 0) return false;
     String fstr = t.substring(fpos + 2, rpos);
-
     int endR = t.indexOf('/', rpos + 3);
     int endC = t.indexOf(':', rpos + 3);
     int end   = t.length();
     if (endR >= 0) end = min(end, endR);
     if (endC >= 0) end = min(end, endC);
-
     String rstr = t.substring(rpos + 3, end);
-
-    long f = fstr.toInt();
-    long r = rstr.toInt();
-    if (f < 0 || f > 255 || r < 0 || r > 255) return false;
-    f_id = (uint8_t)f;
-    r_id = (uint8_t)r;
-    return true;
+    long f = fstr.toInt(), r = rstr.toInt();
+    if (f<0 || f>255 || r<0 || r>255) return false;
+    f_id = (uint8_t)f; r_id = (uint8_t)r; return true;
   };
-
   for (int i = 0; i < count && !gotFR; i++) gotFR = parseFR(tokens[i]);
   if (!gotFR) return false;
 
-  // Ensure model nodes exist
+  // Ensure existence
   addRoom(f_id, r_id);
 
-  // Second pass: process tokens
+  // Apply tokens
   for (int i = 0; i < count; i++) {
     const String& t = tokens[i];
 
-    // header "f/<f>/r/<r>/cs:<v>" ?
+    // header "f/<f>/r/<r>/cs:<v>" OR "cs:<v>"
     int csi = t.indexOf("cs:");
     if (csi >= 0) {
-      String v = t.substring(csi + 3);
-      v.trim();
-      bool cs = (v.toInt() != 0);
-      setRoomConnection(f_id, r_id, cs);
-      // keep parsing other items
-    }
-
-    if (t.startsWith("cs:")) {
-      bool cs = (t.substring(3).toInt() != 0);
-      setRoomConnection(f_id, r_id, cs);
+      bool cs = (t.substring(csi + 3).toInt() != 0);
+      MODEL.floors[f_id].rooms[r_id].connected = cs;
       continue;
     }
 
@@ -360,7 +267,9 @@ bool parseRoomEspString(const String& roomData) {
       if (colon > 2) {
         uint8_t u_id = (uint8_t)t.substring(2, colon).toInt();
         uint8_t val  = (uint8_t)t.substring(colon + 1).toInt();
-        setUltraValue(f_id, r_id, u_id, val);
+        if (addUltra(f_id, r_id, u_id)) {
+          MODEL.floors[f_id].rooms[r_id].ultra[u_id].value = val;
+        }
       }
       continue;
     }
@@ -370,7 +279,9 @@ bool parseRoomEspString(const String& roomData) {
       if (colon > 2) {
         uint8_t hs_id = (uint8_t)t.substring(2, colon).toInt();
         bool open01   = (t.substring(colon + 1).toInt() != 0);
-        setHallOpen(f_id, r_id, hs_id, open01);
+        if (addHall(f_id, r_id, hs_id)) {
+          MODEL.floors[f_id].rooms[r_id].hall[hs_id].open = open01;
+        }
       }
       continue;
     }
@@ -379,63 +290,179 @@ bool parseRoomEspString(const String& roomData) {
   return true;
 }
 
-// ---------------- MQTT full-system compact string (simple keep-alive versions) ----------------
-// NOTE: Signatures are preserved to avoid breaking existing callers. These minimal
-// implementations keep linkage intact; extend as needed for your full compact format.
-String buildSystemMqttString() {
-  // Example minimal payload; adjust to your original compact schema if needed.
-  // We purposefully keep this very small to avoid changing any external expectations.
-  return String();
-}
+// // ---------------- MQTT system string ----------------
+// String buildSystemMqttString() {
+//   String out;
+//   out.reserve(256); // adjust if your model is large
 
+//   auto add = [&](const String& token){
+//     if (token.length() == 0) return;
+//     if (out.length() > 0 && out[out.length()-1] != ';') out += ';';
+//     out += token;
+//   };
+
+//   // System-level
+//   add("s/st:" + String(MODEL.systemState));
+//   add("s/ke:" + String(MODEL.keypad));
+
+//   if (out.startsWith(";")) out.remove(0, 1);
+//   return out;
+// }
+
+
+// // ---------------- MQTT network string ----------------
+// String buildNetworkMqttString() {
+//   String out;
+//   out.reserve(256); 
+
+//   auto add = [&](const String& token){
+//     if (token.length() == 0) return;
+//     if (out.length() > 0 && out[out.length()-1] != ';') out += ';';
+//     out += token;
+//   };
+
+//   // Network-level
+//   add("n/st:" + String(MODEL.network));
+//   if (MODEL.mac.length() > 0) add("n/mc:" + MODEL.mac);
+
+//   if (out.startsWith(";")) out.remove(0, 1);
+//   return out;
+// }
+
+
+// ---------------- Parse MQTT full-system compact string ----------------
 bool parseSystemMqttString(const String& systemData) {
-  // Return false to indicate "not parsed" by this minimal implementation.
-  // Safe no-op that won't mutate MODEL.
-  (void)systemData;
-  return false;
+  if (systemData.length() == 0) return false;
+
+  String tokens[256];
+  int count = 0, start = 0;
+  while (count < 256) {
+    int idx = systemData.indexOf(';', start);
+    String part = (idx == -1) ? systemData.substring(start)
+                              : systemData.substring(start, idx);
+    part.trim();
+    if (part.length() > 0) tokens[count++] = part;
+    if (idx == -1) break;
+    start = idx + 1;
+  }
+
+  bool anyParsed = false;
+  for (int i = 0; i < count; i++) {
+    const String& token = tokens[i];
+    int colon = token.indexOf(':');
+    if (colon <= 0) continue;
+
+    String topic = token.substring(0, colon);
+    String payload = token.substring(colon + 1);
+
+    topic.trim();
+    payload.trim();
+
+    if (parseNode(topic.c_str(), payload.c_str())) {
+      anyParsed = true;
+    }
+  }
+
+  return anyParsed;
 }
 
-
-// ---------------------------------------------------------------------------
-// Build ESP-NOW message for floor RSSI
-// Format: f/<f_id>/rsi:<value>
-// ---------------------------------------------------------------------------
-String buildFloorRssiEspString(uint8_t f_id) {
-    if (!addFloor(f_id)) return "";
-
-    String msg;
-    msg.reserve(20);
-    msg = "f/";
-    msg += String(f_id);
-    msg += "/rsi:";
-    msg += String(MODEL.floors[f_id].rssi);
-
-    return msg;
-}
-
-
-// Add this in elec520_protocol.cpp
 String buildFloorMqttString(uint8_t f_id) {
-    if (!MODEL.floors[f_id].used) return "";
+  if (f_id >= SMP_MAX_FLOORS) return String();
 
-    String msg;
-    msg.reserve(512);
+  FloorNode& F = MODEL.floors[f_id];
+  if (!F.used) return String();
 
-    // Floor connection and RSSI
-    msg += "f/"; msg += String(f_id);
-    msg += "/cs:"; msg += (MODEL.floors[f_id].connected ? "1" : "0");
-    msg += ";f/"; msg += String(f_id);
-    msg += "/rsi:"; msg += String(MODEL.floors[f_id].rssi);
+  String out;
+  out.reserve(160);
 
-    // Each room on this floor
-    for (uint8_t r = 0; r < SMP_MAX_ROOMS; r++) {
-        if (!MODEL.floors[f_id].rooms[r].used) continue;
-        String roomPart = buildRoomEspString(f_id, r);
-        if (roomPart.length() > 0) {
-            msg += ";";
-            msg += roomPart;
-        }
+  // Floor connection + timestamp
+  out += "cs:"; out += (F.connected ? "1" : "0");
+  if (F.ts != 0) {
+    out += ";ts:"; out += String(F.ts);
+  }
+
+  // Rooms
+  for (uint8_t r = 0; r < SMP_MAX_ROOMS; ++r) {
+    RoomNode& R = F.rooms[r];
+    if (!R.used) continue;
+
+    // Room connection
+    out += ";r/"; out += String(r);
+    out += "/cs:"; out += (R.connected ? "1" : "0");
+
+    // Room timestamp
+    if (R.ts != 0) {
+      out += ";r/"; out += String(r);
+      out += "/ts:"; out += String(R.ts);
     }
 
-    return msg;
+    // Ultrasonic sensors
+    for (uint8_t u = 0; u < SMP_MAX_SENSORS; ++u) {
+      if (!R.ultra[u].used) continue;
+      out += ";r/"; out += String(r);
+      out += "/u/"; out += String(u);
+      out += ":";   out += String(R.ultra[u].value);
+    }
+
+    // Hall sensors
+    for (uint8_t h = 0; h < SMP_MAX_SENSORS; ++h) {
+      if (!R.hall[h].used) continue;
+      out += ";r/"; out += String(r);
+      out += "/h/"; out += String(h);
+      out += ":";   out += (R.hall[h].open ? "1" : "0");
+    }
+  }
+
+  return out;
+}
+
+void debugPrintModel(Stream& out) {
+  out.println(F("=== ELEC520 MODEL DUMP ==="));
+
+  // System-level
+  out.print(F("System State (s/st): ")); out.println(MODEL.systemState);
+  out.print(F("Keypad      (s/ke): ")); out.println(MODEL.keypad);
+  out.print(F("Network     (n/st): ")); out.println(MODEL.network);
+  out.print(F("MAC         (n/mc): ")); out.println(MODEL.mac);
+
+  // Floors
+  for (uint8_t f = 0; f < SMP_MAX_FLOORS; ++f) {
+    FloorNode& F = MODEL.floors[f];
+    if (!F.used) continue;
+
+    out.println();
+    out.print  (F("Floor ")); out.print(f);
+    out.print  (F("  connected: ")); out.println(F.connected ? F("1") : F("0"));
+    out.print  (F("         ts: ")); out.println(F.ts);
+
+    // Rooms
+    for (uint8_t r = 0; r < SMP_MAX_ROOMS; ++r) {
+      RoomNode& R = F.rooms[r];
+      if (!R.used) continue;
+
+      out.print  (F("  Room ")); out.print(r);
+      out.print  (F("   connected: ")); out.println(R.connected ? F("1") : F("0"));
+      out.print  (F("           ts: ")); out.println(R.ts);
+
+      // Ultrasonic sensors
+      bool anyU = false;
+      for (uint8_t u = 0; u < SMP_MAX_SENSORS; ++u) {
+        if (!R.ultra[u].used) continue;
+        if (!anyU) { out.println(F("    Ultra:")); anyU = true; }
+        out.print(F("      u/")); out.print(u);
+        out.print(F(" = ")); out.println(R.ultra[u].value);
+      }
+
+      // Hall sensors
+      bool anyH = false;
+      for (uint8_t h = 0; h < SMP_MAX_SENSORS; ++h) {
+        if (!R.hall[h].used) continue;
+        if (!anyH) { out.println(F("    Hall:")); anyH = true; }
+        out.print(F("      h/")); out.print(h);
+        out.print(F(" = ")); out.println(R.hall[h].open ? F("1") : F("0"));
+      }
+    }
+  }
+
+  out.println(F("=== END MODEL DUMP ==="));
 }

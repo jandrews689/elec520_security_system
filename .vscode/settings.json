@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "thread": "cpp",
-        "xlocale": "cpp"
+        "xlocale": "cpp",
+        "ostream": "cpp",
+        "vector": "cpp",
+        "xhash": "cpp",
+        "xstring": "cpp",
+        "xlocinfo": "cpp"
     }
 }
