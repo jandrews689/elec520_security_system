@@ -38,7 +38,7 @@ struct ProtocolModel {
   uint8_t   systemState = DISARMED; // s/st
   uint8_t   keypad      = NO_INPUT; // s/ke
   uint8_t   network     = 0;        // n/st
-  String    mac         = "";       // n/mc
+  String    mac         = "00:00:00:00:00:00";       // n/mc
   FloorNode floors[SMP_MAX_FLOORS]; // f/{f}
 };
 
@@ -78,34 +78,33 @@ String nodeTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id);   // f/{f}/r/{r}/
 String nodeTopicFloorTimestamp(uint8_t f_id);                // f/{f}/ts
 String nodeTopicRoomTimestamp(uint8_t f_id,uint8_t r_id);    // f/{f}/r/{r}/ts
 
-// -------- Topic builders (Cloud, with prefix) --------
-String cloudTopicFloor(uint8_t f_id);                        // ELEC520/security/f/{f}
-String cloudTopicSystemState();                              // ELEC520/security/s/st
-String cloudTopicKeypad();                                   // ELEC520/security/s/ke
-String cloudTopicNetwork();                                  // ELEC520/security/n/st
-String cloudTopicMac();                                      // ELEC520/security/n/mc
-String cloudTopicFloorConnection(uint8_t f_id);              // ELEC520/security/f/{f}/cs
-String cloudTopicRoomConnection(uint8_t f_id,uint8_t r_id);  // ELEC520/security/f/{f}/r/{r}/cs
-String cloudTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id); // ELEC520/security/f/{f}/r/{r}/u/{u}
-String cloudTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id); // ELEC520/security/f/{f}/r/{r}/h/{h}
-String cloudTopicFloorTimestamp(uint8_t f_id);               // ELEC520/security/f/{f}/ts
-String cloudTopicRoomTimestamp(uint8_t f_id,uint8_t r_id);   // ELEC520/security/f/{f}/r/{r}/ts
+// -------- Topic builders (Cloud, with '/hw/' branch) --------
+// NOTE: These now publish under ELEC520/security/hw/...
+String cloudTopicFloor(uint8_t f_id);                        // ELEC520/security/hw/f/{f}
+String cloudTopicSystemState();                              // ELEC520/security/hw/s/st
+String cloudTopicKeypad();                                   // ELEC520/security/hw/s/ke
+String cloudTopicNetwork();                                  // ELEC520/security/hw/n/st
+String cloudTopicMac();                                      // ELEC520/security/hw/n/mc
+String cloudTopicFloorConnection(uint8_t f_id);              // ELEC520/security/hw/f/{f}/cs
+String cloudTopicRoomConnection(uint8_t f_id,uint8_t r_id);  // ELEC520/security/hw/f/{f}/r/{r}/cs
+String cloudTopicUltra(uint8_t f_id,uint8_t r_id,uint8_t u_id); // ELEC520/security/hw/f/{f}/r/{r}/u/{u}
+String cloudTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id); // ELEC520/security/hw/f/{f}/r/{r}/h/{h}
+String cloudTopicFloorTimestamp(uint8_t f_id);               // ELEC520/security/hw/f/{f}/ts
+String cloudTopicRoomTimestamp(uint8_t f_id,uint8_t r_id);   // ELEC520/security/hw/f/{f}/r/{r}/ts
 
 // -------- ESP-NOW per-room compact string --------
 String buildRoomEspString(uint8_t f_id, uint8_t r_id);
 bool   parseRoomEspString(const String& roomData);
 
-// -------- MQTT full-system compact string --------
-String buildSystemMqttString();
-bool   parseSystemMqttString(const String& systemData);
+// -------- MQTT System string --------
+// String buildSystemMqttString();
+// String buildNetworkMqttString();
+bool   parseSystemMqttString(const String& systemData); //Are we using this?
 
-// -------- MQTT per-floor compact string (payload for ELEC520/security/f/{f}) --------
+// -------- MQTT per-floor compact string (payload for ELEC520/security/hw/f/{f}) --------
 String buildFloorMqttString(uint8_t f_id);
 
-
 // ----- Debug helpers -----
-// Pretty, multi-line dump of the entire MODEL to any Arduino Stream (e.g., Serial)
 void debugPrintModel(Stream& out);
-
 
 #endif // ELEC520_PROTOCOL_H
