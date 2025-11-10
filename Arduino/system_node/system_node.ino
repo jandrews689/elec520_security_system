@@ -65,9 +65,16 @@ void setup() {
       addHall   (objFloor.getFloorID(), 2, 2);
   ////////////////////////////////////////////////////////////////////////
 
-    setPassword("001:12345678");
-    setPassword("002:11112222");
-    setPassword("003:57576868");
+  // setPassword("001:12345678");
+
+  // delay(50);
+
+  // findKeypadUser("12345678");
+
+  // delay(50);
+
+  // findKeypadUser("00001234");
+
 }
 
 

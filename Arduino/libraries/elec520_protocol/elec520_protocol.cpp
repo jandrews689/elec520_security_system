@@ -84,6 +84,7 @@ bool setPassword(const String& userPassword) {
 
 // Store trigger location.
 bool setTriggerLoc(uint8_t f_id,uint8_t r_id,uint8_t u_id,uint8_t h_id) { 
+  if ((f_id || r_id) == 0) return false;
   if (u_id == 0 && h_id == 0) return false;
   String address;
   if (u_id != 0) {
@@ -93,6 +94,25 @@ bool setTriggerLoc(uint8_t f_id,uint8_t r_id,uint8_t u_id,uint8_t h_id) {
   }
   MODEL.triggerLoc = address; 
   return true; 
+}
+
+
+// Keypad user search
+bool findKeypadUser(const String& userPassword){
+  std::string pass = userPassword.c_str();
+  std::string user;
+  std::string foundKey;
+  for (const auto& pair : MODEL.password){
+    if (pair.second == pass) {
+      foundKey = pair.first;
+      Serial.println("Keypad User Found!");
+      return true;
+      break;
+    } else {
+      Serial.println("Keypad User Not Found!");
+      return false;
+    }
+ }
 }
 
 

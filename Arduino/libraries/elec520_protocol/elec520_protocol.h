@@ -67,6 +67,7 @@ bool setMac(const String& mac);
 bool setKeypadUser(uint8_t ku);
 bool setPassword(const String& pass);
 bool setTriggerLoc(uint8_t f_id,uint8_t r_id,uint8_t u_id = 0,uint8_t h_id = 0);
+bool findKeypadUser(const String& userPassword);
 
 void resetModel();
 
