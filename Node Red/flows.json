@@ -1,22 +1,15 @@
 [
     {
-        "id": "f6f2187d.f17ca8",
+        "id": "9655a5fe22a078d7",
         "type": "tab",
         "label": "Flow 1",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "d94627ca84a633a7",
-        "type": "tab",
-        "label": "Flow 1",
-        "disabled": false,
-        "info": ""
-    },
-    {
-        "id": "a0b1ce9a10386c13",
+        "id": "0fa7d717b06a2b81",
         "type": "group",
-        "z": "d94627ca84a633a7",
+        "z": "9655a5fe22a078d7",
         "style": {
             "stroke": "#999999",
             "stroke-opacity": "1",
@@ -27,14 +20,14 @@
             "color": "#a4a4a4"
         },
         "nodes": [
-            "ba4f6ffa6419bb11",
-            "9b9fef7efdf50e51",
-            "1c7c1885cb71b698",
-            "930418a07dd17841",
-            "1763b0c2980ef463",
-            "432b30284e9172fb",
-            "ee2a36b504ddeafc",
-            "4bcc7c640579c2bb"
+            "5f0b4b308a24783d",
+            "3baf073cfe918bd2",
+            "3f2cb3e24ce93fc3",
+            "4da0a60a1cb806aa",
+            "42da4f14128e6490",
+            "92c64a64f3ae9a55",
+            "e2b56f87895b9bb2",
+            "3a60897ec71f5717"
         ],
         "x": 834,
         "y": 439,
@@ -42,9 +35,9 @@
         "h": 202
     },
     {
-        "id": "c3940900ce9d0e4b",
+        "id": "680b91c23eabc493",
         "type": "group",
-        "z": "d94627ca84a633a7",
+        "z": "9655a5fe22a078d7",
         "style": {
             "stroke": "#999999",
             "stroke-opacity": "1",
@@ -55,14 +48,14 @@
             "color": "#a4a4a4"
         },
         "nodes": [
-            "956aedd68b56c499",
-            "b8cba519383bffee",
-            "6919a2c8151b2cf0",
-            "0159943f326e2b08",
-            "f88ade9bfe38ec25",
-            "482368321f6057df",
-            "d31863fe9f0731c2",
-            "b46fa6d4c979bbf6"
+            "88e5a85048e2e0a4",
+            "15a7accd8f340810",
+            "35a982ea7b9184c4",
+            "61eed7ad297c6949",
+            "c26ba5169737fd5d",
+            "418654414f8c4f30",
+            "e5032a31386090fe",
+            "c680f103f088cbbd"
         ],
         "x": 834,
         "y": 639,
@@ -70,9 +63,9 @@
         "h": 222
     },
     {
-        "id": "e905c1911d403e4d",
+        "id": "d21efa0ea7e3d89f",
         "type": "group",
-        "z": "d94627ca84a633a7",
+        "z": "9655a5fe22a078d7",
         "style": {
             "stroke": "#999999",
             "stroke-opacity": "1",
@@ -83,38 +76,10 @@
             "color": "#a4a4a4"
         },
         "nodes": [
-            "f89ad4a72f2fd450",
-            "64acad76d6cf967b",
-            "07d0f160de9564d5",
-            "44e625a275eeba14",
-            "2e8091f488bb7cfd",
-            "d5d6e474118197cd",
-            "d7ee4d1bf6a23820",
-            "f6151facbf7f06b8"
-        ],
-        "x": 514,
-        "y": 279,
-        "w": 732,
-        "h": 162
-    },
-    {
-        "id": "4d6dae89d6a16b5d",
-        "type": "group",
-        "z": "d94627ca84a633a7",
-        "style": {
-            "stroke": "#999999",
-            "stroke-opacity": "1",
-            "fill": "none",
-            "fill-opacity": "1",
-            "label": true,
-            "label-position": "nw",
-            "color": "#a4a4a4"
-        },
-        "nodes": [
-            "394f2d265212bde0",
-            "f9fc3c43d4e65d67",
-            "68321dbaa8270b82",
-            "dc8c11e6256d450c"
+            "ad4cd8e32fe9fbd5",
+            "04d68bf8626a127d",
+            "95a20e9730e6bbaf",
+            "d531ce13853d419b"
         ],
         "x": 314,
         "y": 439,
@@ -122,9 +87,9 @@
         "h": 202
     },
     {
-        "id": "91985aa51778e981",
+        "id": "2a622428765310fd",
         "type": "group",
-        "z": "d94627ca84a633a7",
+        "z": "9655a5fe22a078d7",
         "style": {
             "stroke": "#999999",
             "stroke-opacity": "1",
@@ -135,42 +100,16 @@
             "color": "#a4a4a4"
         },
         "nodes": [
-            "2fd01955edc186a4",
-            "30ebabdd52f2f2c1"
+            "1c86761941c1f6d2",
+            "22b64d229499b365"
         ],
-        "x": 294,
-        "y": 139,
+        "x": 274,
+        "y": 59,
         "w": 492,
         "h": 82
     },
     {
-        "id": "593db1627aab6c24",
-        "type": "group",
-        "z": "d94627ca84a633a7",
-        "style": {
-            "stroke": "#999999",
-            "stroke-opacity": "1",
-            "fill": "none",
-            "fill-opacity": "1",
-            "label": true,
-            "label-position": "nw",
-            "color": "#a4a4a4"
-        },
-        "nodes": [
-            "875a94a7b76ef3b5",
-            "69e707b8c123408d",
-            "fb2a7a413bd79f24",
-            "a49981d24c789e69",
-            "d7151ca432cfcb58",
-            "1a399d578ab9f1b4"
-        ],
-        "x": 74,
-        "y": 679,
-        "w": 472,
-        "h": 182
-    },
-    {
-        "id": "16070f5db00beafe",
+        "id": "0a15189a18f78de1",
         "type": "mqtt-broker",
         "name": "",
         "broker": "broker.hivemq.com",
@@ -201,40 +140,7 @@
         "sessionExpiry": ""
     },
     {
-        "id": "4e5a253cfdc1567c",
-        "type": "ui_group",
-        "name": "User Control and Feedback",
-        "tab": "cbb63d0e673d4877",
-        "order": 2,
-        "disp": true,
-        "width": 6,
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "e4bf600661a44d02",
-        "type": "ui_group",
-        "name": "Room 1",
-        "tab": "cbb63d0e673d4877",
-        "order": 3,
-        "disp": true,
-        "width": 6,
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "f2c5d9088e4c1c81",
-        "type": "ui_group",
-        "name": "Room 2",
-        "tab": "cbb63d0e673d4877",
-        "order": 4,
-        "disp": true,
-        "width": 6,
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "cbb63d0e673d4877",
+        "id": "f1cd981ed910b10b",
         "type": "ui_tab",
         "name": "Floor 1",
         "icon": "dashboard",
@@ -243,7 +149,7 @@
         "hidden": false
     },
     {
-        "id": "57ad4df846361b6f",
+        "id": "b0b502bfb1063114",
         "type": "ui_base",
         "theme": {
             "name": "theme-light",
@@ -340,29 +246,52 @@
         }
     },
     {
-        "id": "99d096016f151987",
+        "id": "bfb5c46393214032",
+        "type": "ui_group",
+        "name": "User Control and Feedback",
+        "tab": "f1cd981ed910b10b",
+        "order": 2,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a0fde7d4b58fb5f8",
+        "type": "ui_group",
+        "name": "Room 1",
+        "tab": "f1cd981ed910b10b",
+        "order": 3,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "8d83287f5d09ce8e",
+        "type": "ui_group",
+        "name": "Room 2",
+        "tab": "f1cd981ed910b10b",
+        "order": 4,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "209d5b7c909a70ac",
         "type": "gauth",
         "name": "Unknown"
     },
     {
-        "id": "3cc11d24.ff01a2",
-        "type": "comment",
-        "z": "f6f2187d.f17ca8",
-        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
-        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
-        "x": 350,
-        "y": 80,
-        "wires": []
-    },
-    {
-        "id": "07f3705e2b7eb302",
+        "id": "315914c85c6f1614",
         "type": "mqtt in",
-        "z": "d94627ca84a633a7",
+        "z": "9655a5fe22a078d7",
         "name": "",
         "topic": "ELEC520/security/#",
         "qos": "2",
         "datatype": "auto-detect",
-        "broker": "16070f5db00beafe",
+        "broker": "0a15189a18f78de1",
         "nl": false,
         "rap": true,
         "rh": 0,
@@ -371,18 +300,19 @@
         "y": 340,
         "wires": [
             [
-                "c6f9a027d490f9b4",
-                "394f2d265212bde0",
-                "f89ad4a72f2fd450",
-                "64acad76d6cf967b",
-                "30ebabdd52f2f2c1"
+                "d803536530bad6ee",
+                "ad4cd8e32fe9fbd5",
+                "caaf1f4b276c2514",
+                "1c4acc5069355ff6",
+                "22b64d229499b365",
+                "d599a59a44e0d462"
             ]
         ]
     },
     {
-        "id": "c6f9a027d490f9b4",
+        "id": "d803536530bad6ee",
         "type": "debug",
-        "z": "d94627ca84a633a7",
+        "z": "9655a5fe22a078d7",
         "name": "debug 1",
         "active": false,
         "tosidebar": true,
@@ -396,10 +326,10 @@
         "wires": []
     },
     {
-        "id": "394f2d265212bde0",
+        "id": "ad4cd8e32fe9fbd5",
         "type": "function",
-        "z": "d94627ca84a633a7",
-        "g": "4d6dae89d6a16b5d",
+        "z": "9655a5fe22a078d7",
+        "g": "d21efa0ea7e3d89f",
         "name": "seperateSystemFloorData",
         "func": "// Example topic: ELEC520/security/hw/f/1\nlet topic = String(msg.topic || \"\").trim();\n\n// Match: ELEC520/security/hw/f/{f}\nlet match = topic.match(/^ELEC520\\/security\\/hw\\/f\\/(\\d+)$/);\n\nif (!match) {\n    // node.warn(\"Unexpected topic: \" + topic);\n    return null;\n}\n\nlet floorId = parseInt(match[1], 10);\n\n// Validate range\nif (floorId < 1 || floorId > 8) {\n    node.warn(\"Invalid floor id: \" + floorId);\n    return null;\n}\n\n// 9 outputs = 8 floors + 1 debug\nlet outputs = new Array(9).fill(null);\n\n// Message routed to correct floor\noutputs[floorId - 1] = {\n    payload: msg.payload,\n    topic: topic,\n    floor: floorId\n};\n\n// Send debug info to output 9\noutputs[8] = {\n    payload: {\n        floor: floorId,\n        topic: topic,\n        value: msg.payload\n    }\n};\n\n// node.warn(`Routing floor ${floorId} to output ${floorId}`);\nreturn outputs;\n",
         "outputs": 9,
@@ -412,7 +342,7 @@
         "y": 540,
         "wires": [
             [
-                "68321dbaa8270b82"
+                "95a20e9730e6bbaf"
             ],
             [],
             [],
@@ -422,15 +352,15 @@
             [],
             [],
             [
-                "f9fc3c43d4e65d67"
+                "04d68bf8626a127d"
             ]
         ]
     },
     {
-        "id": "f9fc3c43d4e65d67",
+        "id": "04d68bf8626a127d",
         "type": "debug",
-        "z": "d94627ca84a633a7",
-        "g": "4d6dae89d6a16b5d",
+        "z": "9655a5fe22a078d7",
+        "g": "d21efa0ea7e3d89f",
         "name": "debug 2",
         "active": false,
         "tosidebar": true,
@@ -444,10 +374,10 @@
         "wires": []
     },
     {
-        "id": "68321dbaa8270b82",
+        "id": "95a20e9730e6bbaf",
         "type": "function",
-        "z": "d94627ca84a633a7",
-        "g": "4d6dae89d6a16b5d",
+        "z": "9655a5fe22a078d7",
+        "g": "d21efa0ea7e3d89f",
         "name": "parseFloorData",
         "func": "// Example payload:\n// cs:0;r/1/cs:0;r/1/u/1:120;r/1/h/1:1;r/1/h/2:0;r/2/cs:1;r/2/u/1:98;r/2/h/1:0;r/2/h/2:1\n\nlet payload = msg.payload;\nlet parts = payload.split(\";\");\n\nlet floorConnected = null;\nlet rooms = {};  // temporary store\n\nfor (let part of parts) {\n    if (!part) continue;\n\n    let [key, value] = part.split(\":\");\n    value = parseInt(value);\n\n    // Floor-level connection status\n    if (key === \"cs\") {\n        floorConnected = value;\n        continue;\n    }\n\n    // Room-based info\n    let match = key.match(/^r\\/(\\d+)\\/(.*)$/);\n    if (!match) continue;\n\n    let roomId = parseInt(match[1]);\n    let rest = match[2];\n\n    // Make sure room object exists\n    if (!rooms[roomId]) {\n        rooms[roomId] = {\n            floorConnected: floorConnected,\n            roomId: roomId,\n            roomConnected: null,\n            hall: [],\n            ultra: []\n        };\n    }\n\n    if (rest === \"cs\") {\n        rooms[roomId].roomConnected = value;\n    } else if (rest.startsWith(\"h/\")) {\n        rooms[roomId].hall.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            state: value\n        });\n    } else if (rest.startsWith(\"u/\")) {\n        rooms[roomId].ultra.push({\n            id: parseInt(rest.split(\"/\")[1]),\n            value: value\n        });\n    }\n}\n\n// Create an array of outputs (one per room, max 8)\nlet outputs = new Array(8).fill(null);\n\nfor (let [roomId, data] of Object.entries(rooms)) {\n    let index = data.roomId - 1; // output numbering starts from 0\n    outputs[index] = { payload: data };\n}\n\n\n// node.warn(\"Rooms parsed: \" + JSON.stringify(rooms));\n// node.warn(\"Outputs: \" + JSON.stringify(outputs));\n\nreturn outputs;",
         "outputs": 8,
@@ -460,12 +390,12 @@
         "y": 540,
         "wires": [
             [
-                "dc8c11e6256d450c",
-                "ba4f6ffa6419bb11"
+                "d531ce13853d419b",
+                "5f0b4b308a24783d"
             ],
             [
-                "956aedd68b56c499",
-                "dc8c11e6256d450c"
+                "88e5a85048e2e0a4",
+                "d531ce13853d419b"
             ],
             [],
             [],
@@ -476,10 +406,10 @@
         ]
     },
     {
-        "id": "dc8c11e6256d450c",
+        "id": "d531ce13853d419b",
         "type": "debug",
-        "z": "d94627ca84a633a7",
-        "g": "4d6dae89d6a16b5d",
+        "z": "9655a5fe22a078d7",
+        "g": "d21efa0ea7e3d89f",
         "name": "debug 10",
         "active": false,
         "tosidebar": true,
@@ -493,10 +423,10 @@
         "wires": []
     },
     {
-        "id": "ba4f6ffa6419bb11",
+        "id": "5f0b4b308a24783d",
         "type": "function",
-        "z": "d94627ca84a633a7",
-        "g": "a0b1ce9a10386c13",
+        "z": "9655a5fe22a078d7",
+        "g": "0fa7d717b06a2b81",
         "name": "parseRoom",
         "func": "// Input example (from parseFloor output):\n// msg.payload = { roomId: 1, roomConnected: 1, hall: [...], ultra: [...] }\n\nlet room = msg.payload;\nlet msgs = [];\n\n// Room connection status\nmsgs.push({\n    topic: `room/${room.roomId}/cs`,\n    payload: room.roomConnected\n});\n\n// Hall sensors\nfor (let h of room.hall) {\n    msgs.push({\n        topic: `room/${room.roomId}/hall/${h.id}`,\n        payload: h.state\n    });\n}\n\n// Ultrasonic sensors\nfor (let u of room.ultra) {\n    msgs.push({\n        topic: `room/${room.roomId}/ultra/${u.id}`,\n        payload: u.value\n    });\n}\n\n// Return as separate messages from one output\nreturn [msgs];\n",
         "outputs": 1,
@@ -509,15 +439,15 @@
         "y": 480,
         "wires": [
             [
-                "9b9fef7efdf50e51"
+                "3baf073cfe918bd2"
             ]
         ]
     },
     {
-        "id": "9b9fef7efdf50e51",
+        "id": "3baf073cfe918bd2",
         "type": "switch",
-        "z": "d94627ca84a633a7",
-        "g": "a0b1ce9a10386c13",
+        "z": "9655a5fe22a078d7",
+        "g": "0fa7d717b06a2b81",
         "name": "",
         "property": "topic",
         "propertyType": "msg",
@@ -555,32 +485,32 @@
         "y": 540,
         "wires": [
             [
-                "1c7c1885cb71b698",
-                "930418a07dd17841"
+                "3f2cb3e24ce93fc3",
+                "4da0a60a1cb806aa"
             ],
             [
-                "1c7c1885cb71b698",
-                "1763b0c2980ef463"
+                "3f2cb3e24ce93fc3",
+                "42da4f14128e6490"
             ],
             [
-                "1c7c1885cb71b698",
-                "432b30284e9172fb"
+                "3f2cb3e24ce93fc3",
+                "92c64a64f3ae9a55"
             ],
             [
-                "1c7c1885cb71b698",
-                "ee2a36b504ddeafc"
+                "3f2cb3e24ce93fc3",
+                "e2b56f87895b9bb2"
             ],
             [
-                "1c7c1885cb71b698",
-                "4bcc7c640579c2bb"
+                "3f2cb3e24ce93fc3",
+                "3a60897ec71f5717"
             ]
         ]
     },
     {
-        "id": "1c7c1885cb71b698",
+        "id": "3f2cb3e24ce93fc3",
         "type": "debug",
-        "z": "d94627ca84a633a7",
-        "g": "a0b1ce9a10386c13",
+        "z": "9655a5fe22a078d7",
+        "g": "0fa7d717b06a2b81",
         "name": "debug 18",
         "active": false,
         "tosidebar": true,
@@ -594,10 +524,10 @@
         "wires": []
     },
     {
-        "id": "956aedd68b56c499",
+        "id": "88e5a85048e2e0a4",
         "type": "function",
-        "z": "d94627ca84a633a7",
-        "g": "c3940900ce9d0e4b",
+        "z": "9655a5fe22a078d7",
+        "g": "680b91c23eabc493",
         "name": "parseRoom",
         "func": "// Input example (from parseFloor output):\n// msg.payload = { roomId: 1, roomConnected: 1, hall: [...], ultra: [...] }\n\nlet room = msg.payload;\nlet msgs = [];\n\n// Room connection status\nmsgs.push({\n    topic: `room/${room.roomId}/cs`,\n    payload: room.roomConnected\n});\n\n// Hall sensors\nfor (let h of room.hall) {\n    msgs.push({\n        topic: `room/${room.roomId}/hall/${h.id}`,\n        payload: h.state\n    });\n}\n\n// Ultrasonic sensors\nfor (let u of room.ultra) {\n    msgs.push({\n        topic: `room/${room.roomId}/ultra/${u.id}`,\n        payload: u.value\n    });\n}\n\n// Return as separate messages from one output\nreturn [msgs];\n",
         "outputs": 1,
@@ -610,15 +540,15 @@
         "y": 680,
         "wires": [
             [
-                "b8cba519383bffee"
+                "15a7accd8f340810"
             ]
         ]
     },
     {
-        "id": "b8cba519383bffee",
+        "id": "15a7accd8f340810",
         "type": "switch",
-        "z": "d94627ca84a633a7",
-        "g": "c3940900ce9d0e4b",
+        "z": "9655a5fe22a078d7",
+        "g": "680b91c23eabc493",
         "name": "",
         "property": "topic",
         "propertyType": "msg",
@@ -656,32 +586,32 @@
         "y": 740,
         "wires": [
             [
-                "6919a2c8151b2cf0",
-                "0159943f326e2b08"
+                "35a982ea7b9184c4",
+                "61eed7ad297c6949"
             ],
             [
-                "6919a2c8151b2cf0",
-                "f88ade9bfe38ec25"
+                "35a982ea7b9184c4",
+                "c26ba5169737fd5d"
             ],
             [
-                "6919a2c8151b2cf0",
-                "482368321f6057df"
+                "35a982ea7b9184c4",
+                "418654414f8c4f30"
             ],
             [
-                "6919a2c8151b2cf0",
-                "d31863fe9f0731c2"
+                "35a982ea7b9184c4",
+                "e5032a31386090fe"
             ],
             [
-                "6919a2c8151b2cf0",
-                "b46fa6d4c979bbf6"
+                "35a982ea7b9184c4",
+                "c680f103f088cbbd"
             ]
         ]
     },
     {
-        "id": "6919a2c8151b2cf0",
+        "id": "35a982ea7b9184c4",
         "type": "debug",
-        "z": "d94627ca84a633a7",
-        "g": "c3940900ce9d0e4b",
+        "z": "9655a5fe22a078d7",
+        "g": "680b91c23eabc493",
         "name": "debug 3",
         "active": false,
         "tosidebar": true,
@@ -695,10 +625,9 @@
         "wires": []
     },
     {
-        "id": "875a94a7b76ef3b5",
+        "id": "368407463f6b581a",
         "type": "debug",
-        "z": "d94627ca84a633a7",
-        "g": "593db1627aab6c24",
+        "z": "9655a5fe22a078d7",
         "name": "debug 4",
         "active": false,
         "tosidebar": true,
@@ -708,15 +637,14 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 380,
-        "y": 720,
+        "x": 740,
+        "y": 940,
         "wires": []
     },
     {
-        "id": "69e707b8c123408d",
+        "id": "51f4f2920169d76a",
         "type": "function",
-        "z": "d94627ca84a633a7",
-        "g": "593db1627aab6c24",
+        "z": "9655a5fe22a078d7",
         "name": "topicBuilder",
         "func": "msg.topic = \"ELEC520/security/cl/s/st\";\n\nreturn msg;",
         "outputs": 1,
@@ -725,20 +653,19 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
-        "y": 740,
+        "x": 730,
+        "y": 960,
         "wires": [
             [
-                "fb2a7a413bd79f24",
-                "875a94a7b76ef3b5"
+                "8fac05bb70a75329",
+                "368407463f6b581a"
             ]
         ]
     },
     {
-        "id": "fb2a7a413bd79f24",
+        "id": "8fac05bb70a75329",
         "type": "mqtt out",
-        "z": "d94627ca84a633a7",
-        "g": "593db1627aab6c24",
+        "z": "9655a5fe22a078d7",
         "name": "",
         "topic": "",
         "qos": "",
@@ -748,18 +675,48 @@
         "userProps": "",
         "correl": "",
         "expiry": "",
-        "broker": "16070f5db00beafe",
-        "x": 470,
-        "y": 820,
+        "broker": "0a15189a18f78de1",
+        "x": 830,
+        "y": 1040,
         "wires": []
     },
     {
-        "id": "f89ad4a72f2fd450",
+        "id": "caaf1f4b276c2514",
         "type": "function",
-        "z": "d94627ca84a633a7",
-        "g": "e905c1911d403e4d",
+        "z": "9655a5fe22a078d7",
         "name": "parseSystemData",
-        "func": "// Example topics: ELEC520/security/hw/s/st , ELEC520/security/hw/s/ke\nlet topic = msg.topic;\n\n// Match only hardware system topics ending in /st or /ke\nlet match = topic.match(/ELEC520\\/security\\/hw\\/s\\/(st|ke)$/);\n\n\nif (!match) {\n    // node.warn(\"Unexpected topic: \" + topic);\n    return null;\n}\n\nlet outputs = [null, null];\nlet subTopic = match[1];\n\nif (subTopic === \"st\") {\n    outputs[0] = { payload: msg.payload }; // System state\n} else if (subTopic === \"ke\") {\n    outputs[1] = { payload: msg.payload }; // Keypad\n}\n\n\nreturn outputs;",
+        "func": "// Example topics: ELEC520/security/hw/s/st , ELEC520/security/hw/s/ke\nlet topic = msg.topic;\n\n// Match only hardware system topics ending in /st or /ke\nlet match = topic.match(/ELEC520\\/security\\/hw\\/s\\/(st|ke)$/);\n\n\nif (!match) {\n    // node.warn(\"Unexpected topic: \" + topic);\n    return null;\n}\n\nlet outputs = [null, null];\nlet subTopic = match[1];\n\nif (subTopic === \"st\") {\n    outputs[0] = { payload: msg.payload }; // System state\n} else if (subTopic === \"ke\") {\n    outputs[1] = { payload: msg.payload }; // Keypad\n} else if (subTopic === \"tr\") {\n    outputs[2] = { payload: msg.payload }; // Trigger location\n} else if (subTopic === \"ku\") {\n    outputs[3] = { payload: msg.payload }; // Keypad user ID\n}\n\nreturn outputs;",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 200,
+        "wires": [
+            [
+                "5a71996543a6e4ad",
+                "25ef44ec44cd9eb6"
+            ],
+            [
+                "c809f845cd66ab72",
+                "25ef44ec44cd9eb6"
+            ],
+            [
+                "e3de2534f61f3ff2"
+            ],
+            [
+                "300d89f07d8be8ed"
+            ]
+        ]
+    },
+    {
+        "id": "1c4acc5069355ff6",
+        "type": "function",
+        "z": "9655a5fe22a078d7",
+        "name": "parseNetworkData",
+        "func": "// Example topics: ELEC520/security/hw/n/st, ELEC520/security/hw/n/mc\nlet topic = msg.topic;\n\n// Match only hardware system topics ending in /st or /mc\nlet match = topic.match(/ELEC520\\/security\\/hw\\/n\\/(st|mc)$/);\n\nif (!match) {\n    // node.warn(\"Unexpected system topic:\n    return null;\n}\n\n\nlet outputs = [null, null];\nlet subTopic = match[1];\n\nif (subTopic === \"st\") {\n    outputs[0] = { payload: msg.payload}; //Network state\n} else if (subTopic === \"mc\") {\n    outputs[1] = { payload: msg.payload}; //Basestation MAC\n}\n\nreturn outputs;",
         "outputs": 2,
         "timeout": 0,
         "noerr": 0,
@@ -770,64 +727,20 @@
         "y": 340,
         "wires": [
             [
-                "2e8091f488bb7cfd",
-                "44e625a275eeba14"
+                "de4c1cd348899627",
+                "5da06e01a4b7393e"
             ],
             [
-                "d5d6e474118197cd",
-                "44e625a275eeba14"
+                "37fc510622c53369",
+                "5da06e01a4b7393e"
             ]
         ]
     },
     {
-        "id": "64acad76d6cf967b",
-        "type": "function",
-        "z": "d94627ca84a633a7",
-        "g": "e905c1911d403e4d",
-        "name": "parseNetworkData",
-        "func": "// Example topics: ELEC520/security/hw/n/st, ELEC520/security/hw/n/mc\nlet topic = msg.topic;\n\n// Match only hardware system topics ending in /st or /mc\nlet match = topic.match(/ELEC520\\/security\\/hw\\/n\\/(st|mc)$/);\n\nif (!match) {\n    // node.warn(\"Unexpected system topic:\n    return null;\n}\n\n\nlet outputs = [null, null];\nlet subTopic = match[1];\n\nif (subTopic === \"st\") {\n    outputs[0] = { payload: msg.payload}; //Network state\n} else if (subTopic === \"mc\") {\n    outputs[1] = { payload: msg.payload}; //Basestation MAC\n}\n\nreturn outputs;",
-        "outputs": 2,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 630,
-        "y": 400,
-        "wires": [
-            [
-                "d7ee4d1bf6a23820",
-                "07d0f160de9564d5"
-            ],
-            [
-                "f6151facbf7f06b8",
-                "07d0f160de9564d5"
-            ]
-        ]
-    },
-    {
-        "id": "07d0f160de9564d5",
+        "id": "5da06e01a4b7393e",
         "type": "debug",
-        "z": "d94627ca84a633a7",
-        "g": "e905c1911d403e4d",
+        "z": "9655a5fe22a078d7",
         "name": "debug 6",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 640,
-        "y": 380,
-        "wires": []
-    },
-    {
-        "id": "44e625a275eeba14",
-        "type": "debug",
-        "z": "d94627ca84a633a7",
-        "g": "e905c1911d403e4d",
-        "name": "debug 5",
         "active": false,
         "tosidebar": true,
         "console": false,
@@ -840,12 +753,201 @@
         "wires": []
     },
     {
-        "id": "2e8091f488bb7cfd",
-        "type": "ui_text",
-        "z": "d94627ca84a633a7",
-        "g": "e905c1911d403e4d",
-        "group": "4e5a253cfdc1567c",
+        "id": "25ef44ec44cd9eb6",
+        "type": "debug",
+        "z": "9655a5fe22a078d7",
+        "name": "debug 5",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "1c86761941c1f6d2",
+        "type": "http request",
+        "z": "9655a5fe22a078d7",
+        "g": "2a622428765310fd",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://api.sheetbest.com/sheets/8a55b627-6a5f-4478-b10d-7911de8f3482",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 670,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "22b64d229499b365",
+        "type": "function",
+        "z": "9655a5fe22a078d7",
+        "g": "2a622428765310fd",
+        "name": "loggingMessageFormat",
+        "func": "msg.headers = {\"Content-Type\": \"application/json\"};\n\n// create a single-row array for Sheet.best\nmsg.payload = [{\n    timestamp: new Date().toISOString(),\n    topic: msg.topic,\n    payload: (typeof msg.payload === \"object\") ? JSON.stringify(msg.payload) : msg.payload,\n    qos: msg.qos || 0,\n    retain: msg.retain || false\n}];\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 100,
+        "wires": [
+            [
+                "1c86761941c1f6d2"
+            ]
+        ]
+    },
+    {
+        "id": "d599a59a44e0d462",
+        "type": "function",
+        "z": "9655a5fe22a078d7",
+        "name": "displayPassword",
+        "func": "// Example topics: ELEC520/security/hw/s/st , ELEC520/security/hw/s/ke\nlet topic = msg.topic;\n\n// Match only hardware system topics ending in /st or /ke\nlet match = topic.match(/ELEC520\\/security\\/cl\\/s\\/(pw)$/);\n\n\nif (!match) {\n    // node.warn(\"Unexpected topic: \" + topic);\n    return null;\n}\n\nlet outputs = [null, null];\nlet subTopic = match[1];\n\nif (subTopic === \"pw\") {\n    outputs[0] = { payload: msg.payload }; // User Password Stored\n}\n\n\nreturn outputs;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 260,
+        "wires": [
+            [
+                "b81c73c95a4d9201"
+            ]
+        ]
+    },
+    {
+        "id": "db0d7591adfbf76f",
+        "type": "ui_button",
+        "z": "9655a5fe22a078d7",
+        "name": "",
+        "group": "bfb5c46393214032",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Sys_Disarmed",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "DISARMED",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 540,
+        "y": 960,
+        "wires": [
+            [
+                "51f4f2920169d76a"
+            ]
+        ]
+    },
+    {
+        "id": "67fb1f3b8536f64b",
+        "type": "ui_button",
+        "z": "9655a5fe22a078d7",
+        "name": "",
+        "group": "bfb5c46393214032",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Sys_Armed",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "ARMED",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 530,
+        "y": 1000,
+        "wires": [
+            [
+                "51f4f2920169d76a"
+            ]
+        ]
+    },
+    {
+        "id": "49e661caceaaa0d0",
+        "type": "ui_button",
+        "z": "9655a5fe22a078d7",
+        "name": "",
+        "group": "bfb5c46393214032",
         "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Sys_Alarm",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "ALARM",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 530,
+        "y": 1040,
+        "wires": [
+            [
+                "51f4f2920169d76a"
+            ]
+        ]
+    },
+    {
+        "id": "12debf6ff911308d",
+        "type": "ui_text_input",
+        "z": "9655a5fe22a078d7",
+        "name": "",
+        "label": "User 1 Pass",
+        "tooltip": "",
+        "group": "bfb5c46393214032",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "mode": "password",
+        "delay": "0",
+        "topic": "user1",
+        "sendOnBlur": false,
+        "className": "",
+        "topicType": "str",
+        "x": 470,
+        "y": 1160,
+        "wires": [
+            [
+                "e5fe92803d5f3183"
+            ]
+        ]
+    },
+    {
+        "id": "5a71996543a6e4ad",
+        "type": "ui_text",
+        "z": "9655a5fe22a078d7",
+        "group": "bfb5c46393214032",
+        "order": 5,
         "width": 0,
         "height": 0,
         "name": "",
@@ -858,16 +960,15 @@
         "fontSize": 16,
         "color": "#000000",
         "x": 1140,
-        "y": 320,
+        "y": 140,
         "wires": []
     },
     {
-        "id": "d5d6e474118197cd",
+        "id": "c809f845cd66ab72",
         "type": "ui_text",
-        "z": "d94627ca84a633a7",
-        "g": "e905c1911d403e4d",
-        "group": "4e5a253cfdc1567c",
-        "order": 5,
+        "z": "9655a5fe22a078d7",
+        "group": "bfb5c46393214032",
+        "order": 6,
         "width": 0,
         "height": 0,
         "name": "",
@@ -880,16 +981,15 @@
         "fontSize": 16,
         "color": "#000000",
         "x": 1150,
-        "y": 340,
+        "y": 160,
         "wires": []
     },
     {
-        "id": "d7ee4d1bf6a23820",
+        "id": "de4c1cd348899627",
         "type": "ui_text",
-        "z": "d94627ca84a633a7",
-        "g": "e905c1911d403e4d",
-        "group": "4e5a253cfdc1567c",
-        "order": 6,
+        "z": "9655a5fe22a078d7",
+        "group": "bfb5c46393214032",
+        "order": 7,
         "width": 0,
         "height": 0,
         "name": "",
@@ -902,16 +1002,15 @@
         "fontSize": 16,
         "color": "#000000",
         "x": 1150,
-        "y": 380,
+        "y": 320,
         "wires": []
     },
     {
-        "id": "f6151facbf7f06b8",
+        "id": "37fc510622c53369",
         "type": "ui_text",
-        "z": "d94627ca84a633a7",
-        "g": "e905c1911d403e4d",
-        "group": "4e5a253cfdc1567c",
-        "order": 7,
+        "z": "9655a5fe22a078d7",
+        "group": "bfb5c46393214032",
+        "order": 8,
         "width": 0,
         "height": 0,
         "name": "",
@@ -924,16 +1023,79 @@
         "fontSize": 16,
         "color": "#000000",
         "x": 1140,
-        "y": 400,
+        "y": 340,
         "wires": []
     },
     {
-        "id": "930418a07dd17841",
-        "type": "ui_gauge",
-        "z": "d94627ca84a633a7",
-        "g": "a0b1ce9a10386c13",
+        "id": "e3de2534f61f3ff2",
+        "type": "ui_text",
+        "z": "9655a5fe22a078d7",
+        "group": "bfb5c46393214032",
+        "order": 9,
+        "width": 0,
+        "height": 0,
         "name": "",
-        "group": "e4bf600661a44d02",
+        "label": "FB_Trigger_Loc",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1160,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "300d89f07d8be8ed",
+        "type": "ui_text",
+        "z": "9655a5fe22a078d7",
+        "group": "bfb5c46393214032",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "FB_Keypad_User",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1170,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "b81c73c95a4d9201",
+        "type": "ui_text",
+        "z": "9655a5fe22a078d7",
+        "group": "bfb5c46393214032",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "CL_PasswordSaved",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1180,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "4da0a60a1cb806aa",
+        "type": "ui_gauge",
+        "z": "9655a5fe22a078d7",
+        "g": "0fa7d717b06a2b81",
+        "name": "",
+        "group": "a0fde7d4b58fb5f8",
         "order": 0,
         "width": 0,
         "height": 0,
@@ -957,12 +1119,12 @@
         "wires": []
     },
     {
-        "id": "1763b0c2980ef463",
+        "id": "42da4f14128e6490",
         "type": "ui_gauge",
-        "z": "d94627ca84a633a7",
-        "g": "a0b1ce9a10386c13",
+        "z": "9655a5fe22a078d7",
+        "g": "0fa7d717b06a2b81",
         "name": "",
-        "group": "e4bf600661a44d02",
+        "group": "a0fde7d4b58fb5f8",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -986,12 +1148,12 @@
         "wires": []
     },
     {
-        "id": "432b30284e9172fb",
+        "id": "92c64a64f3ae9a55",
         "type": "ui_gauge",
-        "z": "d94627ca84a633a7",
-        "g": "a0b1ce9a10386c13",
+        "z": "9655a5fe22a078d7",
+        "g": "0fa7d717b06a2b81",
         "name": "",
-        "group": "e4bf600661a44d02",
+        "group": "a0fde7d4b58fb5f8",
         "order": 2,
         "width": 0,
         "height": 0,
@@ -1015,12 +1177,12 @@
         "wires": []
     },
     {
-        "id": "ee2a36b504ddeafc",
+        "id": "e2b56f87895b9bb2",
         "type": "ui_gauge",
-        "z": "d94627ca84a633a7",
-        "g": "a0b1ce9a10386c13",
+        "z": "9655a5fe22a078d7",
+        "g": "0fa7d717b06a2b81",
         "name": "",
-        "group": "e4bf600661a44d02",
+        "group": "a0fde7d4b58fb5f8",
         "order": 3,
         "width": 0,
         "height": 0,
@@ -1044,12 +1206,12 @@
         "wires": []
     },
     {
-        "id": "4bcc7c640579c2bb",
+        "id": "3a60897ec71f5717",
         "type": "ui_gauge",
-        "z": "d94627ca84a633a7",
-        "g": "a0b1ce9a10386c13",
+        "z": "9655a5fe22a078d7",
+        "g": "0fa7d717b06a2b81",
         "name": "",
-        "group": "e4bf600661a44d02",
+        "group": "a0fde7d4b58fb5f8",
         "order": 4,
         "width": 0,
         "height": 0,
@@ -1073,12 +1235,12 @@
         "wires": []
     },
     {
-        "id": "0159943f326e2b08",
+        "id": "61eed7ad297c6949",
         "type": "ui_gauge",
-        "z": "d94627ca84a633a7",
-        "g": "c3940900ce9d0e4b",
+        "z": "9655a5fe22a078d7",
+        "g": "680b91c23eabc493",
         "name": "",
-        "group": "f2c5d9088e4c1c81",
+        "group": "8d83287f5d09ce8e",
         "order": 5,
         "width": 0,
         "height": 0,
@@ -1102,12 +1264,12 @@
         "wires": []
     },
     {
-        "id": "f88ade9bfe38ec25",
+        "id": "c26ba5169737fd5d",
         "type": "ui_gauge",
-        "z": "d94627ca84a633a7",
-        "g": "c3940900ce9d0e4b",
+        "z": "9655a5fe22a078d7",
+        "g": "680b91c23eabc493",
         "name": "",
-        "group": "f2c5d9088e4c1c81",
+        "group": "8d83287f5d09ce8e",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -1131,12 +1293,12 @@
         "wires": []
     },
     {
-        "id": "482368321f6057df",
+        "id": "418654414f8c4f30",
         "type": "ui_gauge",
-        "z": "d94627ca84a633a7",
-        "g": "c3940900ce9d0e4b",
+        "z": "9655a5fe22a078d7",
+        "g": "680b91c23eabc493",
         "name": "",
-        "group": "f2c5d9088e4c1c81",
+        "group": "8d83287f5d09ce8e",
         "order": 2,
         "width": 0,
         "height": 0,
@@ -1160,12 +1322,12 @@
         "wires": []
     },
     {
-        "id": "d31863fe9f0731c2",
+        "id": "e5032a31386090fe",
         "type": "ui_gauge",
-        "z": "d94627ca84a633a7",
-        "g": "c3940900ce9d0e4b",
+        "z": "9655a5fe22a078d7",
+        "g": "680b91c23eabc493",
         "name": "",
-        "group": "f2c5d9088e4c1c81",
+        "group": "8d83287f5d09ce8e",
         "order": 3,
         "width": 0,
         "height": 0,
@@ -1189,12 +1351,12 @@
         "wires": []
     },
     {
-        "id": "b46fa6d4c979bbf6",
+        "id": "c680f103f088cbbd",
         "type": "ui_gauge",
-        "z": "d94627ca84a633a7",
-        "g": "c3940900ce9d0e4b",
+        "z": "9655a5fe22a078d7",
+        "g": "680b91c23eabc493",
         "name": "",
-        "group": "f2c5d9088e4c1c81",
+        "group": "8d83287f5d09ce8e",
         "order": 4,
         "width": 0,
         "height": 0,
@@ -1218,138 +1380,96 @@
         "wires": []
     },
     {
-        "id": "a49981d24c789e69",
-        "type": "ui_button",
-        "z": "d94627ca84a633a7",
-        "g": "593db1627aab6c24",
-        "name": "",
-        "group": "4e5a253cfdc1567c",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Sys_Disarmed",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "DISARMED",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 180,
-        "y": 740,
-        "wires": [
-            [
-                "69e707b8c123408d"
-            ]
-        ]
-    },
-    {
-        "id": "d7151ca432cfcb58",
-        "type": "ui_button",
-        "z": "d94627ca84a633a7",
-        "g": "593db1627aab6c24",
-        "name": "",
-        "group": "4e5a253cfdc1567c",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Sys_Armed",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "ARMED",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 170,
-        "y": 780,
-        "wires": [
-            [
-                "69e707b8c123408d"
-            ]
-        ]
-    },
-    {
-        "id": "1a399d578ab9f1b4",
-        "type": "ui_button",
-        "z": "d94627ca84a633a7",
-        "g": "593db1627aab6c24",
-        "name": "",
-        "group": "4e5a253cfdc1567c",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Sys_Alarm",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "ALARM",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 170,
-        "y": 820,
-        "wires": [
-            [
-                "69e707b8c123408d"
-            ]
-        ]
-    },
-    {
-        "id": "2fd01955edc186a4",
-        "type": "http request",
-        "z": "d94627ca84a633a7",
-        "g": "91985aa51778e981",
-        "name": "",
-        "method": "POST",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "https://api.sheetbest.com/sheets/8a55b627-6a5f-4478-b10d-7911de8f3482",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 690,
-        "y": 180,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "30ebabdd52f2f2c1",
+        "id": "e5fe92803d5f3183",
         "type": "function",
-        "z": "d94627ca84a633a7",
-        "g": "91985aa51778e981",
-        "name": "loggingMessageFormat",
-        "func": "msg.headers = {\"Content-Type\": \"application/json\"};\n\n// create a single-row array for Sheet.best\nmsg.payload = [{\n    timestamp: new Date().toISOString(),\n    topic: msg.topic,\n    payload: (typeof msg.payload === \"object\") ? JSON.stringify(msg.payload) : msg.payload,\n    qos: msg.qos || 0,\n    retain: msg.retain || false\n}];\n\nreturn msg;\n",
+        "z": "9655a5fe22a078d7",
+        "name": "appendUser1",
+        "func": "const userMap = {\n    user1: \"001\",\n    user2: \"002\",\n    user3: \"003\"\n};\n\nlet topic = msg.topic || \"\";\nlet userCode = userMap[topic];\n\nif (!userCode){\n    node.warn(\"Unknown User Button Pressed: \" + topic);\n    return null;\n}\n\nmsg.payload = userCode + \":\" + msg.payload;\n\nmsg.topic = \"ELEC520/security/cl/s/pw\";\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 430,
-        "y": 180,
+        "x": 660,
+        "y": 1160,
         "wires": [
             [
-                "2fd01955edc186a4"
+                "8fac05bb70a75329",
+                "9d46f0a8fd773623"
             ]
         ]
     },
     {
-        "id": "5f4587671911ea70",
+        "id": "9d46f0a8fd773623",
+        "type": "debug",
+        "z": "9655a5fe22a078d7",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "556bdb2e74474cee",
+        "type": "ui_text_input",
+        "z": "9655a5fe22a078d7",
+        "name": "",
+        "label": "User 2 Pass",
+        "tooltip": "",
+        "group": "bfb5c46393214032",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "mode": "password",
+        "delay": "0",
+        "topic": "user2",
+        "sendOnBlur": false,
+        "className": "",
+        "topicType": "str",
+        "x": 470,
+        "y": 1200,
+        "wires": [
+            [
+                "e5fe92803d5f3183"
+            ]
+        ]
+    },
+    {
+        "id": "7be5ed49b2cdc72d",
+        "type": "ui_text_input",
+        "z": "9655a5fe22a078d7",
+        "name": "",
+        "label": "User 3 Pass",
+        "tooltip": "",
+        "group": "bfb5c46393214032",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "mode": "password",
+        "delay": "0",
+        "topic": "user3",
+        "sendOnBlur": false,
+        "className": "",
+        "topicType": "str",
+        "x": 470,
+        "y": 1240,
+        "wires": [
+            [
+                "e5fe92803d5f3183"
+            ]
+        ]
+    },
+    {
+        "id": "4f824c8c3e94558d",
         "type": "global-config",
         "env": [],
         "modules": {

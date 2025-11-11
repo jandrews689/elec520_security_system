@@ -28,7 +28,7 @@ const char* mqtt_client_id = "BaseStation";
 securitySystemNetworkMQTT objFloor(ssid, password, mqtt_server, mqtt_port, mqtt_client_id);
 
 int count = 0;
-bool mqttSystemDebug = false;
+bool mqttSystemDebug = true;
 
 
 //SETUP////////////////////////////////////////////////////////////////////////////////
@@ -64,6 +64,25 @@ void setup() {
       addHall   (objFloor.getFloorID(), 2, 1);
       addHall   (objFloor.getFloorID(), 2, 2);
   ////////////////////////////////////////////////////////////////////////
+
+  // if (setPassword("001:12345678")){
+  //   int sep = userPassword.indexOf(':');
+  //   if (sep < 0 ) return false;
+  //   String u = userPassword.substring(0, sep);
+  //   String topic = cloudTopicPassword();
+  //   String payload = MODEL.password[];
+  // };
+
+  // setPassword("001:12345678");
+
+  // delay(50);
+
+  // findKeypadUser("12345678");
+
+  // delay(50);
+
+  // findKeypadUser("00001234");
+
 }
 
 
@@ -148,4 +167,12 @@ void loop() {
     }
   }
   /////////////////////////////////////////////////////////////////////////////////////
+
+
+
+  //SYSTEM STATE////////////////////////////////////////////////////////////////////////
+  // system state code here 
+  
+
+
 }
