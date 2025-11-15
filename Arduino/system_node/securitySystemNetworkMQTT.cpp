@@ -152,3 +152,68 @@ void securitySystemNetworkMQTT::mqttOperate(){
     }
 
 }
+
+
+void securitySystemNetworkMQTT::alarmSystemStateMachine() {
+    String topic;
+    String payload;
+
+    //If elected leader then control of systemstate machine and triggering of alarms.
+    if (WiFi.macAddress() == MODEL.mac ) {
+        switch (uint8_t alarm = MODEL.systemState) {
+            case SystemState::DISARMED:
+                break;
+            case SystemState::ARMED:
+                for (int i = 0; i < SMP_MAX_FLOORS-1; i++) {
+                    if (MODEL.floors[i].used == true) {
+                        for (int j = 0; j < SMP_MAX_ROOMS-1; j++) {
+                            if (MODEL.floors[i].rooms[j].used == true) {
+                                for (int k = 0; k < SMP_MAX_SENSORS-1; k++) {
+                                    if (MODEL.floors[i].rooms[j].hall[k].open == true) {
+                                        setTriggerLoc(i,j,0,k);
+                                        //send mqtt message
+                                        topic = cloudTopicTrigger();
+                                        payload = MODEL.triggerLoc;
+                                        client.publish(topic.c_str(), payload.c_str());
+                                        Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
+                                    }
+                                    if (MODEL.floors[i].rooms[j].ultra[k].value >= ULTRA_THRESHOLDS) {
+                                        setTriggerLoc(i,j,k,0);
+                                        //send mqtt message
+                                        topic = cloudTopicTrigger();
+                                        payload = MODEL.triggerLoc;
+                                        client.publish(topic.c_str(), payload.c_str());
+                                        Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            case SystemState::ALARM:
+                //ESP32 buzzer and light illuminate
+                break;
+            default:
+                alarm = SystemState::DISARMED;
+                break;
+        }
+    }
+}
+
+
+void securitySystemNetworkMQTT::triggerAlarm() {
+    if (MODEL.systemState == SystemState::ALARM) {
+        //ESP32 LED FLASH
+        digitalWrite(25, HIGH);
+        //ESP32 BUZZER SOUND
+
+
+        static unsigned long publishMsg = 0;
+        if (millis() - publishMsg > 1000) {
+            publishMsg = millis();
+            Serial.printf("ALARM TRIGGERED");
+        }
+    }
+
+}

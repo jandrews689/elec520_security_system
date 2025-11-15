@@ -1,6 +1,10 @@
+// #include <ArduinoJson.h>
+// #include <ArduinoJson.hpp>
+
 #include <elec520_nano.h>
 #include <elec520_protocol.h>
 #include "securitySystemNetworkMQTT.h"
+#include "baseStation.h"
 #include <Arduino.h>
 #include <Wire.h>
 #include <WString.h>
@@ -33,6 +37,9 @@ bool mqttSystemDebug = true;
 
 //SETUP////////////////////////////////////////////////////////////////////////////////
 void setup() {
+  pinMode(23, OUTPUT);
+  digitalWrite(23, LOW);
+
   //nano setup
   Serial.begin(115200);
   delay(100);
@@ -133,7 +140,7 @@ void loop() {
 
   // // Small delay so we’re not hammering the bus
   delay(10);
-  
+
   // Test without I2C/////////////////////////////////////////
     // String nanoHallTest = nanoTokenHall(1, 1, 1, 1);
     // Serial.print(nanoHallTest);
@@ -153,7 +160,7 @@ void loop() {
 
 
   //MQTT//////////////////////////////////////////////////////////////////////////////
-  //MQTT loop - Full System cycle messaging. 
+  //MQTT loop - Full System cycle messaging.
   if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
 
 
@@ -162,7 +169,7 @@ void loop() {
     count++;
     if (count > 500) {
       count = 0;
-      //Spew everything onto the serial. 
+      //Spew everything onto the serial.
       debugPrintModel(Serial);
     }
   }
@@ -171,8 +178,12 @@ void loop() {
 
 
   //SYSTEM STATE////////////////////////////////////////////////////////////////////////
-  // system state code here 
-  
+  //Security system main state machine (checks for triggers)
+  objFloor.alarmSystemStateMachine();
+
+  //Trigger alarm
+  objFloor.triggerAlarm();
+  digitalWrite(23, HIGH);
 
 
 }
