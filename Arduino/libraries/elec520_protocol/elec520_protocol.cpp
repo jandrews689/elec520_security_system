@@ -1,3 +1,17 @@
+/*******************************************************************************************
+ * Project:      ELEC520 - Distributed and Interactive Systems Coursework - Security System
+ * File:         elec520_protocol
+ * Description:  Provides the security system middleware communication protocol for the system.
+ *
+ * Authors:      Joseph Andrews
+ * Created:      November 2025
+ *
+ * Notes:
+ *  - This file is part of the ELEC520 coursework project.
+ *  - Code created in collaboration with AI (ChatGPT 5).
+ *******************************************************************************************/
+
+
 #include "elec520_protocol.h"
 
 // ---------------- Internals ----------------
@@ -58,6 +72,11 @@ bool addHall(uint8_t f_id, uint8_t r_id, uint8_t hs_id){
   return true;
 }
 
+//Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor.
+void setNumOfFloors(int value){
+  MODEL.numOfFloors = value;
+}
+
 // ---------------- System-level setters (kept) ----------------
 bool setSystemState(uint8_t s) { MODEL.systemState = s; return true; }
 bool setKeypad(uint8_t k)      { MODEL.keypad = k;     return true; }
@@ -99,20 +118,21 @@ bool setTriggerLoc(uint8_t f_id,uint8_t r_id,uint8_t u_id,uint8_t h_id) {
 
 // Keypad user search
 bool findKeypadUser(const String& userPassword){
-  std::string pass = userPassword.c_str();
-  std::string user;
-  std::string foundKey;
+  const std::string pass = userPassword.c_str();
+  // std::string user;
+  bool result = false;
   for (const auto& pair : MODEL.password){
     if (pair.second == pass) {
-      foundKey = pair.first;
+      std::string foundKey = pair.first;
       Serial.println("Keypad User Found!");
-      return true;
+      result = true;
       break;
     } else {
       Serial.println("Keypad User Not Found!");
-      return false;
+      result = false;
     }
  }
+  return result;
 }
 
 
