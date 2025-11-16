@@ -41,8 +41,7 @@ private:
     PubSubClient client;
 
     //System setup
-    byte _bFloorID = 0b0000'0001;
-    int _iNumOfFloors;
+    // byte _bFloorID = 0b0000'0001;
 
     // Message structure
     typedef struct struct_message {
@@ -88,16 +87,15 @@ public:
                    const char* mqtt_client_id);
 
 
-    //Set the Floor ID, helper function to make system buildering easier to read. 
-    void setFloorID(byte id);
+    // //Set the Floor ID, helper function to make system buildering easier to read.
+    // void setFloorID(byte id);
+    //
+    //
+    // //Get the Floor ID
+    // byte getFloorID();
 
 
-    //Get the Floor ID
-    byte getFloorID();
 
-
-    //Set the number of floors in the system, used by MMQT 
-    void setNumOfFloors(int value);
 
     
     //Set up the wifi with the cloud. 

@@ -17,11 +17,13 @@
 #include "baseStation.h"
 #include "i2c.h"
 #include <Arduino.h>
+#include <SPIFFS.h>
 #include <WString.h>
 
+#include "system_config.h"
 
 
-const char* ssid = "Joe's S23 Ultra"; 
+const char* ssid = "Joe's S23 Ultra";
 const char* password = "joea12345"; 
 const char* mqtt_server = "broker.hivemq.com"; 
 int mqtt_port = 1883; 
@@ -35,35 +37,28 @@ bool mqttSystemDebug = true;
 
 //SETUP////////////////////////////////////////////////////////////////////////////////
 void setup() {
-  pinMode(23, OUTPUT);
-
-  //nano setup
+  pinMode(23, OUTPUT); //Configures the Alarm LED and BUZZER as output
   Serial.begin(115200);
   delay(100);
+
+  //System Config, Reads Json file to build system
+    SystemConfig config;
+    if (!loadSystemConfig(config)) {
+        Serial.println("Error: Failed to load config");
+    } else {
+        Serial.println("Config loaded OK, applying to MODEL....");
+        if (configureSystemConfig(config)) {
+            Serial.println("System Configured!\n");
+        }
+    }
+
+
 
   //I2C SETUP//////////////////////////////////////////////////////////
   i2cSetup();
 
-  // //ESP setup///////////////////////////////////////////////////////////
+  //ESP setup///////////////////////////////////////////////////////////
   objFloor.setup_wifi();
-
-  //Security Architecture Setup//////////////////////////////////////////
-  //Setup the floor
-  objFloor.setFloorID(1);
-  objFloor.setNumOfFloors(1);
-
-  //floor 1
-  addFloor  (objFloor.getFloorID());
-   addRoom   (objFloor.getFloorID(), 1);
-     addUltra  (objFloor.getFloorID(), 1, 1);
-     addHall   (objFloor.getFloorID(), 1, 1);
-     addHall   (objFloor.getFloorID(), 1, 2);
-
-   addRoom   (objFloor.getFloorID(), 2);
-     addUltra  (objFloor.getFloorID(), 2, 1);
-     addHall   (objFloor.getFloorID(), 2, 1);
-     addHall   (objFloor.getFloorID(), 2, 2);
-  //////////////////////////////////////////////////////////////////////
 
 }
 
@@ -78,19 +73,19 @@ void loop() {
 
 
     //MQTT//////////////////////////////////////////////////////////////////////////////
-    if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
+    //if elected leader node then mqtt.
+    objFloor.mqttOperate();
 
 
     //MQTT System Serial Print Debugging
     if (mqttSystemDebug) {
-     count++;
-     if (count > 500) {
-       count = 0;
-       //Spew everything onto the serial.
-       debugPrintModel(Serial);
-     }
+        count++;
+        if (count > 1000) {
+        count = 0;
+        //Spew everything onto the serial.
+        debugPrintModel(Serial);
+        }
     }
-
 
     //SYSTEM STATE////////////////////////////////////////////////////////////////////////
     objFloor.alarmSystemStateMachine();

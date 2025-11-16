@@ -93,23 +93,9 @@ securitySystemNetworkMQTT::securitySystemNetworkMQTT(const char* ssid = "Joe's S
         _mqtt_client_id(mqtt_client_id), client(espClient) {
 
     instance = this;  // set singleton pointer
-    _iNumOfFloors = 1;
-    
+
 }
 
-
-//Set the Floor ID, helper function to make system buildering easier to read. 
-void securitySystemNetworkMQTT::setFloorID(byte id){_bFloorID = id;}
-
-
-//Get the Floor ID
-byte securitySystemNetworkMQTT::getFloorID(){return _bFloorID;}
-
-
-//Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor. 
-void securitySystemNetworkMQTT::setNumOfFloors(int value){
-    _iNumOfFloors = value;
-}
 
 //NETWORKING//////////////////////////////////////////////////////////////////////////
 
@@ -153,7 +139,8 @@ void securitySystemNetworkMQTT::mqttOperate(){
         Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
 
         //Publish floor data
-        for (int i=1; i<_iNumOfFloors+1; i++){
+        for (int i=1; i<MODEL.numOfFloors+1; i++){
+
             topic = cloudTopicFloor(i);
             // topic = "ELEC520/security";
             payload = buildFloorMqttString(i);
