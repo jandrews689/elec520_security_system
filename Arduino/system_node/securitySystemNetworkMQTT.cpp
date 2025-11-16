@@ -205,7 +205,7 @@ void securitySystemNetworkMQTT::alarmSystemStateMachine() {
 void securitySystemNetworkMQTT::triggerAlarm() {
     if (MODEL.systemState == SystemState::ALARM) {
         //ESP32 LED FLASH
-        digitalWrite(25, HIGH);
+        digitalWrite(23, HIGH);
         //ESP32 BUZZER SOUND
 
 

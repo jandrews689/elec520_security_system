@@ -5,23 +5,11 @@
 #include <elec520_protocol.h>
 #include "securitySystemNetworkMQTT.h"
 #include "baseStation.h"
+#include "i2c.h"
 #include <Arduino.h>
-#include <Wire.h>
 #include <WString.h>
 
-#define SDA_PIN   21
-#define SCL_PIN   22
-#define ADDR_MIN  0x12
-#define ADDR_MAX  0x20
-#define NUM_ADDR  (ADDR_MAX - ADDR_MIN + 1)
-#define REQ_BYTES 30
-#define POLL_DELAY_MS 10
 
-static String rxBuf[NUM_ADDR];
-static String lastMsg[NUM_ADDR];
-
-static inline int idxFromAddr(uint8_t a){ return (a<ADDR_MIN||a>ADDR_MAX)?-1:(a-ADDR_MIN); }
-static inline bool isPrintableAscii(char c){ return c == '\n' || c == '\r' || (c >= 32 && c <= 126); }
 
 const char* ssid = "Joe's S23 Ultra"; 
 const char* password = "joea12345"; 
@@ -38,20 +26,15 @@ bool mqttSystemDebug = true;
 //SETUP////////////////////////////////////////////////////////////////////////////////
 void setup() {
   pinMode(23, OUTPUT);
-  digitalWrite(23, LOW);
 
   //nano setup
   Serial.begin(115200);
   delay(100);
 
   //I2C SETUP//////////////////////////////////////////////////////////
-  Wire.begin(SDA_PIN, SCL_PIN); // 100 kHz
-  Wire.setTimeOut(50);
+  i2cSetup();
 
-  Serial.println("ESP32 I2C master started. Polling 0x12..0x20");
-
-
-  //ESP setup///////////////////////////////////////////////////////////
+  // //ESP setup///////////////////////////////////////////////////////////
   objFloor.setup_wifi();
 
   //Security Architecture Setup//////////////////////////////////////////
@@ -61,34 +44,16 @@ void setup() {
 
   //floor 1
   addFloor  (objFloor.getFloorID());
-    addRoom   (objFloor.getFloorID(), 1);
-      addUltra  (objFloor.getFloorID(), 1, 1);
-      addHall   (objFloor.getFloorID(), 1, 1);
-      addHall   (objFloor.getFloorID(), 1, 2);
+   addRoom   (objFloor.getFloorID(), 1);
+     addUltra  (objFloor.getFloorID(), 1, 1);
+     addHall   (objFloor.getFloorID(), 1, 1);
+     addHall   (objFloor.getFloorID(), 1, 2);
 
-    addRoom   (objFloor.getFloorID(), 2);
-      addUltra  (objFloor.getFloorID(), 2, 1);
-      addHall   (objFloor.getFloorID(), 2, 1);
-      addHall   (objFloor.getFloorID(), 2, 2);
-  ////////////////////////////////////////////////////////////////////////
-
-  // if (setPassword("001:12345678")){
-  //   int sep = userPassword.indexOf(':');
-  //   if (sep < 0 ) return false;
-  //   String u = userPassword.substring(0, sep);
-  //   String topic = cloudTopicPassword();
-  //   String payload = MODEL.password[];
-  // };
-
-  // setPassword("001:12345678");
-
-  // delay(50);
-
-  // findKeypadUser("12345678");
-
-  // delay(50);
-
-  // findKeypadUser("00001234");
+   addRoom   (objFloor.getFloorID(), 2);
+     addUltra  (objFloor.getFloorID(), 2, 1);
+     addHall   (objFloor.getFloorID(), 2, 1);
+     addHall   (objFloor.getFloorID(), 2, 2);
+  //////////////////////////////////////////////////////////////////////
 
 }
 
@@ -97,93 +62,31 @@ void setup() {
 //LOOP/////////////////////////////////////////////////////////////////////////////////////////
 void loop() {
 
-  //I2C////////////////////////////////////////////////////////////////////////
-  static uint8_t addr = ADDR_MIN;
+    //i2C////////////////////////////////////////////////////////////////////////////////
+    i2cOperation();
+    //ESP32/////////////////////////////////////////////////////////////////////////////
 
-  // quick probe
-  Wire.beginTransmission(addr);
-  uint8_t txStatus = Wire.endTransmission(true);
-  if (txStatus == 0){
-    // device ACKed; try to read
-    size_t got = Wire.requestFrom((int)addr, (int)REQ_BYTES, (int)true);
-    if (got > 0){
-      int idx = idxFromAddr(addr);
-      if (idx >= 0){
-        // read exactly 'got' bytes, filter non-printables
-        for (size_t i = 0; i < got; ++i){
-          char c = (char)Wire.read();
-          if (!isPrintableAscii(c)) continue;     // drop 0x00/0xFF/etc.
-          rxBuf[idx] += c;
-        }
-        // extract full lines ending with '\n'
-        for (;;){
-          int nl = rxBuf[idx].indexOf('\n');
-          if (nl < 0) break;
-          String line = rxBuf[idx].substring(0, nl);
-          rxBuf[idx].remove(0, nl + 1);
 
-          // sanity check: only accept our protocol lines
-          if (line.startsWith("f/")){
-            lastMsg[idx] = line;
-            Serial.println(line);
-            // parseRoomEspString(line); //protocol process
-            parseTokenLine(line);
-          }
-        }
-      }
+    //MQTT//////////////////////////////////////////////////////////////////////////////
+    if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
+
+
+    //MQTT System Serial Print Debugging
+    if (mqttSystemDebug) {
+     count++;
+     if (count > 500) {
+       count = 0;
+       //Spew everything onto the serial.
+       debugPrintModel(Serial);
+     }
     }
-  }
-
-  // Move to next address
-  addr++;
-  if (addr > ADDR_MAX) addr = ADDR_MIN;
-
-  // // Small delay so we’re not hammering the bus
-  delay(10);
-
-  // Test without I2C/////////////////////////////////////////
-    // String nanoHallTest = nanoTokenHall(1, 1, 1, 1);
-    // Serial.print(nanoHallTest);
-    // Serial.println();
-    // parseTokenLine(nanoHallTest);
-  ///////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////
 
 
-  //ESP32/////////////////////////////////////////////////////////////////////////////
+    //SYSTEM STATE////////////////////////////////////////////////////////////////////////
+    objFloor.alarmSystemStateMachine();
 
-
-
-
-
-  ///////////////////////////////////////////////////////////////////////////////////
-
-
-  //MQTT//////////////////////////////////////////////////////////////////////////////
-  //MQTT loop - Full System cycle messaging.
-  if (objFloor.getFloorID() == 0b0000'0001) objFloor.mqttOperate();
-
-
-  //MQTT System Serial Print Debugging
-  if (mqttSystemDebug) {
-    count++;
-    if (count > 500) {
-      count = 0;
-      //Spew everything onto the serial.
-      debugPrintModel(Serial);
-    }
-  }
-  /////////////////////////////////////////////////////////////////////////////////////
-
-
-
-  //SYSTEM STATE////////////////////////////////////////////////////////////////////////
-  //Security system main state machine (checks for triggers)
-  objFloor.alarmSystemStateMachine();
-
-  //Trigger alarm
-  objFloor.triggerAlarm();
-  digitalWrite(23, HIGH);
+    //Trigger alarm
+    objFloor.triggerAlarm();
 
 
 }
