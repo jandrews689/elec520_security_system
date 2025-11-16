@@ -10,6 +10,7 @@
 #include <vector>
 
 //pio run --target uploadfs
+//arduino-cli upload --fqbn esp32:esp32:esp32 --filesystem .
 
 // System Data Structures
 struct SensorConfig {
