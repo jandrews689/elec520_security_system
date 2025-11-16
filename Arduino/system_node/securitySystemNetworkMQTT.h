@@ -1,3 +1,17 @@
+/*******************************************************************************************
+ * Project:      ELEC520 - Distributed and Interactive Systems Coursework - Security System
+ * File:         securitySystemNetworkMQTT
+ * Description:
+ *
+ * Authors:      Joseph Andrews
+ * Created:      November 2025
+ *
+ * Notes:
+ *  - This file is part of the ELEC520 coursework project.
+ *  - All code is original work unless stated otherwise.
+ *******************************************************************************************/
+
+
 #ifndef CLASS_SECSYS_NETWORK_MQTT
 #define CLASS_SECSYS_NETWORK_MQTT
 
@@ -27,8 +41,7 @@ private:
     PubSubClient client;
 
     //System setup
-    byte _bFloorID = 0b0000'0001;
-    int _iNumOfFloors;
+    // byte _bFloorID = 0b0000'0001;
 
     // Message structure
     typedef struct struct_message {
@@ -74,16 +87,15 @@ public:
                    const char* mqtt_client_id);
 
 
-    //Set the Floor ID, helper function to make system buildering easier to read. 
-    void setFloorID(byte id);
+    // //Set the Floor ID, helper function to make system buildering easier to read.
+    // void setFloorID(byte id);
+    //
+    //
+    // //Get the Floor ID
+    // byte getFloorID();
 
 
-    //Get the Floor ID
-    byte getFloorID();
 
-
-    //Set the number of floors in the system, used by MMQT 
-    void setNumOfFloors(int value);
 
     
     //Set up the wifi with the cloud. 
@@ -93,9 +105,30 @@ public:
     //MQTT loop
     void mqttOperate();
 
+
+    //Security system alarm state machine.
+    void alarmSystemStateMachine();
+
+
+    //Trigger LED and Buzzer if system state == ALARM
+    void triggerAlarm();
+
+
+
 };
 
 // Define static instance pointer
 inline securitySystemNetworkMQTT* securitySystemNetworkMQTT::instance = nullptr;
 
 #endif
+
+
+
+#define ULTRA_THRESHOLDS 100
+
+/*
+        6) System setup and configuration. Place into configuration file which all nodes read from to build system.
+        JOSH 7) keypad data entry checking of user passwords and access to system state.
+        8) Store password and user into local database.
+    */
+

@@ -1,3 +1,17 @@
+/*******************************************************************************************
+ * Project:      ELEC520 - Distributed and Interactive Systems Coursework - Security System
+ * File:         securitySystemNetworkMQTT
+ * Description:
+ *
+ * Authors:      Joseph Andrews
+ * Created:      November 2025
+ *
+ * Notes:
+ *  - This file is part of the ELEC520 coursework project.
+ *  - All code is original work unless stated otherwise.
+ *******************************************************************************************/
+
+
 #include <securitySystemNetworkMQTT.h>
 
 
@@ -21,9 +35,7 @@ void securitySystemNetworkMQTT::MqttCallBack(char* topicC, byte* payload, unsign
     memcpy(buf, payload, n);
     buf[n] = '\0';
 
-    parseCloud(topicC, buf);
-        
-    Serial.printf("MQTT Callback [%s]: %s\n", topicC, buf);
+    if (bool messageRX = parseCloud(topicC, buf)) Serial.printf("MQTT Callback [%s]: %s\n", topicC, buf);
 
 }
 
@@ -81,23 +93,9 @@ securitySystemNetworkMQTT::securitySystemNetworkMQTT(const char* ssid = "Joe's S
         _mqtt_client_id(mqtt_client_id), client(espClient) {
 
     instance = this;  // set singleton pointer
-    _iNumOfFloors = 1;
-    
+
 }
 
-
-//Set the Floor ID, helper function to make system buildering easier to read. 
-void securitySystemNetworkMQTT::setFloorID(byte id){_bFloorID = id;}
-
-
-//Get the Floor ID
-byte securitySystemNetworkMQTT::getFloorID(){return _bFloorID;}
-
-
-//Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor. 
-void securitySystemNetworkMQTT::setNumOfFloors(int value){
-    _iNumOfFloors = value;
-}
 
 //NETWORKING//////////////////////////////////////////////////////////////////////////
 
@@ -141,7 +139,8 @@ void securitySystemNetworkMQTT::mqttOperate(){
         Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
 
         //Publish floor data
-        for (int i=1; i<_iNumOfFloors+1; i++){
+        for (int i=1; i<MODEL.numOfFloors+1; i++){
+
             topic = cloudTopicFloor(i);
             // topic = "ELEC520/security";
             payload = buildFloorMqttString(i);
@@ -149,6 +148,62 @@ void securitySystemNetworkMQTT::mqttOperate(){
             Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
             delay(20);
         }
+    }
+
+}
+
+
+//Security system alarm state machine.
+void securitySystemNetworkMQTT::alarmSystemStateMachine() {
+    String topic;
+    String payload;
+
+    //If elected leader then control of systemstate machine and triggering of alarms.
+    if (WiFi.macAddress() == MODEL.mac ) {
+        if (MODEL.systemState == SystemState::ARMED) {
+            for (int i = 0; i < SMP_MAX_FLOORS-1; i++) {
+                if (MODEL.floors[i].used == true) {
+                    for (int j = 0; j < SMP_MAX_ROOMS-1; j++) {
+                        if (MODEL.floors[i].rooms[j].used == true) {
+                            for (int k = 0; k < SMP_MAX_SENSORS-1; k++) {
+                                if (MODEL.floors[i].rooms[j].hall[k].open == true) {
+                                    setTriggerLoc(i,j,0,k);
+                                    //send mqtt message
+                                    topic = cloudTopicTrigger();
+                                    payload = MODEL.triggerLoc;
+                                    client.publish(topic.c_str(), payload.c_str());
+                                    Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
+                                }
+                                if (MODEL.floors[i].rooms[j].ultra[k].value >= ULTRA_THRESHOLDS) {
+                                    setTriggerLoc(i,j,k,0);
+                                    //send mqtt message
+                                    topic = cloudTopicTrigger();
+                                    payload = MODEL.triggerLoc;
+                                    client.publish(topic.c_str(), payload.c_str());
+                                    Serial.printf("MQTT Publish [%s]: %s\n", topic.c_str(), payload.c_str());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+//Trigger LED and Buzzer if system state == ALARM
+void securitySystemNetworkMQTT::triggerAlarm() {
+    if (MODEL.systemState == SystemState::ALARM) {
+        digitalWrite(23, HIGH);
+        static unsigned long publishMsg = 0;
+        if (millis() - publishMsg > 1000) {
+            publishMsg = millis();
+            String alarmLocation = MODEL.triggerLoc;
+            Serial.printf("ALARM TRIGGERED in zone %s \n", alarmLocation.c_str());
+        }
+    } else {
+        digitalWrite(23, LOW);
     }
 
 }

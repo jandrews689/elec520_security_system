@@ -1,3 +1,17 @@
+/*******************************************************************************************
+ * Project:      ELEC520 - Distributed and Interactive Systems Coursework - Security System
+ * File:         elec520_protocol
+ * Description:  Provides the security system middleware communication protocol for the system.
+ *
+ * Authors:      Joseph Andrews
+ * Created:      November 2025
+ *
+ * Notes:
+ *  - This file is part of the ELEC520 coursework project.
+ *  - Code created in collaboration with AI (ChatGPT 5).
+ *******************************************************************************************/
+
+
 #ifndef ELEC520_PROTOCOL_H
 #define ELEC520_PROTOCOL_H
 
@@ -45,6 +59,7 @@ struct ProtocolModel {
   std::unordered_map<std::string, std::string> password; // s/pw
   uint8_t   network     = 0;              // n/st
   String    mac         = "00:00:00:00:00:00"; // n/mc
+  byte      numOfFloors = 0;
   FloorNode floors[SMP_MAX_FLOORS];       // f/{f}
 };
 
@@ -57,6 +72,9 @@ bool addFloor(uint8_t f_id);
 bool addRoom(uint8_t f_id, uint8_t r_id);
 bool addUltra(uint8_t f_id, uint8_t r_id, uint8_t u_id);
 bool addHall(uint8_t f_id, uint8_t r_id, uint8_t hs_id);
+
+//Set the number of floors in the system, used by MMQT
+void setNumOfFloors(int value);
 
 // -------- System-level Set (kept) --------
 bool setSystemState(uint8_t s);
