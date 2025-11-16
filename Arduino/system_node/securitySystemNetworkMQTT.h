@@ -1,3 +1,17 @@
+/*******************************************************************************************
+ * Project:      ELEC520 - Distributed and Interactive Systems Coursework - Security System
+ * File:         securitySystemNetworkMQTT
+ * Description:
+ *
+ * Authors:      Joseph Andrews
+ * Created:      November 2025
+ *
+ * Notes:
+ *  - This file is part of the ELEC520 coursework project.
+ *  - All code is original work unless stated otherwise.
+ *******************************************************************************************/
+
+
 #ifndef CLASS_SECSYS_NETWORK_MQTT
 #define CLASS_SECSYS_NETWORK_MQTT
 
@@ -97,23 +111,9 @@ public:
     //Security system alarm state machine.
     void alarmSystemStateMachine();
 
+
+    //Trigger LED and Buzzer if system state == ALARM
     void triggerAlarm();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -129,26 +129,8 @@ inline securitySystemNetworkMQTT* securitySystemNetworkMQTT::instance = nullptr;
 #define ULTRA_THRESHOLDS 100
 
 /*
-        done 1) Check sensor data against limits and system state. If ARMED and exceed limit then trigger event.
-        done 2) Check for trigger events
-        done 2) Location ID should be published to cloud during trigger event.
-        done 3) Trigger event causes alarm buzzer and LED to be set off. Maybe configure certain pins on esp32 for buzzer and led.
-        4) configure certain pins for keypad connection as wel.
-        5) MMQT messaging with the cloud (not part of this class)
         6) System setup and configuration. Place into configuration file which all nodes read from to build system.
         JOSH 7) keypad data entry checking of user passwords and access to system state.
         8) Store password and user into local database.
     */
 
-    // Functions
-
-
-
-
-    // Check trigger loop, cycles through the model data and compares with pre-configured values.
-        //set the trigger threshold as hard coded for now, but later add this to the config file.
-
-    // Functions for setting and getting the system state in prep for the keypad.
-
-    // Keypad input will bypass the coms protocol, Josh to implement a function which will take the keypad data and then
-        //call the password compare function.

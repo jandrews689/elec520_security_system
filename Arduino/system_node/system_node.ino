@@ -1,5 +1,15 @@
-// #include <ArduinoJson.h>
-// #include <ArduinoJson.hpp>
+ /*******************************************************************************************
+ * Project:      ELEC520 - Distributed and Interactive Systems Coursework - Security System
+ * File:         system_node
+ * Description:  FloorNode_ESP32 main file.
+ *
+ * Authors:      Joseph Andrews, Brendan Taylor, Charlie W
+ * Created:      November 2025
+ *
+ * Notes:
+ *  - This file is part of the ELEC520 coursework project.
+ *  - Code created in collaboration with AI (ChatGPT 5).
+ *******************************************************************************************/
 
 #include <elec520_nano.h>
 #include <elec520_protocol.h>
