@@ -28,39 +28,6 @@
             ]
           }
         ]
-      },
-      {
-        "id": 2,
-        "rooms": [
-          {
-            "id": 1,
-            "ultra": [
-              { "id": 1, "threshold": 200 },
-              { "id": 2, "threshold": 180 },
-              { "id": 3, "threshold": 180 },
-              { "id": 4, "threshold": 180 }
-            ],
-            "hall": [
-              { "id": 1, "threshold": 1 },
-              { "id": 2, "threshold": 1 },
-              { "id": 3, "threshold": 1 }
-            ]
-          },
-          {
-            "id": 2,
-            "ultra": [
-              { "id": 1, "threshold": 180 },
-              { "id": 2, "threshold": 180 }
-            ],
-            "hall": [
-              { "id": 1, "threshold": 1 },
-              { "id": 2, "threshold": 1 },
-              { "id": 3, "threshold": 1 },
-              { "id": 4, "threshold": 1 },
-              { "id": 5, "threshold": 1 }
-            ]
-          }
-        ]
       }
     ]
   }

@@ -8,7 +8,6 @@
  *
  * Notes:
  *  - This file is part of the ELEC520 coursework project.
- *  - All code is original work unless stated otherwise.
  *******************************************************************************************/
 
 
@@ -127,7 +126,6 @@ inline securitySystemNetworkMQTT* securitySystemNetworkMQTT::instance = nullptr;
 #define ULTRA_THRESHOLDS 100
 
 /*
-        6) System setup and configuration. Place into configuration file which all nodes read from to build system.
         JOSH 7) keypad data entry checking of user passwords and access to system state.
         8) Store password and user into local database.
     */

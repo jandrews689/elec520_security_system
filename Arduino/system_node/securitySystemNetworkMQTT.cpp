@@ -8,7 +8,6 @@
  *
  * Notes:
  *  - This file is part of the ELEC520 coursework project.
- *  - All code is original work unless stated otherwise.
  *******************************************************************************************/
 
 

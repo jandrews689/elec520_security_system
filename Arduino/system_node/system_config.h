@@ -1,6 +1,14 @@
-//
-// Created by jandr on 16/11/2025.
-//
+ /*******************************************************************************************
+* Project:      ELEC520 - Distributed and Interactive Systems Coursework - Security System
+* File:         system_config
+* Description:  FloorNode_ESP32 main file.
+*
+* Authors:      Joseph Andrews
+* Created:      November 2025
+*
+* Notes:
+*  - This file is part of the ELEC520 coursework project.
+*******************************************************************************************/
 
 #ifndef SECURITY_SYSTEM_CLION_SYSTEM_CONFIG_H
 #define SECURITY_SYSTEM_CLION_SYSTEM_CONFIG_H
@@ -10,7 +18,6 @@
 #include <vector>
 
 //pio run --target uploadfs
-//arduino-cli upload --fqbn esp32:esp32:esp32 --filesystem .
 
 // System Data Structures
 struct SensorConfig {

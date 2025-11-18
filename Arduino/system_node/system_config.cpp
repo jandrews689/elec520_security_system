@@ -1,6 +1,14 @@
-//
-// Created by jandr on 16/11/2025.
-//
+ /*******************************************************************************************
+* Project:      ELEC520 - Distributed and Interactive Systems Coursework - Security System
+* File:         system_config
+* Description:  FloorNode_ESP32 main file.
+*
+* Authors:      Joseph Andrews
+* Created:      November 2025
+*
+* Notes:
+*  - This file is part of the ELEC520 coursework project.
+*******************************************************************************************/
 
 #include <Arduino.h>
 #include "system_config.h"

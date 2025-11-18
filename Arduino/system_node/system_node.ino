@@ -8,13 +8,11 @@
  *
  * Notes:
  *  - This file is part of the ELEC520 coursework project.
- *  - Code created in collaboration with AI (ChatGPT 5).
  *******************************************************************************************/
 
 #include <elec520_nano.h>
 #include <elec520_protocol.h>
 #include "securitySystemNetworkMQTT.h"
-#include "baseStation.h"
 #include "i2c.h"
 #include <Arduino.h>
 #include <SPIFFS.h>
@@ -33,7 +31,7 @@ securitySystemNetworkMQTT objFloor(ssid, password, mqtt_server, mqtt_port, mqtt_
 
 int count = 0;
 bool mqttSystemDebug = true;
-
+bool xConfigFileLoad = false;
 
 //SETUP////////////////////////////////////////////////////////////////////////////////
 void setup() {
@@ -41,17 +39,42 @@ void setup() {
   Serial.begin(115200);
   delay(100);
 
-  //System Config, Reads Json file to build system
-    SystemConfig config;
-    if (!loadSystemConfig(config)) {
-        Serial.println("Error: Failed to load config");
-    } else {
-        Serial.println("Config loaded OK, applying to MODEL....");
-        if (configureSystemConfig(config)) {
-            Serial.println("System Configured!\n");
-        }
-    }
 
+    //Configure the system from config.json, or from functions below.
+    if (xConfigFileLoad) {
+        //System Config, Reads Json file to build system
+        SystemConfig config;
+        if (!loadSystemConfig(config)) {
+            Serial.println("Error: Failed to load config");
+        } else {
+            Serial.println("Config loaded OK, applying to MODEL....");
+            if (configureSystemConfig(config)) {
+                Serial.println("System Configured!\n");
+            }
+        }
+
+    } else {
+
+        setNumOfFloors(2);
+        addFloor(1);
+        addRoom(1,1);
+        addHall(1,1,1);
+        addHall(1,1,2);
+        addUltra(1,1,1);
+        addUltra(1,1,2);
+        addFloor(2);
+        addRoom(2,1);
+        addHall(2,1,1);
+        addHall(2,1,2);
+        addUltra(2,1,1);
+        addUltra(2,1,2);
+        addRoom(2,2);
+        addHall(2,2,1);
+        addHall(2,2,2);
+        addUltra(2,2,1);
+        addUltra(2,2,2);
+
+    }
 
 
   //I2C SETUP//////////////////////////////////////////////////////////
@@ -61,7 +84,6 @@ void setup() {
   objFloor.setup_wifi();
 
 }
-
 
 
 //LOOP/////////////////////////////////////////////////////////////////////////////////////////
