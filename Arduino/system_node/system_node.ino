@@ -9,6 +9,7 @@
 #define SCL_PIN   22
 #define ADDR_MIN  0x12
 #define ADDR_MAX  0x20
+#define Keypad_code 0x11
 #define NUM_ADDR  (ADDR_MAX - ADDR_MIN + 1)
 #define REQ_BYTES 30
 #define POLL_DELAY_MS 10
@@ -19,8 +20,8 @@ static String lastMsg[NUM_ADDR];
 static inline int idxFromAddr(uint8_t a){ return (a<ADDR_MIN||a>ADDR_MAX)?-1:(a-ADDR_MIN); }
 static inline bool isPrintableAscii(char c){ return c == '\n' || c == '\r' || (c >= 32 && c <= 126); }
 
-const char* ssid = "Joe's S23 Ultra"; 
-const char* password = "joea12345"; 
+const char* ssid = "Yes"; 
+const char* password = "NoYesNo1010"; 
 const char* mqtt_server = "broker.hivemq.com"; 
 int mqtt_port = 1883; 
 const char* mqtt_client_id = "BaseStation";

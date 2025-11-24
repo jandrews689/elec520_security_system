@@ -23,7 +23,7 @@ static bool sentConnectOnce = false;   // only send connection token once
 static bool sendUltraNext = true;      // alternate ultra/hall
 static uint32_t lastSenseMs = 0;
 static uint8_t lastUltraCm = 0;
-static uint8_t hallOpen01 = 0;         // 1=detected, 0=no magnet (right way?)
+static uint8_t hallOpen01 = 0;         // 1=detected, 0=no magnet 
 
 //  ultrasonics: simple read (cap at 255 cm need to add some averaging to minimise the jitter)
 static uint8_t readUltrasonicCm() {
