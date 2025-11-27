@@ -100,7 +100,7 @@ static void refreshSensors() {
   // === Hall array update ===
   for (uint8_t i = 0; i < NUM_HALLS; i++) {   // NEW: loop over all halls
     int raw = digitalRead(HALL_PINS[i]);
-    hallOpen01[i] = (raw == LOW) ? 0 : 1;
+    hallOpen01[i] = (raw == HIGH) ? 0 : 1;
   }
 }
 
