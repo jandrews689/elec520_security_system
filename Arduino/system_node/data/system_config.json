@@ -1,0 +1,34 @@
+{
+  "system": {
+    "numFloors": 2,
+    "floors": [
+      {
+        "id": 1,
+        "rooms": [
+          {
+            "id": 1,
+            "ultra": [
+              { "id": 1, "threshold": 200 }
+            ],
+            "hall": [
+              { "id": 1, "threshold": 1 },
+              { "id": 2, "threshold": 1 }
+            ]
+          },
+          {
+            "id": 2,
+            "ultra": [
+              { "id": 1, "threshold": 180 },
+              { "id": 2, "threshold": 180 }
+            ],
+            "hall": [
+              { "id": 1, "threshold": 1 },
+              { "id": 2, "threshold": 1 },
+              { "id": 3, "threshold": 1 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

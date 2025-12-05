@@ -1,7 +1,23 @@
+/*******************************************************************************************
+ * Project:      ELEC520 - Distributed and Interactive Systems Coursework - Security System
+ * File:         elec520_protocol
+ * Description:  Provides the security system middleware communication protocol for the system.
+ *
+ * Authors:      Joseph Andrews
+ * Created:      November 2025
+ *
+ * Notes:
+ *  - This file is part of the ELEC520 coursework project.
+ *  - Code created in collaboration with AI (ChatGPT 5).
+ *******************************************************************************************/
+
+
 #ifndef ELEC520_PROTOCOL_H
 #define ELEC520_PROTOCOL_H
 
 #include <Arduino.h>
+#include <string>
+#include <unordered_map>
 
 // -------- Limits --------
 #define SMP_MAX_FLOORS   8
@@ -35,12 +51,18 @@ struct FloorNode {
   RoomNode rooms[SMP_MAX_ROOMS];
 };
 struct ProtocolModel {
-  uint8_t   systemState = DISARMED; // s/st
-  uint8_t   keypad      = NO_INPUT; // s/ke
-  uint8_t   network     = 0;        // n/st
-  String    mac         = "00:00:00:00:00:00";       // n/mc
-  FloorNode floors[SMP_MAX_FLOORS]; // f/{f}
+  uint8_t   systemState = DISARMED;       // s/st
+  uint8_t   keypad      = NO_INPUT;       // s/ke
+  String    triggerLoc  = "f/ /r/ / / "; // s/tr
+  uint8_t   keypadUser  = 0;              // s/ku
+  // String    password    = "000:00000000"; // s/pw
+  std::unordered_map<std::string, std::string> password; // s/pw
+  uint8_t   network     = 0;              // n/st
+  String    mac         = "00:00:00:00:00:00"; // n/mc
+  byte      numOfFloors = 0;
+  FloorNode floors[SMP_MAX_FLOORS];       // f/{f}
 };
+
 
 // -------- Global MODEL --------
 extern ProtocolModel MODEL;
@@ -51,11 +73,19 @@ bool addRoom(uint8_t f_id, uint8_t r_id);
 bool addUltra(uint8_t f_id, uint8_t r_id, uint8_t u_id);
 bool addHall(uint8_t f_id, uint8_t r_id, uint8_t hs_id);
 
+//Set the number of floors in the system, used by MMQT
+void setNumOfFloors(int value);
+
 // -------- System-level Set (kept) --------
 bool setSystemState(uint8_t s);
 bool setKeypad(uint8_t k);
 bool setNetwork(uint8_t n);
 bool setMac(const String& mac);
+
+bool setKeypadUser(uint8_t ku);
+bool setPassword(const String& pass);
+bool setTriggerLoc(uint8_t f_id,uint8_t r_id,uint8_t u_id = 0,uint8_t h_id = 0);
+bool findKeypadUser(const String& userPassword);
 
 void resetModel();
 
@@ -69,6 +99,11 @@ bool parseTokenLine(const String& tokenLine);
 // -------- Topic builders (Node, no prefix) --------
 String nodeTopicSystemState();                               // s/st
 String nodeTopicKeypad();                                    // s/ke
+
+String nodeTopicTrigger();                                   // s/tr
+String nodeTopicKeypadUser();                                // s/ku
+String nodeTopicPassword();                                  // s/pw
+
 String nodeTopicNetwork();                                   // n/st
 String nodeTopicMac();                                       // n/mc
 String nodeTopicFloorConnection(uint8_t f_id);               // f/{f}/cs
@@ -78,11 +113,18 @@ String nodeTopicHall(uint8_t f_id,uint8_t r_id,uint8_t hs_id);   // f/{f}/r/{r}/
 String nodeTopicFloorTimestamp(uint8_t f_id);                // f/{f}/ts
 String nodeTopicRoomTimestamp(uint8_t f_id,uint8_t r_id);    // f/{f}/r/{r}/ts
 
+
+
 // -------- Topic builders (Cloud, with '/hw/' branch) --------
 // NOTE: These now publish under ELEC520/security/hw/...
 String cloudTopicFloor(uint8_t f_id);                        // ELEC520/security/hw/f/{f}
 String cloudTopicSystemState();                              // ELEC520/security/hw/s/st
 String cloudTopicKeypad();                                   // ELEC520/security/hw/s/ke
+
+String cloudTopicTrigger();                                  // ELEC520/security/hw/s/tr
+String cloudTopicKeypadUser();                               // ELEC520/security/hw/s/ku
+String cloudTopicPassword();                                 // ELEC520/security/hw/s/pw
+
 String cloudTopicNetwork();                                  // ELEC520/security/hw/n/st
 String cloudTopicMac();                                      // ELEC520/security/hw/n/mc
 String cloudTopicFloorConnection(uint8_t f_id);              // ELEC520/security/hw/f/{f}/cs
@@ -97,8 +139,6 @@ String buildRoomEspString(uint8_t f_id, uint8_t r_id);
 bool   parseRoomEspString(const String& roomData);
 
 // -------- MQTT System string --------
-// String buildSystemMqttString();
-// String buildNetworkMqttString();
 bool   parseSystemMqttString(const String& systemData); //Are we using this?
 
 // -------- MQTT per-floor compact string (payload for ELEC520/security/hw/f/{f}) --------

@@ -1,5 +1,18 @@
-#ifndef CLASS_SECSYS_NETOWRK_MQTT
-#define CLASS_SECSYS_NETOWRK_MQTT
+/*******************************************************************************************
+ * Project:      ELEC520 - Distributed and Interactive Systems Coursework - Security System
+ * File:         securitySystemNetworkMQTT
+ * Description:
+ *
+ * Authors:      Joseph Andrews
+ * Created:      November 2025
+ *
+ * Notes:
+ *  - This file is part of the ELEC520 coursework project.
+ *******************************************************************************************/
+
+
+#ifndef CLASS_SECSYS_NETWORK_MQTT
+#define CLASS_SECSYS_NETWORK_MQTT
 
 #include <cstdint>
 #include <PubSubClient.h>
@@ -26,8 +39,8 @@ private:
     //MQTT setup variables
     PubSubClient client;
 
-    byte _bFloorID = 0b0000'0001;
-    int _iNumOfFloors; //Need to figure out a way to define this.
+    //System setup
+    // byte _bFloorID = 0b0000'0001;
 
     // Message structure
     typedef struct struct_message {
@@ -35,11 +48,6 @@ private:
         char payload[250];        //value contained in message
         uint8_t src_addr[6];      //source address (used for RX messages not TX messages)
     } struct_message;
-
-
-    unsigned long startTime;
-    byte bTransmitPosition = 0b0000'0001;
-    uint8_t _uiNumRoom;
 
 
     // --- Static callbacks that forward into the instance ---
@@ -68,10 +76,6 @@ private:
     void brokerReconnect();
 
 
-    //Set up the wifi with the cloud. 
-    void setup_wifi();
-
-
 public:
 
     // Constructor
@@ -82,28 +86,32 @@ public:
                    const char* mqtt_client_id);
 
 
-    //Set the Floor ID, helper function to make system buildering easier to read. 
-    void setFloorID(byte id);
+    // //Set the Floor ID, helper function to make system buildering easier to read.
+    // void setFloorID(byte id);
+    //
+    //
+    // //Get the Floor ID
+    // byte getFloorID();
 
 
-    //Get the Floor ID
-    byte getFloorID();
 
 
-    //Set the number of floors in the system, used by MMQT 
-    void setNumOfFloors(int value);
-
-
-    //Network setup
-    void setupNetwork();
-
-
-    //Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor. 
-    void setNumberOfRooms(int number);
+    
+    //Set up the wifi with the cloud. 
+    void setup_wifi();
 
 
     //MQTT loop
     void mqttOperate();
+
+
+    //Security system alarm state machine.
+    void alarmSystemStateMachine();
+
+
+    //Trigger LED and Buzzer if system state == ALARM
+    void triggerAlarm();
+
 
 
 };
@@ -112,3 +120,13 @@ public:
 inline securitySystemNetworkMQTT* securitySystemNetworkMQTT::instance = nullptr;
 
 #endif
+
+
+
+#define ULTRA_THRESHOLDS 100
+
+/*
+        JOSH 7) keypad data entry checking of user passwords and access to system state.
+        8) Store password and user into local database.
+    */
+

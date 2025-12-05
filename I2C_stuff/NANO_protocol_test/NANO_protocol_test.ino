@@ -14,7 +14,7 @@
 #define ECHO_PIN   7
 // Hall pin (active low when magnet present i cant remeber if this is the right way ask charlie?)
 #define HALL_PIN   4
-
+#define LED_PIN    8 
 // ====== INTERNAL ======
 static uint8_t ROOM_ID;               // derived from I2C address
 static volatile bool haveLine = false; // when line is ready
@@ -23,7 +23,7 @@ static bool sentConnectOnce = false;   // only send connection token once
 static bool sendUltraNext = true;      // alternate ultra/hall
 static uint32_t lastSenseMs = 0;
 static uint8_t lastUltraCm = 0;
-static uint8_t hallOpen01 = 1;         // 0=detected, 1=no magnet (right way?)
+static uint8_t hallOpen01 = 0;         // 1=detected, 0=no magnet (right way?)
 
 //  ultrasonics: simple read (cap at 255 cm need to add some averaging to minimise the jitter)
 static uint8_t readUltrasonicCm() {
@@ -46,7 +46,12 @@ static void refreshSensors() {
 
   // Ultrasonic
   lastUltraCm = readUltrasonicCm();
-
+  if (lastUltraCm < 20) {
+  digitalWrite(LED_PIN, HIGH);
+  delay(100);
+  digitalWrite(LED_PIN, LOW);
+  delay(100);
+  }
   // Hall
   int raw = digitalRead(HALL_PIN);
   hallOpen01 = (raw == LOW) ? 0 : 1;
@@ -88,7 +93,7 @@ void setup() {
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
   pinMode(HALL_PIN, INPUT_PULLUP);
-
+  pinMode(LED_PIN, OUTPUT);
   Serial.begin(115200);
   delay(50);
 
@@ -112,7 +117,7 @@ void setup() {
 void loop() {
   // keep sensors fresh (contant polling)
   refreshSensors();
-
+  
   // if no requests poll keep updating anyway so we allways have up to date values
   static uint32_t lastPrep = 0;
   if (millis() - lastPrep > 150) { // 6–7 Hz per stream ish

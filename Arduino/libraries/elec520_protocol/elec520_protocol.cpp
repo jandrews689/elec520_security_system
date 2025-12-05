@@ -1,3 +1,17 @@
+/*******************************************************************************************
+ * Project:      ELEC520 - Distributed and Interactive Systems Coursework - Security System
+ * File:         elec520_protocol
+ * Description:  Provides the security system middleware communication protocol for the system.
+ *
+ * Authors:      Joseph Andrews
+ * Created:      November 2025
+ *
+ * Notes:
+ *  - This file is part of the ELEC520 coursework project.
+ *  - Code created in collaboration with AI (ChatGPT 5).
+ *******************************************************************************************/
+
+
 #include "elec520_protocol.h"
 
 // ---------------- Internals ----------------
@@ -58,17 +72,78 @@ bool addHall(uint8_t f_id, uint8_t r_id, uint8_t hs_id){
   return true;
 }
 
+//Sets the number of rooms in the system. Used for sending the correct amount of esp now messages per floor.
+void setNumOfFloors(int value){
+  MODEL.numOfFloors = value;
+}
+
 // ---------------- System-level setters (kept) ----------------
 bool setSystemState(uint8_t s) { MODEL.systemState = s; return true; }
 bool setKeypad(uint8_t k)      { MODEL.keypad = k;     return true; }
 bool setNetwork(uint8_t n)     { MODEL.network = n;    return true; }
 bool setMac(const String& mac) { MODEL.mac = mac;      return true; }
+bool setKeypadUser(uint8_t ku) { MODEL.keypadUser = ku; return true; }
+
+
+// Store user password
+bool setPassword(const String& userPassword) { 
+  int sep = userPassword.indexOf(':');
+  if (sep < 0 ) return false;
+  String u = userPassword.substring(0, sep);
+  String p = userPassword.substring(sep + 1);
+  std::string user = u.c_str();
+  std::string password = p.c_str();
+  MODEL.password[user] = password;
+
+  Serial.printf("Password Stored! User: %s, Password: %s\n", user.c_str(), password.c_str());
+  
+  return true; 
+}
+
+
+// Store trigger location.
+bool setTriggerLoc(uint8_t f_id,uint8_t r_id,uint8_t u_id,uint8_t h_id) { 
+  if ((f_id || r_id) == 0) return false;
+  if (u_id == 0 && h_id == 0) return false;
+  String address;
+  if (u_id != 0) {
+    address = "f/"+String(f_id)+"/r/"+String(r_id)+"/u/"+String(u_id);
+  } else {
+    address = "f/"+String(f_id)+"/r/"+String(r_id)+"/h/"+String(u_id);
+  }
+  MODEL.triggerLoc = address; 
+  return true; 
+}
+
+
+// Keypad user search
+bool findKeypadUser(const String& userPassword){
+  const std::string pass = userPassword.c_str();
+  // std::string user;
+  bool result = false;
+  for (const auto& pair : MODEL.password){
+    if (pair.second == pass) {
+      std::string foundKey = pair.first;
+      Serial.println("Keypad User Found!");
+      result = true;
+      break;
+    } else {
+      Serial.println("Keypad User Not Found!");
+      result = false;
+    }
+ }
+  return result;
+}
+
 
 void resetModel(){ MODEL = ProtocolModel(); }
 
 // ---------------- Topic builders (Node) ----------------
 String nodeTopicSystemState()                    { return "s/st"; }
 String nodeTopicKeypad()                         { return "s/ke"; }
+String nodeTopicTrigger()                        { return "s/tr"; }
+String nodeTopicKeypadUser()                     { return "s/ku"; }
+String nodeTopicPassword()                       { return "s/pw"; }
 String nodeTopicNetwork()                        { return "n/st"; }
 String nodeTopicMac()                            { return "n/mc"; }
 String nodeTopicFloorConnection(uint8_t f_id)    { return "f/"+String(f_id)+"/cs"; }
@@ -84,6 +159,9 @@ String cloudTopicFloor(uint8_t f_id) {
 }
 String cloudTopicSystemState()                    { return _CLOUD_BASE_HW()+"s/st"; }
 String cloudTopicKeypad()                         { return _CLOUD_BASE_HW()+"s/ke"; }
+String cloudTopicTrigger()                        { return _CLOUD_BASE_HW()+"s/tr"; }
+String cloudTopicKeypadUser()                     { return _CLOUD_BASE_HW()+"s/ku"; }
+String cloudTopicPassword()                       { return _CLOUD_BASE_HW()+"s/pw"; }
 String cloudTopicNetwork()                        { return _CLOUD_BASE_HW()+"n/st"; }
 String cloudTopicMac()                            { return _CLOUD_BASE_HW()+"n/mc"; }
 String cloudTopicFloorConnection(uint8_t f_id)    { return _CLOUD_BASE_HW()+"f/"+String(f_id)+"/cs"; }
@@ -110,9 +188,16 @@ static bool parseCore(const char* topicC, const char* payloadC, bool cloud){
     base = 3;
   }
 
-  // s/st, s/ke, n/st, n/mc
+  // s/st, s/ke, s/tr, s/ku, s/pw, n/st, n/mc
   if (n-base==2 && p[base]=="s" && p[base+1]=="st"){ uint8_t v; if(!parseByte(payloadC,v)) return false; MODEL.systemState=v; return true; }
   if (n-base==2 && p[base]=="s" && p[base+1]=="ke"){ uint8_t v; if(!parseByte(payloadC,v)) return false; MODEL.keypad=v;      return true; }
+  if (n-base==2 && p[base]=="s" && p[base+1]=="tr"){ MODEL.triggerLoc = String(payloadC); return true; }
+  if (n-base==2 && p[base]=="s" && p[base+1]=="ku"){ uint8_t v; if(!parseByte(payloadC,v)) return false; MODEL.keypadUser = v; return true;}
+
+  // if (n-base==2 && p[base]=="s" && p[base+1]=="pw"){ MODEL.password = String(payloadC); return true; }
+  if (n-base==2 && p[base]=="s" && p[base+1]=="pw"){ setPassword(payloadC); return true; }
+
+
   if (n-base==2 && p[base]=="n" && p[base+1]=="st"){ uint8_t v; if(!parseByte(payloadC,v)) return false; MODEL.network=v;     return true; }
   if (n-base==2 && p[base]=="n" && p[base+1]=="mc"){ MODEL.mac = String(payloadC); return true; }
 
@@ -290,45 +375,6 @@ bool parseRoomEspString(const String& roomData) {
   return true;
 }
 
-// // ---------------- MQTT system string ----------------
-// String buildSystemMqttString() {
-//   String out;
-//   out.reserve(256); // adjust if your model is large
-
-//   auto add = [&](const String& token){
-//     if (token.length() == 0) return;
-//     if (out.length() > 0 && out[out.length()-1] != ';') out += ';';
-//     out += token;
-//   };
-
-//   // System-level
-//   add("s/st:" + String(MODEL.systemState));
-//   add("s/ke:" + String(MODEL.keypad));
-
-//   if (out.startsWith(";")) out.remove(0, 1);
-//   return out;
-// }
-
-
-// // ---------------- MQTT network string ----------------
-// String buildNetworkMqttString() {
-//   String out;
-//   out.reserve(256); 
-
-//   auto add = [&](const String& token){
-//     if (token.length() == 0) return;
-//     if (out.length() > 0 && out[out.length()-1] != ';') out += ';';
-//     out += token;
-//   };
-
-//   // Network-level
-//   add("n/st:" + String(MODEL.network));
-//   if (MODEL.mac.length() > 0) add("n/mc:" + MODEL.mac);
-
-//   if (out.startsWith(";")) out.remove(0, 1);
-//   return out;
-// }
-
 
 // ---------------- Parse MQTT full-system compact string ----------------
 bool parseSystemMqttString(const String& systemData) {
@@ -422,6 +468,18 @@ void debugPrintModel(Stream& out) {
   // System-level
   out.print(F("System State (s/st): ")); out.println(MODEL.systemState);
   out.print(F("Keypad      (s/ke): ")); out.println(MODEL.keypad);
+  out.print(F("Trigger Loc (s/tr): ")); out.println(MODEL.triggerLoc);
+  out.print(F("Keypad UserID (s/ku): ")); out.println(MODEL.keypadUser);
+
+  // Prints all passwords saved
+  out.println(F("Stored Passwords (s/pw): "));
+  for (const auto& entry : MODEL.password) {
+    out.print(F(" User: "));
+    out.print(entry.first.c_str());
+    out.print(F(" Password: "));
+    out.println(entry.second.c_str());
+  }
+
   out.print(F("Network     (n/st): ")); out.println(MODEL.network);
   out.print(F("MAC         (n/mc): ")); out.println(MODEL.mac);
 
