@@ -48,6 +48,15 @@ private:
 
   // ---- Cadence ----
   uint32_t lastGossipMs_=0, lastI2CPollMs_=0, lastRoomTxMs_=0, lastSummaryMs_=0;
+  // last time we published alarm trigger MQTT messages (rate limiting)
+  uint32_t lastAlarmPublishMs_ = 0;
+  // last time alarm state changed to ALARM (for auto-clear)
+  uint32_t lastAlarmStateChangeMs_ = 0;
+  // previous alarm state to detect transitions
+  uint8_t prevAlarmState_ = SystemState::DISARMED;
+  // track the last MQTT/cloud-sourced system state (ARMED or DISARMED)
+  // when ESP clears an ALARM, it reverts to this state
+  uint8_t lastMqttSystemState_ = SystemState::DISARMED;
 
   // ---- I2C rooms ----
   RoomBusI2C rb_;
@@ -86,6 +95,7 @@ private:
   void tickPublish();
   void tickRoomI2C();
   void sendRoomLine(const String& line, bool force=false);
+  void sendSystemLine(const String& line, bool force=false);
   static void onRxMQTT_(char* topicC, byte* payload, unsigned int length);
   // Alarm / system helpers
   void alarmSystemStateMachine();

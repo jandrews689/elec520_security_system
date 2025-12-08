@@ -4,7 +4,7 @@
 
 // Threshold for ultrasound trigger (matches reference system)
 #ifndef ULTRA_THRESHOLDS
-#define ULTRA_THRESHOLDS 100
+#define ULTRA_THRESHOLDS 20
 #endif
 
 // Normalize various compact room line formats into the semicolon-delimited
@@ -339,7 +339,41 @@ void FloorController::onRxMQTT_(char *topicC, byte *payload, unsigned int length
   buf[n] = '\0';
 
   if (bool messageRX = parseCloud(topicC, buf))
-    Serial.printf("MQTT Callback [%s]: %s\n", topicC, buf);
+  {
+    LOGV("MQTT Callback [%s]: %s", topicC, buf);
+
+    // New priority rules:
+    // - Cloud (MQTT) controls ARMED/DISARMED and can always DISARM.
+    // - ESP/leader can raise ALARM when cloud state is ARMED.
+    // - Once ALARM, it remains until cloud sends DISARM.
+    if (self_)
+    {
+      // Only handle state-specific logic if this is actually a system state message
+      // Check if topic contains "s/st" (system state), not other fields like keypad, network, mac
+      String topicStr(topicC);
+      if (topicStr.indexOf("s/st") >= 0)
+      {
+        uint8_t incoming = MODEL.systemState;
+        self_->lastMqttSystemState_ = incoming;
+        LOGV("MQTT system state update recorded: %u", (unsigned)incoming);
+
+        if (incoming == (uint8_t)SystemState::DISARMED)
+        {
+          // Cloud requests DISARM: immediately clear any ALARM and honor cloud
+          LOGI("MQTT DISARM received: clearing ALARM and honoring cloud state");
+          setSystemState((uint8_t)SystemState::DISARMED);
+          self_->clearAlarm();
+          // Also clear the trigger location so we don't auto-retrigger
+          setTriggerLoc(0xFF, 0xFF, 0xFF, 0xFF);
+        }
+        else if (incoming == (uint8_t)SystemState::ARMED)
+        {
+          LOGV("MQTT ARMED received: recorded as lastMqttSystemState");
+        }
+        // If incoming is ALARM (should be rare), just record it
+      }
+    }
+  }
 }
 
 void FloorController::onRx_(const uint8_t *mac, const uint8_t *data, int len)
@@ -376,9 +410,9 @@ void FloorController::onRx_(const uint8_t *mac, const uint8_t *data, int len)
     return;
   }
 
-  // Application payload (room lines)
+  // Application payload (room or system-level compact strings)
   uint32_t h = fnv1a(data, len), now = millis();
-  // mark we've seen a peer activity (room line); this keeps the leader election
+  // mark we've seen a peer activity; this keeps the leader election
   // clock moving even if a peer isn't sending explicit GossipMsg messages.
   self_->lastPeerSeenMs_ = millis();
   // Derive rank/floor for the sender from its MAC and the line to update peer table
@@ -389,16 +423,84 @@ void FloorController::onRx_(const uint8_t *mac, const uint8_t *data, int len)
   String line((const char *)data, len);
   int senderFloor = extractFloor(line);
   self_->updatePeer(mac, senderRank, (senderFloor < 0 ? 0 : (uint8_t)senderFloor), false);
-  LOGT("Rx room line (raw): %s", line.c_str());
+  LOGT("Rx app payload (raw): %s", line.c_str());
   String normLine = normalizeRoomLine(line);
   if (normLine != line)
-    LOGV("Rx room line normalized: %s -> %s", line.c_str(), normLine.c_str());
-  LOGT("Rx room line (norm): %s", normLine.c_str());
-  bool ok = parseRoomEspString(normLine.c_str());
-  if (!ok)
-    LOGV("parseRoomEspString failed for: %s", normLine.c_str());
+    LOGV("Rx normalized: %s -> %s", line.c_str(), normLine.c_str());
+  LOGT("Rx payload (norm): %s", normLine.c_str());
+
+  // Try room parser first (most common). If it fails, fall back to system parser.
+  bool ok = false;
+  bool isSystemMessage = (normLine.indexOf("f/") < 0); // system messages have no floor token
+
+  if (!isSystemMessage)
+  {
+    ok = parseRoomEspString(normLine.c_str());
+    if (ok)
+    {
+      LOGT("parseRoomEspString OK for: %s", normLine.c_str());
+      // Extract floor and room IDs to mark them as connected via gossip
+      int fpos = normLine.indexOf("f/");
+      int rpos = normLine.indexOf("/r/");
+      if (fpos >= 0 && rpos >= 0)
+      {
+        String fstr = normLine.substring(fpos + 2, rpos);
+        int rend = normLine.indexOf('/', rpos + 3);
+        if (rend < 0)
+          rend = normLine.indexOf(':', rpos + 3);
+        if (rend < 0)
+          rend = normLine.indexOf(';', rpos + 3);
+        if (rend < 0)
+          rend = normLine.length();
+        String rstr = normLine.substring(rpos + 3, rend);
+        uint8_t f = (uint8_t)fstr.toInt();
+        uint8_t r = (uint8_t)rstr.toInt();
+        if (f < SMP_MAX_FLOORS && r < SMP_MAX_ROOMS)
+        {
+          // Mark both room and floor as connected
+          MODEL.floors[f].connected = true;
+          MODEL.floors[f].rooms[r].connected = true;
+          LOGT("Marked f/%u/r/%u as connected via ESP-NOW gossip", (unsigned)f, (unsigned)r);
+        }
+      }
+      // Re-gossip room messages so they propagate across the mesh
+      self_->sendRoomLine(normLine, false);
+    }
+    else
+    {
+      LOGV("parseRoomEspString failed, trying parseSystemMqttString for: %s", normLine.c_str());
+      ok = parseSystemMqttString(normLine);
+      if (ok)
+        LOGT("parseSystemMqttString OK for: %s", normLine.c_str());
+      else
+        LOGV("Both parsers failed for: %s", normLine.c_str());
+    }
+  }
   else
-    LOGT("parseRoomEspString OK for: %s", normLine.c_str());
+  {
+    // No floor token -> system-level compact string (from leader gossip)
+    // Followers: accept and parse, but do NOT re-gossip back
+    ok = parseSystemMqttString(normLine);
+    if (ok)
+    {
+      LOGT("parseSystemMqttString OK (leader gossip): %s", normLine.c_str());
+      // System messages are leader-only gossip: followers parse but don't re-transmit
+      return;
+    }
+    else
+    {
+      // Fallback to room parser in case formatting differs
+      ok = parseRoomEspString(normLine.c_str());
+      if (ok)
+      {
+        LOGT("Fallback parseRoomEspString OK for: %s", normLine.c_str());
+        // Re-gossip if fallback parse succeeded
+        self_->sendRoomLine(normLine, false);
+      }
+      else
+        LOGV("Both parsers failed for: %s", normLine.c_str());
+    }
+  }
 }
 
 void FloorController::sendGossip()
@@ -749,29 +851,36 @@ void FloorController::tickPublish()
   if (now - lastSummaryMs_ < MQTT_SUMMARY_MS)
     return;
   lastSummaryMs_ = now;
-  // Publish system & network snapshots first (same as reference network code)
+  
+  // Publish system state (ARMED/DISARMED/ALARM) so Node-RED can see confirmations
+  // and echo back the state as an ACK. This is the single source of truth for state.
   {
-    String topic, payload;
-
-    topic = cloudTopicSystemState();
-    payload = MODEL.systemState;
+    String topic = cloudTopicSystemState();
+    String payload = String((int)MODEL.systemState);
     mqtt_.publish(topic.c_str(), payload.c_str());
-    LOGI("Publish system state %s topic=%s", payload.c_str(), topic.c_str());
+    LOGI("Publish system state=%d to MQTT topic=%s", (int)MODEL.systemState, topic.c_str());
+  }
+  
+  // Note: We don't publish keypad/network/mac periodically since they create
+  // feedback loops when the MQTT broker retains them and sends them back.
+  // Only system state (s/st) is published for Node-RED to confirm/echo.
 
-    topic = cloudTopicKeypad();
-    payload = MODEL.keypad;
-    mqtt_.publish(topic.c_str(), payload.c_str());
-    LOGI("Publish keypad %s topic=%s", payload.c_str(), topic.c_str());
-
-    topic = cloudTopicNetwork();
-    payload = String((int)MODEL.network);
-    mqtt_.publish(topic.c_str(), payload.c_str());
-    LOGI("Publish network %s topic=%s", payload.c_str(), topic.c_str());
-
-    topic = cloudTopicMac();
-    payload = MODEL.mac;
-    mqtt_.publish(topic.c_str(), payload.c_str());
-    LOGI("Publish mac %s topic=%s", payload.c_str(), topic.c_str());
+  // Also gossip the system-level compact string via ESP-NOW so followers
+  // that aren't MQTT-connected receive system updates and converge.
+  {
+    String sys;
+    sys.reserve(128);
+    sys += String("s/st:") + String((int)MODEL.systemState);
+    sys += ";s/ke:" + String((int)MODEL.keypad);
+    sys += ";n/st:" + String((int)MODEL.network);
+    sys += ";n/mc:" + MODEL.mac;
+    // Gossip trigger location if alarm is active so followers know where alarm occurred
+    if (MODEL.systemState == SystemState::ALARM)
+    {
+      sys += ";s/tr:" + MODEL.triggerLoc;
+    }
+    sendSystemLine(sys, true);
+    LOGT("Gossiped system compact string: %s", sys.c_str());
   }
 
   // Publish snapshots for ALL floors, not just our own.
@@ -782,8 +891,15 @@ void FloorController::tickPublish()
 
     const unsigned payloadLen = (unsigned)payload.length();
     const int showLen = (int)min<unsigned>(payloadLen, DEBUG_TRUNC);
-    LOGI("Publish tick: floor=%u topic=%s payloadLen=%u payload=%.*s",
-         (unsigned)f, topic.c_str(), payloadLen, showLen, payload.c_str());
+    if (payloadLen > 0)
+    {
+      LOGI("Publish tick: floor=%u topic=%s payloadLen=%u payload=%.*s",
+           (unsigned)f, topic.c_str(), payloadLen, showLen, payload.c_str());
+    }
+    else
+    {
+      LOGV("Publish tick: floor=%u topic=%s payloadLen=0", (unsigned)f, topic.c_str());
+    }
 
     if (!payload.length())
       continue; // nothing known for this floor yet
@@ -862,7 +978,12 @@ void FloorController::tickRoomI2C()
     if (!ok)
       LOGV("I2C: parseRoomEspString failed for: %s", normLine.c_str());
     else
+    {
       LOGT("I2C: parseRoomEspString OK for: %s", normLine.c_str());
+      // Explicitly mark room and floor as connected since data was received
+      MODEL.floors[FLOOR_ID].connected = true;
+      MODEL.floors[FLOOR_ID].rooms[roomId].connected = true;
+    }
     // Cache + gossip so other floors ingest it too
     lastLocal_[i % MAX_ROOMS] = normLine;
     sendRoomLine(normLine, true);
@@ -927,7 +1048,30 @@ void FloorController::tickRoomI2C()
     if (!ok)
       LOGT("Rx: parseRoomEspString failed for: %s", normLine.c_str());
     else
+    {
       LOGT("Rx: parseRoomEspString OK for: %s", normLine.c_str());
+      // Explicitly mark this room as connected since it sent data
+      // Extract room ID from line (format: "f/{f}/r/{r}/cs:{c}...")
+      int rpos = normLine.indexOf("/r/");
+      if (rpos >= 0)
+      {
+        int rend = normLine.indexOf('/', rpos + 3);
+        if (rend < 0)
+          rend = normLine.indexOf(':', rpos + 3);
+        if (rend < 0)
+          rend = normLine.indexOf(';', rpos + 3);
+        if (rend < 0)
+          rend = normLine.length();
+        String rstr = normLine.substring(rpos + 3, rend);
+        uint8_t roomId = (uint8_t)rstr.toInt();
+        if (roomId < MAX_ROOMS)
+        {
+          // Mark both floor and room as connected
+          MODEL.floors[FLOOR_ID].connected = true;
+          MODEL.floors[FLOOR_ID].rooms[roomId].connected = true;
+        }
+      }
+    }
 
     lastLocal_[i % MAX_ROOMS] = normLine; // cache last per-room
     sendRoomLine(normLine, true);         // gossip to peers (force local re-gossip)
@@ -1000,47 +1144,148 @@ void FloorController::sendRoomLine(const String &line, bool force)
   }
 }
 
-// Alarm / state-machine: scan MODEL for triggers when we're leader and system is ARMED
+// Send system-level compact strings (s/st, s/ke, n/st, n/mc, etc.) over ESP-NOW
+// so followers that aren't MQTT-connected can converge on the same MODEL.
+void FloorController::sendSystemLine(const String &line, bool force)
+{
+  uint32_t h = fnv1a((const uint8_t *)line.c_str(), line.length()), now = millis();
+  if (self_ == nullptr)
+    return;
+  if (self_->seen(h, now) && !force)
+  {
+    static uint32_t lastDup = 0;
+    if (millis() - lastDup > 10000)
+    {
+      lastDup = millis();
+      LOGV("sendSystemLine: skipping duplicate line h=0x%08X len=%u", h, (unsigned)line.length());
+    }
+    return;
+  }
+  // Mark seen
+  self_->remember(h, now);
+  static const uint8_t BCAST[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+  if (!espnowInit_)
+  {
+    initEspNow();
+    if (!espnowInit_)
+      return;
+  }
+  ensureBroadcastPeer();
+  ++sendAttemptCount_;
+  esp_err_t rc = esp_now_send(BCAST, (const uint8_t *)line.c_str(), line.length());
+  if (rc != ESP_OK)
+  {
+    LOGE("Gossip/System send rc=%d -> reinit ESP-NOW", (int)rc);
+    ++sendFailCount_;
+    ++sendConsecFails_;
+    lastSendFailMs_ = millis();
+    if (sendConsecFails_ >= 3 && millis() - lastEspNowRecoveryMs_ > 5000)
+    {
+      LOGE("System gossip: consecutive send failures >=3; deeper recovery");
+      lastEspNowRecoveryMs_ = millis();
+      espnowInit_ = false;
+      esp_err_t d = esp_now_deinit();
+      LOGT("esp_now_deinit rc=%d", (int)d);
+      delay(50);
+      initEspNow();
+    }
+  }
+  else
+  {
+    LOGT("System line gossiped (%u bytes)", (unsigned)line.length());
+    ++sendSuccessCount_;
+    sendConsecFails_ = 0;
+  }
+}
+
+// Alarm / state-machine: scan MODEL for triggers when we're leader and cloud says ARMED
+// Behavior change: the ESP leader only raises an ALARM when the last MQTT/cloud state
+// is ARMED. If cloud reports DISARMED, ESP sensor triggers are ignored. Once ALARM
+// is raised it persists until the cloud explicitly DISARMs.
 void FloorController::alarmSystemStateMachine()
 {
-  if (!isLeader_)
-    return; // leader-only behavior for triggering
-
-  // Only act when system is ARMED
-  if (MODEL.systemState != SystemState::ARMED)
+  if (!isLeader_){
     return;
+  }
+
+  // Only attempt to raise an alarm when the cloud/Node-RED state is ARMED.
+  if (MODEL.systemState != SystemState::ARMED){
+    return;
+  }
+
+  // Rate-limit MQTT alarm trigger publishes to avoid spamming the broker.
+  // The interval is configurable via `ALARM_MQTT_MS` in `config.h`.
+  const uint32_t now = millis();
+  if (now - lastAlarmPublishMs_ < ALARM_MQTT_MS)
+    return;
+  lastAlarmPublishMs_ = now;
+
 
   String topic;
   String payload;
 
-  // Scan configured floors/rooms/sensors
+  // Scan configured floors/rooms/sensors continuously
   for (uint8_t i = 0; i < SMP_MAX_FLOORS; ++i)
   {
-    if (!MODEL.floors[i].used)
+    if (!MODEL.floors[i].used || !MODEL.floors[i].connected)
+    {
+      LOGV("Skipping floor %u: used=%d connected=%d", (unsigned)i,
+           (int)MODEL.floors[i].used,
+           (int)MODEL.floors[i].connected);
       continue;
+    }
     for (uint8_t j = 0; j < SMP_MAX_ROOMS; ++j)
     {
-      if (!MODEL.floors[i].rooms[j].used)
+      if (!MODEL.floors[i].rooms[j].used || !MODEL.floors[i].rooms[j].connected)
+      {
+        LOGV("Skipping floor %u room %u: used=%d connected=%d", (unsigned)i, (unsigned)j,
+             (int)MODEL.floors[i].rooms[j].used,
+             (int)MODEL.floors[i].rooms[j].connected);
         continue;
-      for (uint8_t k = 0; k < SMP_MAX_SENSORS; ++k)
+      }
+      for (uint8_t k = 1; k < 2; ++k)
       {
         // Hall sensors
-        if (MODEL.floors[i].rooms[j].hall[k].open)
-        {
-          setTriggerLoc(i, j, 0, k);
-          topic = cloudTopicTrigger();
-          payload = MODEL.triggerLoc;
-          mqtt_.publish(topic.c_str(), payload.c_str());
-          LOGI("Alarm trigger published: %s -> %s", topic.c_str(), payload.c_str());
-        }
+        // if (MODEL.floors[i].rooms[j].hall[k].open)
+        // {
+        //   // First-detected trigger: set trigger location, publish, and elevate
+        //   // system state to ALARM. Use protocol setters to keep MODEL in sync.
+        //   setTriggerLoc(i, j, 0, k);
+        //   topic = cloudTopicTrigger();
+        //   payload = MODEL.triggerLoc;
+        //   mqtt_.publish(topic.c_str(), payload.c_str());
+        //   LOGE("Alarm detected (hall) at %s -> publishing trigger", payload.c_str());
+
+        //   // Mark system as ALARM and remember timestamp for auto-clear
+        //   setSystemState((uint8_t)SystemState::ALARM);
+        //   lastAlarmStateChangeMs_ = now;
+        //   // Immediately gossip system state so followers converge quickly
+        //   {
+        //     String sys = String("s/st:") + String((int)MODEL.systemState) + ";s/ke:" + String((int)MODEL.keypad) + ";n/st:" + String((int)MODEL.network) + ";n/mc:" + MODEL.mac;
+        //     sendSystemLine(sys, true);
+        //   }
+        //   // Stop scanning further sensors this pass to avoid multiple publishes
+        //   return;
+        // }
         // Ultra sensors
-        if (MODEL.floors[i].rooms[j].ultra[k].value >= ULTRA_THRESHOLDS)
+        if (MODEL.floors[i].rooms[j].ultra[k].value <= ULTRA_THRESHOLDS)
         {
           setTriggerLoc(i, j, k, 0);
           topic = cloudTopicTrigger();
           payload = MODEL.triggerLoc;
           mqtt_.publish(topic.c_str(), payload.c_str());
-          LOGI("Alarm trigger published: %s -> %s", topic.c_str(), payload.c_str());
+          //LOGE("Alarm detected (ultra) at %s -> publishing trigger location only", payload.c_str());
+          LOGE("Alarm detected (ultra) at %s -> floor=%u room=%u sensor=%u value=%u", payload.c_str(), (unsigned)i, (unsigned)j, (unsigned)k, (unsigned)MODEL.floors[i].rooms[j].ultra[k].value);
+
+          // Set local ALARM state (this is what we detected, not what MQTT said)
+          setSystemState((uint8_t)SystemState::ALARM);
+          lastAlarmStateChangeMs_ = now;
+          
+          // DO NOT gossip system state - MQTT is the source of truth for state
+          // Only publish trigger location to MQTT (already done above)
+          // Followers will receive this via MQTT if they're subscribed
+          LOGE("ALARM raised locally; awaiting MQTT DISARM to clear");
+          return;
         }
       }
     }
@@ -1053,16 +1298,22 @@ void FloorController::triggerAlarm()
   // Mirror reference behavior: only drive the alarm output when the
   // global MODEL.systemState == SystemState::ALARM. Print a periodic
   // message (once per second) with the triggered location for visibility.
+  const uint32_t now = millis();
   if (MODEL.systemState == SystemState::ALARM)
   {
     digitalWrite(23, HIGH);
     static unsigned long publishMsg = 0;
-    if (millis() - publishMsg > 1000)
+    if (now - publishMsg >= 1000)
     {
-      publishMsg = millis();
       String alarmLocation = MODEL.triggerLoc;
-      LOGI("ALARM TRIGGERED in zone %s", alarmLocation.c_str());
+      publishMsg = now;
+      LOGE("ALARM TRIGGERED in zone %s", alarmLocation.c_str());
     }
+
+    // Per new behavior: DO NOT auto-clear the ALARM here. The system will remain
+    // in ALARM until the cloud/Node-RED explicitly sends a DISARM. This prevents
+    // local auto-clears from re-triggering or conflicting with cloud intent.
+    // (If you want auto-clear behavior in the future, re-enable the block above.)
   }
   else
   {

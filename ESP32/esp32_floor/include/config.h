@@ -6,7 +6,7 @@
 // =============================
 // 0=OFF, 1=ERROR, 2=INFO+VERBOSE (default), 3=DEBUG, 4=TRACE (very noisy)
 #ifndef DEBUG_LEVEL
-#define DEBUG_LEVEL 3
+#define DEBUG_LEVEL 2
 #endif
 
 // Truncate long payloads in logs to avoid flooding the serial monitor
@@ -17,7 +17,7 @@
 // If enabled, calling code will invoke `debugPrintModel(Serial);` from the
 // diagnostics path. Set to 1 to enable deep MODEL dumps (very verbose).
 #ifndef DEBUG_PRINT_MODEL
-#define DEBUG_PRINT_MODEL 1
+#define DEBUG_PRINT_MODEL 0
 #endif
 
 // =============================
@@ -98,10 +98,23 @@
 #endif
 
 // Cadence (ms)
-#define GOSSIP_BASE_MS 1000   // slower gossip to avoid WiFi conflicts
+#define GOSSIP_BASE_MS 500   // slower gossip to avoid WiFi conflicts
 #define GOSSIP_JITTER_MS 200  // increased jitter for better collision avoidance
-#define MQTT_SUMMARY_MS 10000 // reduced MQTT frequency to avoid WiFi conflicts
-#define GOSSIP_ROOM_MS 2000   // slower room broadcasts to reduce conflicts
+#define MQTT_SUMMARY_MS 6000 // reduced MQTT frequency to avoid WiFi conflicts
+#define GOSSIP_ROOM_MS 1000   // slower room broadcasts to reduce conflicts
+
+// Alarm publish cadence (ms): when an alarm condition is detected, MQTT
+// trigger messages will be emitted at most once per this interval to avoid
+// overwhelming the broker. Tune to taste (lower -> more frequent publishes).
+#ifndef ALARM_MQTT_MS
+#define ALARM_MQTT_MS 5000
+#endif
+
+// Auto-clear alarm after this many milliseconds since the alarm was set.
+// Set to 0 to disable auto-clear (not recommended for demos).
+#ifndef ALARM_CLEAR_MS
+#define ALARM_CLEAR_MS 15000
+#endif
 
 // Gossip de‑duplication
 #define RECENT_CACHE_SIZE 32        // remember last 32 distinct messages
